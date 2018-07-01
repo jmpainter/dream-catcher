@@ -1,0 +1,14 @@
+{
+  "name": "dream-catcher",
+  "version": "1.0.0",
+  "description": "DreamCatcher app",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha --exit"
+  },
+  "author": "Josh Painter",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
