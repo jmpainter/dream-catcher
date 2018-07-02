@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: VxLze7M/W1QsM1qAMkdaUMmwenp8iggo64489PJN4y9xoBTfnqGAnW6gygE6B3heLc57C2faAMctQV++LA0wbmZeRJtMGojq3dI5U99btbiR4Kw8ftyd3E4DrdzneGXpaf5lCMtxPGloCGN4fh6BQSwPIwly62evCAOsbz8WgT9UZmiqXBSyRXipmsWQyvT15Ob82GAWmmptoANUui8se/Pn+/dHQruwV59OhYnQUK1Mv3Sempl6MQ4iTcQN4FQuuihvBFTUoYIbwIqk3lsmakx6Ejekegf8rikoc89lJIKqY7lRg87+O71bjWOR8hqaGl9IGXzeh/DnWfc6RDY5wt+zrOIbNow+Y7+LLMwPhzyVk1FNjK9wTcaQ3gNUh6PD30KOigJA0CFACku3/iMObcXkVeUldILUs3+a/aRARv8JHRJirWKUBmHjO5pXlIvjBEINcJs4y4i2/yTC27HAV5LuuP08UnUgdGF74VVdh/nrwW1CieDbWjXny7EuaTkzY+Ld64JWMxBm7UG11DvHsZ08hrRexsu06P6/AljLBggDCJj8YGhs4kNiHIKnbL1Z4X/XY438meFg/U5O9A8xGutiCdUx4dIpVdpJKmgB9Tq7RZkzlHCmnNOmMfrRZP/5jPWp/352dMuf47swqtpAhuebgPk+PdHeMgHWuPHCMyw=
+  app: afternoon-wave-33296
+  on:
+    repo: jmpainter/dream-catcher
