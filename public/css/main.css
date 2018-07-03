@@ -23,6 +23,7 @@ body {
 }
 header {
   padding: 20px 0px;
+  border-bottom: 1px solid #bebebe;
 }
 header h1 {
   font-family: 'Paprika', cursive;
@@ -37,4 +38,21 @@ header h1 {
 }
 header .row {
   position: relative;
+}
+main {
+  padding-top: 33px;
+}
+h2 {
+  font-size: 21px;
+}
+.dream-list {
+  list-style: none;
+  line-height: 2em;
+  padding: 0;
+}
+.dream-list li a {
+  font-size: 19px;
+}
+.dream-list .author, .dream-list .date {
+  font-size: 14px;
 }
