@@ -4,15 +4,29 @@ function getLatestDreams(callback) {
 }
 
 function displayLatestDreams(data) {
-  $('main')
-    .prop('hidden', false)
-    .append('<div class="row"><div class="col-12"><h2>Latest Dreams</h2>');
+  $('main').prop('hidden', false);
 
+  let htmlString = `
+    <div class="row">
+      <div class="col-12">
+        <ul class="dream-list"> 
+  `;
   for(index in data.latestDreams) {
-    $('main').append('<p>' + data.latestDreams[index].title + '</p');
+    htmlString += `
+      <li>
+        <a href="javascript:void(0)">${data.latestDreams[index].title}</a>
+        <span class="author">by ${data.latestDreams[index].userName}</span>
+        <span class="date">- ${new Date(data.latestDreams[index].publishDate).toDateString()}</span>
+      </li>
+    `;
   }
-  $('main').append('</div></div>');
-
+  htmlString += `
+        </ul>
+      </div>
+    </div>
+  `;
+  $('main').html(htmlString);
+ 
 }
 
 function getAndDisplayLatestDreams() {
@@ -20,6 +34,6 @@ function getAndDisplayLatestDreams() {
 }
 
 function startApp() {
-  //getAndDisplayLatestDreams();
+  getAndDisplayLatestDreams();
 }
 $(startApp);
