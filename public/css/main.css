@@ -1,0 +1,40 @@
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, 
+fieldset, form, label, legend,
+footer, header, menu, nav, section, summary
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+html {
+  box-sizing: border-box;
+}
+* {
+  box-sizing: inherit;
+}
+body {
+  font-family: 'Nunito Sans', sans-serif;
+}
+header {
+  padding: 20px 0px;
+}
+header h1 {
+  font-family: 'Paprika', cursive;
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+.nav-links {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  list-style: none;
+}
+header .row {
+  position: relative;
+}
