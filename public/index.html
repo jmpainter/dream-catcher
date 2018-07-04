@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="Dream logging and publishing service">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/float-grid.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans|Paprika" rel="stylesheet">
-  <title>DreamCatcher</title>
+  <title>Dream Catcher</title>
 </head>
 <body>
   <header role="banner">
@@ -37,9 +38,11 @@
 
     <div class="view" id="dream-detail">
       <div class="row">
-        <div class="col-12">
-          <h1 class="dream-title">Golden Girls</h1>
-          <p>I was dreaming last night of watching a standup comic, who was telling some really hilarious jokes I hadn't heard before. \"I wish I could steal these jokes,\" I thought to myself. The dream then started going a little lucid; I realized I was dreaming. This led me to realize, \"wait, if I'm dreaming, therse are my jokes!\" I resolved to remember them. Of course, when I woke up I remembered the dream but can't remember a damned one of the jokes.</p>
+        <div class="col-6">
+          <h1 class="dream-title"></h1>
+          <h2><span class="dream-author"></span> <span class="dream-publish-date"></span></h2>
+          <p class="dream-text"></p>
+          <button class="dream-back">Back</button>
         </div>
       </div>
     </div>
@@ -52,5 +55,6 @@
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>
+  <script src="js/dream-detail.js"></script>
 </body>
 </html>

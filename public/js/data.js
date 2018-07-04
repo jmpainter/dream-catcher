@@ -31,7 +31,7 @@ const MOCK_LATEST_DREAMS = {
       "publishDate": 1470017176609
     },  
     {
-      "id": "3",
+      "id": "4",
       "title": "Odd Nightmare",
       "authorId": "2",
       "authorFirst": "Maria",

@@ -5,21 +5,17 @@ const appState = {
 
 function showView(viewName) {
   $('.view').hide();
-  if(viewName === 'start') {
-    $('#' + viewName).show();
-  } else {
-    $('#' + viewName).fadeIn('slow');
-  }
+  $('#' + viewName).show();
 }
 
 function startApp() {
 
   //for manually setting views
-  $('main').prop('hidden', false);
-  showView('dream-detail');
+  // $('main').prop('hidden', false);
+  // showView('dream-detail');
 
   //actual app code below
-  // getAndDisplayLatestDreams();
-  // handleDreamClick();
+  getAndDisplayLatestDreams();
+  handleDreamClick();
 }
 $(startApp);

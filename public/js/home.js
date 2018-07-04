@@ -28,6 +28,6 @@ function handleDreamClick() {
   $('.dream-list').on('click', '.js-dream', function(event) {
     dreamId = $(this).attr('data-dream-id');
     const dream = appState.dreams.find(dream => dream.id === dreamId );
-    console.log(dream);
+    showDreamDetail(dream);
   });
 }
