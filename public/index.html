@@ -20,7 +20,30 @@
       </div>
     </div>
   </header>
-  <main role="main" class="js-output" aria-live="assertive">
+  <main role="main" class="js-output" aria-live="assertive" hidden>
+
+    <!-- Home Screen  -->
+
+    <div class="view" id="recent-dreams">
+      <div class="row">
+        <div class="col-12">
+          <ul class="dream-list">
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dream Detail Screen -->
+
+    <div class="view" id="dream-detail">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="dream-title">Golden Girls</h1>
+          <p>I was dreaming last night of watching a standup comic, who was telling some really hilarious jokes I hadn't heard before. \"I wish I could steal these jokes,\" I thought to myself. The dream then started going a little lucid; I realized I was dreaming. This led me to realize, \"wait, if I'm dreaming, therse are my jokes!\" I resolved to remember them. Of course, when I woke up I remembered the dream but can't remember a damned one of the jokes.</p>
+        </div>
+      </div>
+    </div>
+
   </main>
   <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -28,5 +51,6 @@
   crossorigin="anonymous"></script>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>

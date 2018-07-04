@@ -21,7 +21,7 @@ const MOCK_LATEST_DREAMS = {
       "publishDate": 1470017076609
     },   
     {
-      "id": "2",
+      "id": "3",
       "title": "Vampires",
       "authorId": "1",
       "authorFirst": "James",
@@ -31,7 +31,7 @@ const MOCK_LATEST_DREAMS = {
       "publishDate": 1470017176609
     },  
     {
-      "id": "2",
+      "id": "3",
       "title": "Odd Nightmare",
       "authorId": "2",
       "authorFirst": "Maria",
@@ -41,7 +41,7 @@ const MOCK_LATEST_DREAMS = {
       "publishDate": 1470017076609
     },  
     {
-      "id": "2",
+      "id": "5",
       "title": "Animals are People Too",
       "authorId": "3",
       "authorFirst": "Sarah",
@@ -51,7 +51,7 @@ const MOCK_LATEST_DREAMS = {
       "publishDate": 1470018176609
     },  
     {
-      "id": "2",
+      "id": "6",
       "title": "Attack",
       "authorId": "3",
       "authorFirst": "Sarah",

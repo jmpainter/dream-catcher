@@ -1,39 +1,25 @@
 
-function getLatestDreams(callback) {
-  setTimeout(() => callback(MOCK_LATEST_DREAMS), 100);
-}
+const appState = {
+  dreams: []
+};
 
-function displayLatestDreams(data) {
-  $('main').prop('hidden', false);
-
-  let htmlString = `
-    <div class="row">
-      <div class="col-12">
-        <ul class="dream-list"> 
-  `;
-  for(index in data.latestDreams) {
-    htmlString += `
-      <li>
-        <a href="javascript:void(0)">${data.latestDreams[index].title}</a>
-        <span class="author">by ${data.latestDreams[index].userName}</span>
-        <span class="date">- ${new Date(data.latestDreams[index].publishDate).toDateString()}</span>
-      </li>
-    `;
+function showView(viewName) {
+  $('.view').hide();
+  if(viewName === 'start') {
+    $('#' + viewName).show();
+  } else {
+    $('#' + viewName).fadeIn('slow');
   }
-  htmlString += `
-        </ul>
-      </div>
-    </div>
-  `;
-  $('main').html(htmlString);
- 
-}
-
-function getAndDisplayLatestDreams() {
-  getLatestDreams(displayLatestDreams);
 }
 
 function startApp() {
-  getAndDisplayLatestDreams();
+
+  //for manually setting views
+  $('main').prop('hidden', false);
+  showView('dream-detail');
+
+  //actual app code below
+  // getAndDisplayLatestDreams();
+  // handleDreamClick();
 }
 $(startApp);
