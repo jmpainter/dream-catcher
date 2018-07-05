@@ -95,3 +95,28 @@ label {
   margin: 8px 0 2px;
   display: block;  
 }
+.dream-journal-list a {
+  font-size: 18px;
+}
+.journal-date, .journal-public {
+  font-size: 14px;
+}
+.journal-public-check {
+  margin: 0px 0px 0px 12px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+#dream-journal-containter {
+  width: 90%;
+}
+#dream-journal-containter h1 {
+  display: inline;
+}
+#new-dream {
+  float: right;
+  margin: 5px;
+}
+.dream-journal-list td {
+  padding: 8px 7px 0 0;
+}

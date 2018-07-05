@@ -1,9 +1,14 @@
+function initRecentDreams() {
+  getAndDisplayLatestDreams();
+  handleDreamClick();
+}
+
 function getLatestDreams(callback) {
   setTimeout(() => callback(MOCK_LATEST_DREAMS), 100);
 }
 
 function displayLatestDreams(data) {
-  appState.dreams = data.latestDreams;
+  appState.latestDreams = data.latestDreams;
   $('main').prop('hidden', false);
 
   let htmlString = '';
@@ -27,7 +32,7 @@ function getAndDisplayLatestDreams() {
 function handleDreamClick() {
   $('.dream-list').on('click', '.js-dream', function(event) {
     dreamId = $(this).attr('data-dream-id');
-    const dream = appState.dreams.find(dream => dream.id === dreamId );
-    showDreamDetail(dream);
+    const dream = appState.latestDreams.find(dream => dream.id === dreamId );
+    showDreamDetail(dream, 'recent-dreams');
   });
 }

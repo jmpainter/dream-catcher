@@ -1,6 +1,6 @@
-
 const appState = {
-  dreams: []
+  latestDreams: [],
+  journalDreams: []
 };
 
 function showView(viewName) {
@@ -9,13 +9,13 @@ function showView(viewName) {
 }
 
 function startApp() {
-
-  //for manually setting views
+  //for manually setting a view
   $('main').prop('hidden', false);
-  showView('login');
+  initDreamJournal();
+  showView('dream-journal');
 
-  //actual app code below
-  // getAndDisplayLatestDreams();
-  // handleDreamClick();
+  // actual start app code
+  // initRecentDreams();
+  // showView('recent-dreams');
 }
 $(startApp);

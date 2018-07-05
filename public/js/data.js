@@ -59,6 +59,41 @@ const MOCK_LATEST_DREAMS = {
       "userName": "sarahn",    
       "text": "Last night I dreamt I'd been attacked by someone on the way into my house, but was able to subdue him while my family called the police. I looked away from my attacker for a moment and looked back; he'd turned into a cat, but speaking with the same voice and demanding to be let go. I kept hold of him, but started to wonder how the police would react to a complaint about a talking cat. That was followed by a dream in which I was riding on a 19th century steam train with really cramped wooden seating, and I unsuccessfully tried to get myself a seat.",
       "publishDate": 1470017088609
-    },                  
+    }              
   ]
+}
+
+const MOCK_JOURNAL_DREAMS = {
+  "journalDreams": [
+    {
+      "id": "1",
+      "title": "Golden Girls",
+      "authorId": "1",
+      "authorFirst": "James",
+      "authorLast": "Goodman",
+      "userName": "jgoodman",
+      "text": "Last night I dreamt they were doing a present-day season of Golden Girls, with Betty White and three new younger old ladies. Instead of a laugh track, Rose's \"the ditzy one\" lines were followed by the others looking deeply concerned for their 96-year-old friend. (Also, is anyone's still reading this stuff? For those interested, I'm far more active on the tweetybirds these days.)",
+      "publishDate": "December 17, 1995"
+    },
+    {
+      "id": "2",
+      "title": "Standup Comic",
+      "authorId": "1",
+      "authorFirst": "James",
+      "authorLast": "Goodman",
+      "userName": "jgoodman",    
+      "text": "I was dreaming last night of watching a standup comic, who was telling some really hilarious jokes I hadn't heard before. \"I wish I could steal these jokes,\" I thought to myself. The dream then started going a little lucid; I realized I was dreaming. This led me to realize, \"wait, if I'm dreaming, therse are my jokes!\" I resolved to remember them. Of course, when I woke up I remembered the dream but can't remember a damned one of the jokes.",
+      "publishDate": 1470017076609
+    },   
+    {
+      "id": "3",
+      "title": "Vampires",
+      "authorId": "1",
+      "authorFirst": "James",
+      "authorLast": "Goodman",
+      "userName": "jgoodman",    
+      "text": "The other night I dreamt the world was being taken over by vampires, until clerics of various faiths from all over the world got together with the bright idea to consecrate the oceans, clouds, and the moisture in the air, so that the entire biosphere contained holy water which killed off the vampires. Surely an idea like this must have been done in fiction? At any rate, anyone who sees this is welcome to use it.",
+      "publishDate": 1470017176609
+    }
+  ]  
 }
