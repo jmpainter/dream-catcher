@@ -65,3 +65,33 @@ p {
 .dream-list .author, .dream-list .date {
   font-size: 14px;
 }
+.login-form {
+  border: 1px solid #bebebe;
+  padding: 12px;
+  /* width: 33%; */
+  border-radius: 3px;
+}
+legend {
+  font-size: 20px;
+  padding: 5px 0;
+}
+input[type="email"],
+input[type="password"],
+input[type="submit"],
+input[type="text"] {
+  display: block;
+  border: 1px solid #bebebe;
+  border-radius: 3px;
+  /* background: #fcfcfc; */
+  width: 90%;
+  font-size: 18px;
+  text-align: left;
+  padding: 2px;
+}
+button {
+  margin: 12px 0;
+}
+label {
+  margin: 8px 0 2px;
+  display: block;  
+}

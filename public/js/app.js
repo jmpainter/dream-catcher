@@ -11,11 +11,11 @@ function showView(viewName) {
 function startApp() {
 
   //for manually setting views
-  // $('main').prop('hidden', false);
-  // showView('dream-detail');
+  $('main').prop('hidden', false);
+  showView('login');
 
   //actual app code below
-  getAndDisplayLatestDreams();
-  handleDreamClick();
+  // getAndDisplayLatestDreams();
+  // handleDreamClick();
 }
 $(startApp);
