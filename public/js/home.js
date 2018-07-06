@@ -40,7 +40,12 @@ function handleDreamClick() {
 
 function handleLoginClick() {
   $('.login-link').click(function(event) {
-    initLogin();
-    showView('login');
+    if(appState.isLoggedIn === false) {
+      initLogin();
+      showView('login');
+    } else {
+      appState.isLoggedIn = false;
+      $('.login-link').text('Log Out');      
+    }
   });
 }

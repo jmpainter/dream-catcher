@@ -14,8 +14,8 @@ function displayJournalDreams(data) {
   let htmlString = '';
   for(index in data.journalDreams) {
     htmlString += `
-      <tr class="js-journal-dream" data-dream-id="${data.journalDreams[index].id}">
-        <td><a href="javascript:void(0)">${data.journalDreams[index].title}</a></td>
+      <tr class="js-journal-dream">
+        <td><a data-dream-id="${data.journalDreams[index].id}" href="javascript:void(0)">${data.journalDreams[index].title}</a></td>
         <td><span class="journal-date">${new Date(data.journalDreams[index].publishDate).toDateString()}</span></td>
         <td><input type="checkbox" class="journal-public-check"></td>
         <td><span class="journal-public">Public</span></td>
@@ -31,7 +31,7 @@ function getAndDisplayJournalDreams() {
 }
 
 function handleJournalDreamClick() {
-  $('.dream-journal-list').on('click', '.js-journal-dream', function(event) {
+  $('.dream-journal-list').on('click', 'a', function(event) {
     dreamId = $(this).attr('data-dream-id');
     const dream = appState.journalDreams.find(dream => dream.id === dreamId );
     showDreamDetail(dream, 'dream-journal');
@@ -41,6 +41,7 @@ function handleJournalDreamClick() {
 function handleNewDreamClick() {
   $('#new-dream').click(function() {
     initDreamEditor();
+    $('#dream-editor').css('visibility', 'visible');
     showView('dream-editor');
   });
 }

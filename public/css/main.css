@@ -129,3 +129,6 @@ label {
 #dream-editor-title {
   width: 100%;
 }
+#dream-editor {
+  visibility: hidden;
+}
