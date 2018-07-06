@@ -2,6 +2,7 @@ function initRecentDreams() {
   getAndDisplayLatestDreams();
   handleDreamClick();
   handleLoginClick();
+  handleLogoClick();
 }
 
 function getLatestDreams(callback) {
@@ -38,6 +39,12 @@ function handleDreamClick() {
   });
 }
 
+function handleLogoClick() {
+  $('#logo').click(function(event) {
+    showView('recent-dreams');
+  });
+}
+
 function handleLoginClick() {
   $('.login-link').click(function(event) {
     if(appState.isLoggedIn === false) {
@@ -45,7 +52,8 @@ function handleLoginClick() {
       showView('login');
     } else {
       appState.isLoggedIn = false;
-      $('.login-link').text('Log Out');      
+      showView('recent-dreams');
+      $('.login-link').text('Log In');      
     }
   });
 }

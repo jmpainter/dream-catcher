@@ -132,3 +132,7 @@ label {
 #dream-editor {
   visibility: hidden;
 }
+.dream-edit-button {
+  visibility: hidden;
+  float: right;
+}
