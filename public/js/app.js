@@ -17,5 +17,7 @@ function startApp() {
   // actual start app code
   // initRecentDreams();
   // showView('recent-dreams');
+
+  bkLib.onDomLoaded(nicEditors.allTextAreas);
 }
 $(startApp);
