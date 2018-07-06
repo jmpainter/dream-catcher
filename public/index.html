@@ -16,7 +16,7 @@
       <div class="col-12">
         <h1 id="logo">Dream Catcher</h1>
         <ul class="nav-links">
-          <li class="dream-journal-link"></li>
+          <li class=""></li>
           <li><a class="login-link" href="javascript:void(0)">Log In</a></li>
         </ul>
       </div>
@@ -27,7 +27,7 @@
 
     <!-- Home Screen  -->
 
-    <div class="view" id="recent-dreams">
+    <div class="view" id="recent-dreams" hidden>
       <div class="row">
         <div class="col-12">
           <ul class="dream-list">
@@ -45,7 +45,6 @@
           <h2><span class="dream-author"></span> <span class="dream-publish-date"></span></h2>
           <p class="dream-text"></p>
           <button class="dream-back">Back</button>
-          <button class="dream-edit-button">Edit</button>
         </div>
       </div>
     </div>
@@ -90,17 +89,17 @@
     </div>
 
     <!-- Dream Editor -->
-
     <div class="view" id="dream-editor">
       <div class="row">
         <div class="col-12">
+
           <form id="dream-editor-form" role="form" action="/dreams" accept-charset="UTF-8" method="post" class="edit-form">
             <fieldset>
               <legend><span class="dream-editor-mode"></span> Dream</legend>
               <label for="dream-editor-title">Title:</label>
               <input type="text" name="title" id="dream-editor-title" required>
               <label for="text">Text:</label>
-              <textarea name="text" id="text" rows="30"></textarea>
+              <textarea name="text" id="text" cols="90" rows="30"></textarea>
               <button type="submit"><span id="dream-editor-button-label"></span></button>
             </fieldset>
           </form>

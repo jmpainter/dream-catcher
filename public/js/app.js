@@ -1,7 +1,6 @@
 const appState = {
   latestDreams: [],
   journalDreams: [],
-  currentDream: null,
   editorMode: '',
   isLoggedIn: false
 };

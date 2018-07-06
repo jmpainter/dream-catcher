@@ -39,12 +39,6 @@ function handleDreamClick() {
   });
 }
 
-function handleLogoClick() {
-  $('#logo').click(function(event) {
-    showView('recent-dreams');
-  });
-}
-
 function handleLoginClick() {
   $('.login-link').click(function(event) {
     if(appState.isLoggedIn === false) {
@@ -52,8 +46,14 @@ function handleLoginClick() {
       showView('login');
     } else {
       appState.isLoggedIn = false;
-      showView('recent-dreams');
-      $('.login-link').text('Log In');      
+      $('.login-link').text('Log Out');      
     }
+  });
+}
+
+function handleLogoClick() {
+  $('#logo').click(function(event) {
+    initRecentDreams();
+    showView('recent-dreams');
   });
 }
