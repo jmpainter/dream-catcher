@@ -40,6 +40,7 @@ function handleJournalDreamClick() {
 
 function handleNewDreamClick() {
   $('#new-dream').click(function() {
-    showView('dream-add-edit');
+    initDreamEditor();
+    showView('dream-editor');
   });
 }

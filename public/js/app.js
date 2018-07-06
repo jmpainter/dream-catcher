@@ -1,6 +1,7 @@
 const appState = {
   latestDreams: [],
-  journalDreams: []
+  journalDreams: [],
+  editorMode: ''
 };
 
 function showView(viewName) {
@@ -10,14 +11,12 @@ function showView(viewName) {
 
 function startApp() {
   //for manually setting a view
-  $('main').prop('hidden', false);
-  initDreamJournal();
-  showView('dream-journal');
+  // $('main').prop('hidden', false);
+  // initDreamJournal();
+  // showView('dream-journal');
 
   // actual start app code
-  // initRecentDreams();
-  // showView('recent-dreams');
-
-  bkLib.onDomLoaded(nicEditors.allTextAreas);
+  initRecentDreams();
+  showView('recent-dreams');
 }
 $(startApp);

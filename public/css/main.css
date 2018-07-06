@@ -120,3 +120,12 @@ label {
 .dream-journal-list td {
   padding: 8px 7px 0 0;
 }
+#dream-editor-form {
+  width: 80%;
+}
+#dream-editor textarea {
+  width: 100%;
+}
+#dream-editor-title {
+  width: 100%;
+}

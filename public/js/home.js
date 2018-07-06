@@ -1,6 +1,7 @@
 function initRecentDreams() {
   getAndDisplayLatestDreams();
   handleDreamClick();
+  handleLoginClick();
 }
 
 function getLatestDreams(callback) {
@@ -34,5 +35,12 @@ function handleDreamClick() {
     dreamId = $(this).attr('data-dream-id');
     const dream = appState.latestDreams.find(dream => dream.id === dreamId );
     showDreamDetail(dream, 'recent-dreams');
+  });
+}
+
+function handleLoginClick() {
+  $('.login-link').click(function(event) {
+    initLogin();
+    showView('login');
   });
 }
