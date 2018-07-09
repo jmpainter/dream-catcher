@@ -3,7 +3,7 @@ function initLogin() {
 }
 
 function handleLoginSubmit() {
-  $('#login-form').submit(function(event) {
+  $('.login-form').submit(function(event) {
     event.preventDefault();
     appState.isLoggedIn = true;
     $('.login-link').text('Log Out');

@@ -107,10 +107,10 @@ label {
   position: relative;
   top: -1px;
 }
-#dream-journal-containter {
+.dream-journal-containter {
   width: 90%;
 }
-#dream-journal-containter h1 {
+.dream-journal-containter h1 {
   display: inline;
 }
 #new-dream {
@@ -120,10 +120,10 @@ label {
 .dream-journal-list td {
   padding: 8px 7px 0 0;
 }
-#dream-editor-form {
+.dream-editor-form {
   width: 80%;
 }
-#dream-editor textarea {
+.dream-editor textarea {
   width: 100%;
 }
 #dream-editor-title {
@@ -132,7 +132,7 @@ label {
 #dream-editor {
   visibility: hidden;
 }
-#logo {
+.logo {
   cursor: pointer;
 }
 .dream-edit {
