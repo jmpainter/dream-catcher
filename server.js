@@ -1,6 +1,22 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const passport = require('passport');
+
+mongoose.Promise = global.Promise;
+
 const app = express();
 app.use(express.static('public'));
+app.use(morgan('common'));
+
+const { router: dreamsRouter } = require('./dreams');
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
+const { PORT, DATABASE_URL } = require('./config');
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 let server;
 
