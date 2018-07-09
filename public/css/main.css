@@ -135,3 +135,6 @@ label {
 #logo {
   cursor: pointer;
 }
+.dream-edit {
+  float: right;
+}
