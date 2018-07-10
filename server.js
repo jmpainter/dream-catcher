@@ -11,43 +11,51 @@ app.use(morgan('common'));
 
 const { router: dreamsRouter } = require('./dreams');
 const { router: usersRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+// const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
+app.use('/dreams', dreamsRouter);
 
 const { PORT, DATABASE_URL } = require('./config');
 
-passport.use(localStrategy);
-passport.use(jwtStrategy);
+// passport.use(localStrategy);
+// passport.use(jwtStrategy);
 
 let server;
 
-function runServer() {
-  const port = process.env.PORT || 8080;
+function runServer(DATABASE_URL, port=PORT) {
   return new Promise((resolve, reject) => {
-    server = app.listen(port, () => {
-      console.log(`Your app is listening on port ${port}`);
-      resolve(server);
-    }).on('error', err => {
-      reject(err)
+    mongoose.connect(DATABASE_URL, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+      .on('error', err => {
+        mongoose.disconnect();
+        reject(err);
+      });
     });
   });
 }
 
 function closeServer() {
-  return new Promise((resolve, reject) => {
-    console.log('Closing server');
-    server.close(err => {
-      if (err) {
-        reject(err);
-        // so we don't also call `resolve()`
-        return;
-      }
-      resolve();
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log("Closing server");
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
     });
   });
 }
 
 if (require.main === module) {
-  runServer().catch(err => console.error(err));
+  runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
 module.exports = { app, runServer, closeServer };
