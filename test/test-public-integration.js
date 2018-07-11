@@ -8,7 +8,7 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('Dream Catcher integration tests', function() {
+describe('Dream Catcher public html tests', function() {
   before(function() {
     return runServer();
   });
