@@ -14,6 +14,7 @@ const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
+chai.use(require('chai-datetime'));
 
 //first create users collection in order to give each dream an author
 
@@ -91,6 +92,36 @@ describe('dreams API resource', function() {
   });  
 
   describe('GET endpoint', function() {
+      
+    it('should return dreams with the right fields', function() {
+      let resDream;
+      return chai.request(app)
+        .get('/dreams')
+        .then(function(res) {
+          // so subsequent .then blocks can access response object
+          expect(res).to.have.status(200);
+          // otherwise our db seeding didn't work
+          expect(res.body.dreams).to.have.lengthOf.at.least(1);
+
+          res.body.dreams.forEach(function(dream) {
+            expect(dream).to.be.a('object');
+            expect(dream).to.include.keys('_id', 'title', 'author', 'text', 'publishDate');
+          });
+          resDream = res.body.dreams[0];          
+          return Dream.findById(resDream._id)
+            .populate('author', 'firstName lastName screenName');
+        })
+        .then(function(dream) {
+          console.log('dream: ' + JSON.stringify(dream));
+          expect(resDream._id).to.equal(dream.id);
+          expect(resDream.title).to.equal(dream.title);
+          expect(resDream.author.firstName).to.equal(dream.author.firstName);
+          expect(resDream.author.lastName).to.equal(dream.author.lastName);
+          expect(resDream.author.screenName).to.equal(dream.author.screenName);
+          expect(resDream.text).to.equal(dream.text);
+          expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
+        });
+    });
 
     it('should return all public dreams', function() {
       let res;
@@ -108,5 +139,6 @@ describe('dreams API resource', function() {
           expect(res.body.dreams).to.have.lengthOf(count);
         });      
     });
+
   });
 });
