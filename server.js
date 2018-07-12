@@ -11,14 +11,14 @@ app.use(morgan('common'));
 
 const { router: dreamsRouter } = require('./dreams');
 const { router: usersRouter } = require('./users');
-// const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 app.use('/dreams', dreamsRouter);
 
 const { PORT, DATABASE_URL } = require('./config');
 
-// passport.use(localStrategy);
-// passport.use(jwtStrategy);
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 let server;
 

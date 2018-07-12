@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
+mongoose.Promise = global.Promise;
+
 const {Dream} = require('../dreams');
 const {User} = require('../users');
 
@@ -18,44 +20,59 @@ chai.use(require('chai-datetime'));
 
 //first create users collection in order to give each dream an author
 
-const newUserIds = [];
+function seedData() {
+  console.info('seeding data');
 
-function seedUserData() {
-  console.info('seeding user data');
-  const seedData = [];
-
+  const userSeedData = [];
+  
+  //create three users
   for (let i = 1; i <= 3; i++) {
-    seedData.push(generateUserData());
+    userSeedData.push(generateUserData());
   }
-  // this will return a promise
-  return User.insertMany(seedData);
+  
+  const promises = [];
+
+  userSeedData.forEach(seed => {
+    promises.push(
+      User.create(seed)
+        .then(user => {
+          const dreamPromises = [];
+          //create three dreams for each user
+          for (let i = 1; i <= 3; i++) {
+            dreamPromises.push(Dream.create(generateDreamData(user._id)))
+          }
+          return Promise.all(dreamPromises);
+        })
+        .then(results => {
+          // add each dream id to dream array in user document
+          const addDreamToUserPromises = [];
+          results.forEach(result => {
+            addDreamToUserPromises.push(addDreamToUser(result.author, result._id));
+          })
+          return Promise.all(addDreamToUserPromises);
+        })
+    )
+  });
+
+  return Promise.all(promises);
+}
+
+function addDreamToUser(userId, dreamId) {
+  return User.findById(userId)
+    .then(user => {
+      user.dreams.push(dreamId);
+      user.save()
+    })
 }
 
 function generateUserData() {
-  const userId = new ObjectID();
-  newUserIds.push(userId);
   return {
-    _id: userId,
     username: faker.internet.userName(),
     password: faker.internet.password(),
     screenName: faker.name.firstName(),
     firstName: faker.name.lastName(),
     lastName: faker.name.lastName()
   }
-}
-
-//create 3 dreams for each new user
-
-function seedDreamData() {
-  console.info('seeding dream data');
-  const seedData = [];
-
-  for(let id of newUserIds) {
-    for(let i = 0; i <= 3; i++) {
-      seedData.push(generateDreamData(id));
-    }
-  }
-  return Dream.insertMany(seedData);
 }
 
 function generateDreamData(userId) {
@@ -70,7 +87,7 @@ function generateDreamData(userId) {
 
 function tearDownDb() {
   console.warn('Deleting database');
-  return mongoose.connection.dropDatabase();
+  // return mongoose.connection.dropDatabase();
 }
 
 describe('dreams API resource', function() {
@@ -80,7 +97,7 @@ describe('dreams API resource', function() {
   });
   
   beforeEach(function() {
-    return Promise.all([seedUserData(), seedDreamData()]);
+    return seedData();
   });
 
   afterEach(function() {
@@ -92,11 +109,28 @@ describe('dreams API resource', function() {
   });  
 
   describe('GET endpoint', function() {
-      
+
+    it('should return all public dreams', function() {
+      let res;
+      return chai.request(app)
+        .get('/dreams/public-dreams')
+        .then(function(_res) {
+          // so subsequent .then blocks can access response object
+          res = _res;
+          expect(res).to.have.status(200);
+          // otherwise our db seeding didn't work
+          expect(res.body.dreams).to.have.lengthOf.at.least(1);
+          return Dream.count();
+        })
+        .then(function(count) {
+          expect(res.body.dreams).to.have.lengthOf(count);
+        });      
+    });
+
     it('should return dreams with the right fields', function() {
       let resDream;
       return chai.request(app)
-        .get('/dreams')
+        .get('/dreams/public-dreams')
         .then(function(res) {
           // so subsequent .then blocks can access response object
           expect(res).to.have.status(200);
@@ -112,7 +146,6 @@ describe('dreams API resource', function() {
             .populate('author', 'firstName lastName screenName');
         })
         .then(function(dream) {
-          console.log('dream: ' + JSON.stringify(dream));
           expect(resDream._id).to.equal(dream.id);
           expect(resDream.title).to.equal(dream.title);
           expect(resDream.author.firstName).to.equal(dream.author.firstName);
@@ -121,24 +154,7 @@ describe('dreams API resource', function() {
           expect(resDream.text).to.equal(dream.text);
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
         });
-    });
-
-    it('should return all public dreams', function() {
-      let res;
-      return chai.request(app)
-        .get('/dreams')
-        .then(function(_res) {
-          // so subsequent .then blocks can access response object
-          res = _res;
-          expect(res).to.have.status(200);
-          // otherwise our db seeding didn't work
-          expect(res.body.dreams).to.have.lengthOf.at.least(1);
-          return Dream.count();
-        })
-        .then(function(count) {
-          expect(res.body.dreams).to.have.lengthOf(count);
-        });      
-    });
+    });    
 
   });
 });

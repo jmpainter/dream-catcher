@@ -12,7 +12,13 @@ const userSchema = mongoose.Schema({
   password: {type: String, required: true},
   screenName: {type: String, default: ''},
   firstName: {type: String, default: ''},
-  lastName: {type: String, default: ''}
+  lastName: {type: String, default: ''},
+  dreams: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Dream"
+    }
+  ]
 });
 
 userSchema.methods.serialize = function() {

@@ -20,7 +20,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-router.get('/', (req, res) => {
+router.get('/public-dreams', (req, res) => {
   Dream
     .find({public: true})
     .populate('author', 'firstName lastName screenName')
@@ -35,5 +35,11 @@ router.get('/', (req, res) => {
       res.status(500).json({message: 'Internal server error'});
     })
 });
+
+// router.get('/', jwtAuth, (req, res) => {
+//   return res.json({
+//     data: 'rosebud'
+//   });
+// })
 
 module.exports = {router};
