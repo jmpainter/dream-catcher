@@ -87,7 +87,7 @@ function generateDreamData(userId) {
 
 function tearDownDb() {
   console.warn('Deleting database');
-  // return mongoose.connection.dropDatabase();
+  return mongoose.connection.dropDatabase();
 }
 
 describe('dreams API resource', function() {
@@ -113,7 +113,7 @@ describe('dreams API resource', function() {
     it('should return all public dreams', function() {
       let res;
       return chai.request(app)
-        .get('/dreams/public-dreams')
+        .get('/dreams/public')
         .then(function(_res) {
           // so subsequent .then blocks can access response object
           res = _res;
@@ -130,7 +130,7 @@ describe('dreams API resource', function() {
     it('should return dreams with the right fields', function() {
       let resDream;
       return chai.request(app)
-        .get('/dreams/public-dreams')
+        .get('/dreams/public')
         .then(function(res) {
           // so subsequent .then blocks can access response object
           expect(res).to.have.status(200);

@@ -14,6 +14,7 @@ const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 app.use('/dreams', dreamsRouter);
+app.use('/auth', authRouter);
 
 const { PORT, DATABASE_URL } = require('./config');
 

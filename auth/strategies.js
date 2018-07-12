@@ -53,4 +53,4 @@ const jwtStrategy = new JwtStrategy(
   }
 );
 
-module.exports = { localStrategy, jwtStrategy };
+module.exports = {localStrategy, jwtStrategy};

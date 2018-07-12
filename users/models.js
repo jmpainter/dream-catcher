@@ -23,6 +23,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.serialize = function() {
   return {
+    id: this.id,
     username: this.username,
     screenName: this.screenName || '',
     firstName: this.firstName || '',
