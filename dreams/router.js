@@ -64,17 +64,19 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
   }
 });
 
-router.post('/', jwtAuth, (req, res) => {
+router.post('/', jsonParser, jwtAuth, (req, res) => {
   const requiredFields = ['title', 'text'];
 
   for(let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
-    if(!field in req.body) {
+    if(!(field in req.body)) {
       const message = `Missing '${field}' in req.body`
       console.error(message);
       return res.status(400).send(message);
     }
   }
+
+  let dream = null;
 
   Dream
     .create({
@@ -82,7 +84,15 @@ router.post('/', jwtAuth, (req, res) => {
       author: req.user.id,
       text: req.body.text
     })
-    .then(dream => res.status(201).json(dream.serialize()))
+    .then(_dream => {
+      dream = _dream;
+      return User.findById(req.user.id)
+    })
+    .then(user => {
+      user.dreams.push(dream._id);
+      user.save();
+      res.status(201).json(dream.serialize());
+    })
     .catch(err => {
       console.error(err);
       res.status(500).json({ message: 'Internal server error'});
