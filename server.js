@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
+const AnonymousStrategy = require('passport-anonymous').Strategy;
 
 mongoose.Promise = global.Promise;
 
@@ -10,7 +11,7 @@ app.use(express.static('public'));
 app.use(morgan('common'));
 
 const { router: dreamsRouter } = require('./dreams');
-const { router: usersRouter } = require('./users');
+// const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 app.use('/dreams', dreamsRouter);
@@ -20,6 +21,7 @@ const { PORT, DATABASE_URL } = require('./config');
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
+passport.use(new AnonymousStrategy());
 
 let server;
 
