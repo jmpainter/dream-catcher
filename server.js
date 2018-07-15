@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
+
 const AnonymousStrategy = require('passport-anonymous').Strategy;
 
 mongoose.Promise = global.Promise;

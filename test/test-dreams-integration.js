@@ -1,9 +1,10 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
-const ObjectID = require('mongodb').ObjectId;
+const jwt = require('jsonwebtoken');
 
 const mongoose = require('mongoose');
+const {JWT_SECRET} = require('../config');
 
 const expect = chai.expect;
 
@@ -18,8 +19,10 @@ const {TEST_DATABASE_URL} = require('../config');
 chai.use(chaiHttp);
 chai.use(require('chai-datetime'));
 
-//first create users collection in order to give each dream an author
+//save off a user for authenticated tests
+let testUser = {};
 
+//first create users collection in order to give each dream an author
 function seedData() {
   console.info('seeding data');
 
@@ -32,25 +35,35 @@ function seedData() {
   
   const promises = [];
 
-  userSeedData.forEach(seed => {
+  //each user is created with password 'test'
+
+  userSeedData.forEach((seed, index) => {
     promises.push(
-      User.create(seed)
-        .then(user => {
-          const dreamPromises = [];
-          //create three dreams for each user
-          for (let i = 1; i <= 3; i++) {
-            dreamPromises.push(Dream.create(generateDreamData(user._id)))
-          }
-          return Promise.all(dreamPromises);
+      User.hashPassword('test').
+      then(password => {
+        seed["password"] = password;
+        return User.create(seed);
+      })
+      .then(user => {
+        //save off a user for authenticated tests
+        if(index === 0) {
+          testUser = user;
+        }
+        const dreamPromises = [];
+        //create three dreams for each user
+        for (let i = 1; i <= 3; i++) {
+          dreamPromises.push(Dream.create(generateDreamData(user._id)))
+        }
+        return Promise.all(dreamPromises);
+      })
+      .then(results => {
+        // add each dream id to dream array in user document
+        const addDreamToUserPromises = [];
+        results.forEach(result => {
+          addDreamToUserPromises.push(addDreamToUser(result.author, result._id));
         })
-        .then(results => {
-          // add each dream id to dream array in user document
-          const addDreamToUserPromises = [];
-          results.forEach(result => {
-            addDreamToUserPromises.push(addDreamToUser(result.author, result._id));
-          })
-          return Promise.all(addDreamToUserPromises);
-        })
+        return Promise.all(addDreamToUserPromises);
+      })
     )
   });
 
@@ -68,7 +81,6 @@ function addDreamToUser(userId, dreamId) {
 function generateUserData() {
   return {
     username: faker.internet.userName(),
-    password: faker.internet.password(),
     screenName: faker.name.firstName(),
     firstName: faker.name.lastName(),
     lastName: faker.name.lastName()
@@ -108,7 +120,7 @@ describe('dreams API resource', function() {
     return closeServer();
   });  
 
-  describe('GET endpoint', function() {
+  describe('GET endpoint - unauthorized', function() {
 
     it('should return all public dreams', function() {
       let res;
@@ -127,7 +139,7 @@ describe('dreams API resource', function() {
         });      
     });
 
-    it('should return dreams with the right fields', function() {
+    it('should return public dreams with the right fields', function() {
       let resDream;
       return chai.request(app)
         .get('/dreams')
@@ -155,6 +167,109 @@ describe('dreams API resource', function() {
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
         });
     });    
+
+  });
+
+  describe('GET endpoint - authorized', function() {
+
+    it('Should send user dreams for authorized user', function() {
+      const token = jwt.sign(
+        {
+          user: {
+            id: testUser.id,
+            username: testUser.username,
+            firstName: testUser.firstName,
+            lastName: testUser.lastName
+          }
+        },
+        JWT_SECRET,
+        {
+          algorithm: 'HS256',
+          subject: testUser.username,
+          expiresIn: '7d'
+        }
+      );
+      return chai.request(app)
+        .get('/dreams')
+        .set('authorization', `Bearer ${token}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+        })
+    });
+
+    it('should return user dreams with the right fields', function() {
+      const token = jwt.sign(
+        {
+          user: {
+            id: testUser.id,
+            username: testUser.username,
+            firstName: testUser.firstName,
+            lastName: testUser.lastName
+          }
+        },
+        JWT_SECRET,
+        {
+          algorithm: 'HS256',
+          subject: testUser.username,
+          expiresIn: '7d'
+        }
+      );
+      let resDream;
+      return chai.request(app)
+        .get('/dreams?personal=true')
+        .set('authorization', `Bearer ${token}`)
+        .then(function(res) {
+          // so subsequent .then blocks can access response object
+          expect(res).to.have.status(200);
+          // otherwise our db seeding didn't work
+          expect(res.body.dreams).to.have.lengthOf.at.least(1);
+
+          res.body.dreams.forEach(function(dream) {
+            expect(dream).to.be.a('object');
+            expect(dream).to.include.keys('_id', 'title', 'text', 'publishDate');
+          });
+          resDream = res.body.dreams[0];          
+          return Dream.findById(resDream._id)
+            .populate('author', 'firstName lastName screenName');
+        })
+        .then(function(dream) {
+          expect(resDream._id).to.equal(dream.id);
+          expect(resDream.title).to.equal(dream.title);
+          expect(resDream.text).to.equal(dream.text);
+          expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
+        });
+    });
+
+    it('should return the correct number of user dreams', function() {
+      const token = jwt.sign(
+        {
+          user: {
+            id: testUser.id,
+            username: testUser.username,
+            firstName: testUser.firstName,
+            lastName: testUser.lastName
+          }
+        },
+        JWT_SECRET,
+        {
+          algorithm: 'HS256',
+          subject: testUser.username,
+          expiresIn: '7d'
+        }
+      );
+      let resDreamCount;
+      return chai.request(app)
+        .get('/dreams?personal=true')
+        .set('authorization', `Bearer ${token}`)
+        .then(function(res) {
+          resDreamCount = res.body.dreams.length;
+          return Dream.countDocuments({author: testUser._id});
+        })
+        .then(function (count) {
+          expect(count).to.equal(resDreamCount);
+        });
+    });
 
   });
 });
