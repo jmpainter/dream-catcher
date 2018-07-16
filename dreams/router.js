@@ -24,7 +24,7 @@ mongoose.Promise = global.Promise;
 
 
 //This endpoint allows an unauthenticated user to get public dreams
-//or an authenticated user to get public dream or their personal dream list
+//or an authenticated user to get public dreams or their personal dream list
 router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }), (req, res) => {
   if (req.user && req.query.personal === "true") {
   User
@@ -98,5 +98,64 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
       res.status(500).json({ message: 'Internal server error'});
     });
 });
+
+router.put('/:id', jsonParser, jwtAuth, (req, res) => {
+  if(!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+    console.error(message);
+    return res.status(400).json({message});
+  }
+
+  // Make sure that dream to update is actually one of the user's dreams 
+  Dream
+    .findById(req.params.id)
+    .then(dream => {
+      if(dream.author.toString() !== req.user.id) {
+        return res.status(401).json({message: 'Unauthorized'});
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+
+  const toUpdate = {};
+  const updateableFields = ['title', 'text', 'publishDate', 'public'];
+
+  updateableFields.forEach(field => {
+    if(field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Dream
+    .findByIdAndUpdate(req.params.id, {$set: toUpdate}, {'new': true})
+    .then(dream => {
+      console.log(dream);
+      res.status(200).json(dream.serialize())
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({message: 'Internal server error'});
+    });
+});
+
+router.delete('/:id', jwtAuth, (req, res) => {
+  // Make sure that dream to delete is actually one of the user's dreams 
+  Dream
+    .findById(req.params.id)
+    .then(dream => {
+      if(dream.id !== req.params.id) {
+        return res.status(401).json({message: 'Unauthorized'});
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  
+  Dream
+    .findByIdAndRemove(req.params.id)
+    .then(res.status(204).end())
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+})
 
 module.exports = {router};

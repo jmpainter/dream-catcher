@@ -21,6 +21,7 @@ chai.use(require('chai-datetime'));
 
 //save off a user for authenticated tests
 let testUser = {};
+let testUserToken;
 
 //first create users collection in order to give each dream an author
 function seedData() {
@@ -48,6 +49,8 @@ function seedData() {
         //save off a user for authenticated tests
         if(index === 0) {
           testUser = user;
+          testUser['id'] = user.id;
+          testUserToken = generateTestUserToken();
         }
         const dreamPromises = [];
         //create three dreams for each user
@@ -64,6 +67,7 @@ function seedData() {
         })
         return Promise.all(addDreamToUserPromises);
       })
+      .catch(err => console.error(err))
     )
   });
 
@@ -95,6 +99,25 @@ function generateDreamData(userId) {
     publishDate: faker.date.past(),
     public: true
   }
+}
+
+function generateTestUserToken() {
+  return jwt.sign(
+    {
+      user: {
+        id: testUser.id,
+        username: testUser.username,
+        firstName: testUser.firstName,
+        lastName: testUser.lastName
+      }
+    },
+    JWT_SECRET,
+    {
+      algorithm: 'HS256',
+      subject: testUser.username,
+      expiresIn: '7d'
+    }
+  );
 }
 
 function tearDownDb() {
@@ -136,7 +159,8 @@ describe('dreams API resource', function() {
         })
         .then(function(count) {
           expect(res.body.dreams).to.have.lengthOf(count);
-        });      
+        })
+        .catch(err => console.error(err));
     });
 
     it('should return public dreams with the right fields', function() {
@@ -165,7 +189,8 @@ describe('dreams API resource', function() {
           expect(resDream.author.screenName).to.equal(dream.author.screenName);
           expect(resDream.text).to.equal(dream.text);
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
-        });
+        })
+        .catch(err => console.error(err));
     });    
 
   });
@@ -173,52 +198,21 @@ describe('dreams API resource', function() {
   describe('GET endpoint - authorized', function() {
 
     it('Should send user dreams for authorized user', function() {
-      const token = jwt.sign(
-        {
-          user: {
-            id: testUser.id,
-            username: testUser.username,
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-          }
-        },
-        JWT_SECRET,
-        {
-          algorithm: 'HS256',
-          subject: testUser.username,
-          expiresIn: '7d'
-        }
-      );
       return chai.request(app)
         .get('/dreams')
-        .set('authorization', `Bearer ${token}`)
+        .set('authorization', `Bearer ${testUserToken}`)
         .then(res => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object');
         })
+        .catch(err => console.error(err));
     });
 
     it('should return user dreams with the right fields', function() {
-      const token = jwt.sign(
-        {
-          user: {
-            id: testUser.id,
-            username: testUser.username,
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-          }
-        },
-        JWT_SECRET,
-        {
-          algorithm: 'HS256',
-          subject: testUser.username,
-          expiresIn: '7d'
-        }
-      );
       let resDream;
       return chai.request(app)
         .get('/dreams?personal=true')
-        .set('authorization', `Bearer ${token}`)
+        .set('authorization', `Bearer ${testUserToken}`)
         .then(function(res) {
           // so subsequent .then blocks can access response object
           expect(res).to.have.status(200);
@@ -238,38 +232,132 @@ describe('dreams API resource', function() {
           expect(resDream.title).to.equal(dream.title);
           expect(resDream.text).to.equal(dream.text);
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
-        });
+        })
+        .catch(err => console.error(err));
     });
 
     it('should return the correct number of user dreams', function() {
-      const token = jwt.sign(
-        {
-          user: {
-            id: testUser.id,
-            username: testUser.username,
-            firstName: testUser.firstName,
-            lastName: testUser.lastName
-          }
-        },
-        JWT_SECRET,
-        {
-          algorithm: 'HS256',
-          subject: testUser.username,
-          expiresIn: '7d'
-        }
-      );
       let resDreamCount;
       return chai.request(app)
         .get('/dreams?personal=true')
-        .set('authorization', `Bearer ${token}`)
+        .set('authorization', `Bearer ${testUserToken}`)
         .then(function(res) {
           resDreamCount = res.body.dreams.length;
           return Dream.countDocuments({author: testUser._id});
         })
         .then(function (count) {
           expect(count).to.equal(resDreamCount);
-        });
+        })
+        .catch(err => console.error(err));
+    });
+  });
+
+  describe('POST endpoint', function() {
+
+    it('Should not allow an unauthorized request to post', function(){
+      return chai.request(app)
+        .post('/dreams')
+        .then(function(res) {
+          expect(res).to.have.status(401);
+        })
     });
 
+    it('Should add a new dream', function() {
+      const newDream = generateDreamData(testUser.id);
+
+      console.log(`newDream.publishDate: ${newDream.publishDate}`);
+
+      return chai.request(app)
+        .post('/dreams')
+        .set('authorization', `Bearer ${testUserToken}`)
+        .send(newDream)
+        .then(function(res) {
+          expect(res).to.have.status(201);
+          expect(res).to.be.json;
+          expect(res).to.be.a('object');
+          expect(res.body).to.include.keys('id', 'title', 'text', 'publishDate', 'public');
+          expect(res.body.id).to.not.be.null;
+          expect(res.body.title).to.equal(newDream.title);
+          expect(res.body.text).to.equal(newDream.text);
+
+          return Dream.findById(res.body.id);
+        })
+        .then(function(dream) {
+          expect(dream.title).to.equal(newDream.title);
+          expect(dream.text).to.equal(newDream.text);
+        })
+        .catch(err => console.error(err));
+    });
+  });
+
+  describe('PUT endpont', function() {
+
+    it('Should not allow an unauthorized request to put', function(){
+      return chai.request(app)
+        .put('/dreams')
+        .then(function(res) {
+          expect(res).to.have.status(404);
+        })
+        .catch(err => console.error(err));
+    });
+
+    it('Should update dream document with supplied fields', function() {
+      const updateData = {
+        title: 'New Title',
+        text: 'New text'
+      }
+
+      return Dream
+        .findOne({author: testUser.id})
+        .then(function(dream) {
+          updateData.id = dream.id;
+        return chai.request(app)
+          .put(`/dreams/${dream.id}`)
+          .set('authorization', `Bearer ${testUserToken}`)
+          .send(updateData)           
+        })
+        .then(function(res) {
+          expect(res).to.have.status(200);
+
+          return Dream.findById(updateData.id);
+        })
+        .then(function(dream) {
+          expect(dream.title).to.equal(updateData.title);
+          expect(dream.text).to.equal(updateData.text);
+        })
+        .catch(err => console.error(err));
+    });
+  });
+
+  describe('DELETE endpoint', function() {
+
+    it('Should not allow an unauthorized request to delete', function(){
+      return chai.request(app)
+        .delete('/dreams')
+        .then(function(res) {
+          expect(res).to.have.status(404);
+        })
+    });    
+
+    it('Should delete a dream by id', function() {
+      let dream;
+
+      return Dream
+        .findOne({author: testUser.id})
+        .then(function(_dream) {
+          dream = _dream;
+          return chai.request(app)
+            .delete(`/dreams/${dream.id}`)
+            .set('authorization', `Bearer ${testUserToken}`);
+        })
+        .then(function(res) {
+          expect(res).to.have.status(204);
+          return Dream.findById(dream.id);
+        })
+        .then(function(_dream) {
+          expect(_dream).to.be.null;
+        })
+        .catch(err => console.error(err));
+    });
   });
 });
