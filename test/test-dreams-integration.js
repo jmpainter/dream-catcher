@@ -265,8 +265,6 @@ describe('dreams API resource', function() {
     it('Should add a new dream', function() {
       const newDream = generateDreamData(testUser.id);
 
-      console.log(`newDream.publishDate: ${newDream.publishDate}`);
-
       return chai.request(app)
         .post('/dreams')
         .set('authorization', `Bearer ${testUserToken}`)
@@ -337,7 +335,25 @@ describe('dreams API resource', function() {
         .then(function(res) {
           expect(res).to.have.status(404);
         })
-    });    
+    });
+
+    it('Should not allow an authorized user to delete a dream that is not theirs', function(){
+      let dream;
+
+      return Dream
+        .findOne({author: {$not: {$eq: testUser.id}}})
+        .then(function(_dream) {
+          dream = _dream;
+
+          return chai.request(app)
+            .delete(`/dreams/${dream.id}`)
+            .set('authorization', `Bearer ${testUserToken}`);
+        })
+        .then(function(res) {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => console.error(err));
+    });       
 
     it('Should delete a dream by id', function() {
       let dream;
