@@ -5,8 +5,6 @@ function initDreamJournal() {
 }
 
 function getJournalDreams(callback) {
-  $.getJSON(API_URL + '/dreams?personal=true', callback);
-
   $.ajax({
     url: API_URL + '/dreams?personal=true',
     type: 'GET',
@@ -50,7 +48,7 @@ function handleJournalDreamClick() {
 }
 
 function handleNewDreamClick() {
-  $('#new-dream').click(function() {
+  $('.new-dream').click(function() {
     initDreamEditor();
     $('#dream-editor').css('visibility', 'visible');
     showView('dream-editor');

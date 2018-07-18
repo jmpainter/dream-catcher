@@ -15,11 +15,7 @@ function handleLoginSubmit() {
       data: JSON.stringify(data)
     })
     .done(function(data){
-      // debugger;
       Cookies.set('_dream-catcher-token', data.authToken, {expires: 1});
-      // $.ajaxSetup({
-      //   beforeSend: function(xhr, settings) { xhr.setRequestHeader('Authorization','Bearer ' + data.authToken ); } 
-      // });
       appState.isLoggedIn = true;
       $('.login-link').text('Log Out');
       initDreamJournal();

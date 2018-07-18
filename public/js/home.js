@@ -15,7 +15,6 @@ function displayLatestDreams(data) {
 
   let htmlString = '';
   appState.latestDreams.forEach(dream => {
-    console.log(dream);
     htmlString += `
       <li class="js-dream" data-dream-id="${dream._id}">
         <a href="javascript:void(0)">${dream.title}</a>
@@ -54,6 +53,7 @@ function handleLoginClick() {
 
 function handleLogoClick() {
   $('#logo').click(function(event) {
+    event.preventDefault();
     initRecentDreams();
     showView('recent-dreams');
   });

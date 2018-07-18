@@ -56,7 +56,6 @@
     <div class="view" id="login" hidden>
       <div class="row">
         <div class="col-4">
-          <!-- <form role="form" action="/login" accept-charset="UTF-8" method="post" id="login-form"> -->
           <form role="form" class="login-form">
             <fieldset>
               <legend>Log In</legend>
@@ -91,18 +90,21 @@
       </div>
     </div>
 
-    <!-- Dream Editor -->
+    <!-- Dream Editor Screen -->
+
     <div class="view" id="dream-editor">
       <div class="row">
         <div class="col-12">
           <form class="dream-editor-form" role="form" accept-charset="UTF-8" class="edit-form">
             <fieldset>
               <legend><span class="dream-editor-mode"></span> Dream</legend>
+              <span class="dream-editor-message">Hello World</span>
               <label for="dream-editor-title">Title:</label>
-              <input type="text" name="title" id="dream-editor-title" required>
+              <input type="text" name="title" id="dream-editor-title">
               <label for="dream-editor-text">Text:</label>
-              <textarea name="text" id="dream-editor-text" cols="90" rows="20" required></textarea>
+              <textarea name="text" id="dream-editor-text" rows="20"></textarea>
               <button type="submit"><span class="dream-editor-submit-label"></span></button>
+              <button class="dream-editor-back">Back</button>
             </fieldset>
           </form>
         </div>

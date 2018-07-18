@@ -3,7 +3,7 @@ function showDreamDetail(backView) {
   $('.dream-title').text(dream.title);
   $('.dream-author').text(dream.userName);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
-  $('.dream-text').text(dream.text);
+  $('.dream-text').html(dream.text);
   showView('dream-detail');
   handleDreamDetailBackClick(backView);
   if(appState.isLoggedIn === true) {
