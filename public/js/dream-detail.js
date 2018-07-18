@@ -1,5 +1,5 @@
-function showDreamDetail(dream, backView) {
-  appState.currentDream = dream;
+function showDreamDetail(backView) {
+  dream = appState.currentDream;
   $('.dream-title').text(dream.title);
   $('.dream-author').text(dream.userName);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());

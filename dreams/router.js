@@ -1,13 +1,3 @@
-  // route
-  // /dreams
-
-  // endpoints
-  // get: public
-  // get by userid: protected
-  // put: protected
-  // post: protected
-  // delete: protected
-
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -126,9 +116,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
       }
     })
     .then(dream => {
-      if(dream) {
-        res.status(200).json(dream.serialize())
-      }
+      if(dream) res.status(200).json(dream.serialize())
     })
     .catch(err => {
       console.error(err);

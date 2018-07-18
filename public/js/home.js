@@ -6,23 +6,24 @@ function initRecentDreams() {
 }
 
 function getLatestDreams(callback) {
-  setTimeout(() => callback(MOCK_LATEST_DREAMS), 100);
+  $.getJSON(API_URL + '/dreams', callback);
 }
 
 function displayLatestDreams(data) {
-  appState.latestDreams = data.latestDreams;
+  appState.latestDreams = data.dreams;
   $('main').prop('hidden', false);
 
   let htmlString = '';
-  for(index in data.latestDreams) {
+  appState.latestDreams.forEach(dream => {
+    console.log(dream);
     htmlString += `
-      <li class="js-dream" data-dream-id="${data.latestDreams[index].id}">
-        <a href="javascript:void(0)">${data.latestDreams[index].title}</a>
-        <span class="author">by ${data.latestDreams[index].userName}</span>
-        <span class="date">- ${new Date(data.latestDreams[index].publishDate).toDateString()}</span>
+      <li class="js-dream" data-dream-id="${dream._id}">
+        <a href="javascript:void(0)">${dream.title}</a>
+        <span class="author">by ${dream.author.screenName}</span>
+        <span class="date">- ${new Date(dream.publishDate).toDateString()}</span>
       </li>
     `;
-  }
+  });
   $('.dream-list').html(htmlString);
   showView('recent-dreams');
 }
@@ -34,8 +35,8 @@ function getAndDisplayLatestDreams() {
 function handleDreamClick() {
   $('.dream-list').on('click', '.js-dream', function(event) {
     dreamId = $(this).attr('data-dream-id');
-    const dream = appState.latestDreams.find(dream => dream.id === dreamId );
-    showDreamDetail(dream, 'recent-dreams');
+    appState.currentDream = appState.latestDreams.find(dream => dream._id === dreamId );
+    showDreamDetail('recent-dreams');
   });
 }
 
