@@ -23,12 +23,20 @@ function displayJournalDreams(data) {
   let htmlString = '';
   appState.journalDreams.forEach(dream => {
     htmlString += `
-      <tr class="js-journal-dream">
-        <td><a data-dream-id="${dream._id}" href="javascript:void(0)">${dream.title}</a></td>
-        <td><span class="journal-date">${new Date(dream.publishDate).toDateString()}</span></td>
-        <td><input data-dream-id="${dream._id}" type="checkbox" class="journal-public-check" ${dream.public ? 'checked' : ''}></td>
-        <td><span class="journal-public">Public</span></td>
-      </td>
+      <div class="row">
+        <div class="col-3">
+          <a data-dream-id="${dream._id}" href="javascript:void(0)">${dream.title}</a>
+        </div>
+        <div class="col-3">
+          <span class="journal-date">${new Date(dream.publishDate).toDateString()}</span>
+          <label for="public-check" class="journal-public">Public</span>;
+          <input data-dream-id="${dream._id}" type="checkbox" id="public-check" class="journal-public-check" ${dream.public ? 'checked' : ''}>
+        </div>
+        <div class="col-3">
+        </div>
+        <div class="col-3">
+        </div>
+      </div>
     `;
   });
   $('.dream-journal-list').html(htmlString);

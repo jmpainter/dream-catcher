@@ -59,6 +59,7 @@
       <div class="row">
         <div class="col-4">
           <form role="form" class="login-form">
+            <span class="login-message"></span>
             <fieldset>
               <legend>Log In</legend>
               <label for="username">User Name:</label>
@@ -67,31 +68,37 @@
               <input type="password" name="password" id="password" required>
               <button type="submit">Submit</button>
             </fieldset>
-            <span class="login-message">Hello</span>
           </form>
         </div>
         <div class="col-4"></div>
         <div class="col-4"></div>
       </div>
     </div>
-
-    <!-- Dream Journal Screen -->
-
+    
+    <!-- Dream journal screen -->
+    
     <div class="view" id="dream-journal" hidden>
       <div class="row">
-        <div class="col-6">
-          <div class="dream-journal-containter">
-            <span class="dream-journal-message"></span>
-            <h1>My Dream Journal</h1>
-            <button class="new-dream">New Dream</button>
-            <table class="dream-journal-list"> 
-            </table>
-          </div>
+        <div class="col-3">
+          <h1>My Dream Journal</h1>
         </div>
-        <div class="col-6">
+        <div class="col-3">
+            <button class="new-dream">New Dream</button>
+        </div>
+        <div class="col-3">
+        </div>
+        <div class="col-3">
         </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col-12">
+          <span class="dream-journal-message"></span>
+        </div>
+      </div>
+      <div class="dream-journal-list">
+      </div>
+    </div>    
+
 
     <!-- Dream Editor Screen -->
 

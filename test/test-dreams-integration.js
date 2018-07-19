@@ -370,8 +370,12 @@ describe('dreams API resource', function() {
           expect(res).to.have.status(204);
           return Dream.findById(dream.id);
         })
-        .then(function(_dream) {
-          expect(_dream).to.be.null;
+        .then(function(dream) {
+          expect(dream).to.be.null;
+          return User.findById(testUser.id);
+        })
+        .then(function(user) {
+          expect(user.dreams).to.not.include(dream.id);
         })
         .catch(err => console.error(err));
     });

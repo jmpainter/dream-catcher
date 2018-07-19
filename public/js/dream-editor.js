@@ -1,5 +1,8 @@
 function initDreamEditor(dream){
-  //TODO: clean out old text
+  //clean out any old text
+  $('#dream-editor-title').val('');
+  nicEditors.findEditor('dream-editor-text').setContent('');
+
   if(!dream) {
     appState.editorMode = 'new';
     $('.dream-editor-mode').text('New');

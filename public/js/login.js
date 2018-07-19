@@ -18,6 +18,8 @@ function handleLoginSubmit() {
       Cookies.set('_dream-catcher-token', data.authToken, {expires: 1});
       appState.isLoggedIn = true;
       $('.login-link').text('Log Out');
+      $('#username').val('');
+      $('#password').val('');
       initDreamJournal();
       showView('dream-journal');
     })

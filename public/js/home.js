@@ -46,7 +46,9 @@ function handleLoginClick() {
       showView('login');
     } else {
       appState.isLoggedIn = false;
-      $('.login-link').text('Log Out');      
+      $('.login-link').text('Log In');
+      initRecentDreams();
+      showView('recent-dreams');     
     }
   });
 }

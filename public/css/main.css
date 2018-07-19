@@ -102,15 +102,22 @@ label {
 }
 .dream-journal-list {
   width: 100%;
+  line-height: 2.1em;
 }
 .dream-journal-list a {
   font-size: 18px;
 }
 .journal-date, .journal-public {
   font-size: 14px;
+  margin-right: 10px;
+}
+.journal-public {
+  margin-left: 11px;
+  display: inline-block;
+  margin: 0;
 }
 .journal-public-check {
-  margin: 0px 0px 0px 12px;
+  margin-left: 0;
   vertical-align: middle;
   position: relative;
   top: -1px;
@@ -118,12 +125,11 @@ label {
 .dream-journal-containter {
   width: 90%;
 }
-.dream-journal-containter h1 {
+#dream-journal h1 {
   display: inline-block;
   margin: 0 0 10px 0;
 }
 .new-dream {
-  float: right;
   margin-top: 5px;
 }
 .dream-journal-list td {
@@ -155,4 +161,10 @@ label {
 }
 .dream-editor-back {
   float: right;
+}
+/* Mobile */
+@media only screen and (max-width: 640px) {
+  header h1 {
+    font-size: 26px;
+  }
 }

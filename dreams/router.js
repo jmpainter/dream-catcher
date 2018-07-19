@@ -83,9 +83,12 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
       return User.findById(req.user.id)
     })
     .then(user => {
+      //add dream reference to user dreams array
       user.dreams.push(dream._id);
-      user.save();
-      res.status(201).json(dream.serialize());
+      return user.save();
+    })
+    .then(user => {
+      if(user) res.status(201).json(dream.serialize());
     })
     .catch(err => {
       console.error(err);
@@ -120,7 +123,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
       }
     })
     .then(dream => {
-      if(dream) res.status(200).json(dream.serialize())
+      if(dream) res.status(200).json(dream.serialize());
     })
     .catch(err => {
       console.error(err);
@@ -129,23 +132,40 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.delete('/:id', jwtAuth, (req, res) => {
-  //TODO: delete dream from ebedded user's list
   // Make sure that dream to delete is actually one of the user's dreams 
   Dream
-    .findById(req.params.id)
-    .then(dream => {
-      if(!dream) {
-        return res.status(404).json({message: 'Not Found'});
-      } else if(dream.author.toString() !== req.user.id) {
-        return res.status(401).json({message: 'Unauthorized'});
-      } else {
-        return Dream.findByIdAndRemove(req.params.id)
-      }
-    })
-    .then(dream => {
-      if(dream) res.status(204).end()
-    })
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
+  .findById(req.params.id)
+  .then(dream => {
+    if(!dream) {
+      res.status(404).json({message: 'Not Found'});
+      throw new Error('abort promise chain');
+    } else if(dream.author.toString() !== req.user.id) {
+      res.status(401).json({message: 'Unauthorized'});
+      throw new Error('abort promise chain');
+    } else {
+      return Dream.findByIdAndRemove(req.params.id)
+    }
+  })
+  .then(dream => {
+    if(dream) {
+      return User.findById(req.user.id);
+    }
+  })
+  .then(user => {
+    //delete dream from ebedded user's list of dreams
+    const dreamIndex = user.dreams.indexOf(mongoose.Types.ObjectId(req.params.id));
+    user.dreams.splice(dreamIndex, 1);
+    return user.save();
+  })
+  .then(user => {
+    if(user) res.status(204).end();
+  })
+  .catch(err => {
+    if(err.message !== 'abort promise chain') {
+      console.error(err);
+      res.status(500).json({message: 'Internal server error'});
+    }
+  });
 })
 
 module.exports = {router};
