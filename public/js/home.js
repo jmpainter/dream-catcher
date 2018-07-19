@@ -52,8 +52,7 @@ function handleLoginClick() {
 }
 
 function handleLogoClick() {
-  $('#logo').click(function(event) {
-    event.preventDefault();
+  $('.logo').click(function(event) {
     initRecentDreams();
     showView('recent-dreams');
   });

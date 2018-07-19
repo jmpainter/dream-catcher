@@ -16,6 +16,10 @@ mongoose.Promise = global.Promise;
 //This endpoint allows an unauthenticated user to get public dreams
 //or an authenticated user to get public dreams or their personal dream list
 router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }), (req, res) => {
+  if(!req.user && req.query.personal === "true") {
+    return res.status(401).json({message: 'Unauthorized'});
+  }
+  
   if (req.user && req.query.personal === "true") {
     User
       .findById(req.user.id)
@@ -125,13 +129,14 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.delete('/:id', jwtAuth, (req, res) => {
+  //TODO: delete dream from ebedded user's list
   // Make sure that dream to delete is actually one of the user's dreams 
   Dream
     .findById(req.params.id)
     .then(dream => {
       if(!dream) {
         return res.status(404).json({message: 'Not Found'});
-      } else if(dream.author !== req.user.id) {
+      } else if(dream.author.toString() !== req.user.id) {
         return res.status(401).json({message: 'Unauthorized'});
       } else {
         return Dream.findByIdAndRemove(req.params.id)

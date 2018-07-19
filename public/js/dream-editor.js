@@ -1,4 +1,5 @@
 function initDreamEditor(dream){
+  //TODO: clean out old text
   if(!dream) {
     appState.editorMode = 'new';
     $('.dream-editor-mode').text('New');
@@ -10,18 +11,20 @@ function initDreamEditor(dream){
     $('#dream-editor-title').val(dream.title);
     nicEditors.findEditor('dream-editor-text').setContent(dream.text);
   }
+  $('.dream-editor-message').css('display', 'none');
   handleDreamEditSubmit();
   handleDreamEditBack();
 }
 
 function postOrPutDream(postOrPut) {
   const title = $('#dream-editor-title').val();
-  const text = $('#dream-editor-text').val();
+  const text = nicEditors.findEditor('dream-editor-text').getContent();
 
-  if(title === '' || text === '<br>') {
+  if(title === '' || text === '<br>' || text === '') {
     $('.dream-editor-message')
       .text('Please enter a title and text.')
       .css('display', 'block');
+      handleDreamEditSubmit();
     return;
   }
 
@@ -43,8 +46,7 @@ function postOrPutDream(postOrPut) {
     data: JSON.stringify(_data),
     success: postOrPutSuccess,
     error: postOrPutError
-  })
-  .catch(err => console.log(err));
+  });
 }
 
 function postOrPutSuccess() {
@@ -56,10 +58,11 @@ function postOrPutError() {
   $('.dream-editor-message')
   .text('There has been an error with your submission.')
   .css('display', 'block');
+  handleDreamEditSubmit();
 }
 
 function handleDreamEditSubmit() {
-  $('#dream-editor').submit(function(event) {
+  $('.dream-editor-form').off().submit(function(event) {
     event.preventDefault();
     if(appState.editorMode === 'new') {
       postOrPutDream('POST');
@@ -70,7 +73,6 @@ function handleDreamEditSubmit() {
 }
 
 function handleDreamEditBack() {
-  console.log('back');
   $('.dream-editor-back').click(function(event) {
     initDreamJournal();
     showView('dream-journal');    

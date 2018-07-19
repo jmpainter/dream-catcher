@@ -14,7 +14,6 @@ mongoose.Promise = global.Promise;
 const app = express();
 app.use(express.static('public'));
 app.use(morgan('common'));
-app.use(logRequest);
 
 // CORS
 app.use(function (req, res, next) {
@@ -34,16 +33,6 @@ passport.use(jwtStrategy);
 passport.use(new AnonymousStrategy());
 
 let server;
-
-//debugging - temp
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-function logRequest(req, res, next) {
-  // console.log(req);
-  console.log(req.get('Bearer'));
-  next();
-}
-app.use(logRequest);
 
 function logErrors(err, req, res, next) {
   console.error(err);
