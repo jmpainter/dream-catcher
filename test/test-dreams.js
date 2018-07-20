@@ -67,7 +67,7 @@ function seedData() {
         })
         return Promise.all(addDreamToUserPromises);
       })
-      .catch(err => console.error(err))
+      .catch(err => handleError(err))
     )
   });
 
@@ -78,8 +78,14 @@ function addDreamToUser(userId, dreamId) {
   return User.findById(userId)
     .then(user => {
       user.dreams.push(dreamId);
-      user.save()
+      return user.save();
     })
+    .then(user => {
+      if(!user) {
+        throw new Error('User not created');
+      }
+    })
+    .catch(err => handleError(err));
 }
 
 function generateUserData() {
@@ -125,6 +131,14 @@ function tearDownDb() {
   return mongoose.connection.dropDatabase();
 }
 
+function handleError(err) {
+  if (err instanceof chai.AssertionError) {
+    throw err;
+  } else {
+    console.err(err);
+  }  
+}
+
 describe('dreams API resource', function() {
   
   before(function() {
@@ -160,7 +174,7 @@ describe('dreams API resource', function() {
         .then(function(count) {
           expect(res.body.dreams).to.have.lengthOf(count);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
 
     it('should return public dreams with the right fields', function() {
@@ -190,7 +204,7 @@ describe('dreams API resource', function() {
           expect(resDream.text).to.equal(dream.text);
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });    
 
   });
@@ -205,7 +219,7 @@ describe('dreams API resource', function() {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object');
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
 
     it('should return user dreams with the right fields', function() {
@@ -233,7 +247,7 @@ describe('dreams API resource', function() {
           expect(resDream.text).to.equal(dream.text);
           expect(new Date(resDream.publishDate)).to.equalDate(new Date(dream.publishDate));
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
 
     it('should return the correct number of user dreams', function() {
@@ -248,7 +262,7 @@ describe('dreams API resource', function() {
         .then(function (count) {
           expect(count).to.equal(resDreamCount);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
   });
 
@@ -284,7 +298,7 @@ describe('dreams API resource', function() {
           expect(dream.title).to.equal(newDream.title);
           expect(dream.text).to.equal(newDream.text);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
   });
 
@@ -296,7 +310,7 @@ describe('dreams API resource', function() {
         .then(function(res) {
           expect(res).to.have.status(404);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
 
     it('Should update dream document with supplied fields', function() {
@@ -323,7 +337,7 @@ describe('dreams API resource', function() {
           expect(dream.title).to.equal(updateData.title);
           expect(dream.text).to.equal(updateData.text);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
   });
 
@@ -352,7 +366,7 @@ describe('dreams API resource', function() {
         .then(function(res) {
           expect(res).to.have.status(401);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });       
 
     it('Should delete a dream by id', function() {
@@ -377,7 +391,7 @@ describe('dreams API resource', function() {
         .then(function(user) {
           expect(user.dreams).to.not.include(dream.id);
         })
-        .catch(err => console.error(err));
+        .catch(err => handleError(err));
     });
   });
 });

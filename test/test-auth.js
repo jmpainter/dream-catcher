@@ -12,6 +12,14 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
+function handleError(err) {
+  if (err instanceof chai.AssertionError) {
+    throw err;
+  } else {
+    console.err(err);
+  }  
+}
+
 describe('Auth endpoints', function () {
   let id = null;
   const username = 'exampleUser';
@@ -55,7 +63,8 @@ describe('Auth endpoints', function () {
         .post('/auth/login')
         .then(res => {
           expect(res).to.have.status(400);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should reject requests with incorrect usernames', function () {
       return chai
@@ -64,7 +73,8 @@ describe('Auth endpoints', function () {
         .send({ username: 'wrongUsername', password })        
         .then(res => {
           expect(res).to.have.status(401);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should reject requests with incorrect passwords', function () {
       return chai
@@ -73,7 +83,8 @@ describe('Auth endpoints', function () {
         .send({ username, password: 'wrongPassword' })
         .then(res => {
           expect(res).to.have.status(401);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should return a valid auth token', function () {
       return chai
@@ -95,7 +106,8 @@ describe('Auth endpoints', function () {
             firstName,
             lastName
           });
-        });
+        })
+        .catch(err => handleError(err));
     });
   });
 
@@ -106,7 +118,8 @@ describe('Auth endpoints', function () {
         .post('/auth/refresh')
         .then(res => {
           expect(res).to.have.status(401);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should reject requests with an invalid token', function () {
       const token = jwt.sign(
@@ -128,7 +141,8 @@ describe('Auth endpoints', function () {
         .set('Authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(401);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should reject requests with an expired token', function () {
       const token = jwt.sign(
@@ -153,7 +167,8 @@ describe('Auth endpoints', function () {
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(401);
-        });
+        })
+        .catch(err => handleError(err));
     });
     it('Should return a valid auth token with a newer expiry date', function () {
       const token = jwt.sign(
@@ -191,7 +206,8 @@ describe('Auth endpoints', function () {
             lastName
           });
           expect(payload.exp).to.be.at.least(decoded.exp);
-        });
+        })
+        .catch(err => handleError(err));
     });
   });
 });

@@ -6,7 +6,7 @@ const passport = require('passport');
 const AnonymousStrategy = require('passport-anonymous').Strategy;
 
 const { router: dreamsRouter } = require('./dreams');
-// const { router: usersRouter } = require('./users');
+const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 mongoose.Promise = global.Promise;
@@ -43,6 +43,7 @@ app.use(logErrors);
 
 app.use('/dreams', dreamsRouter);
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
