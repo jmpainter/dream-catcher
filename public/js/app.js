@@ -1,9 +1,6 @@
-const IS_LOCAL = true;
-let API_URL;
-if(IS_LOCAL) {
-  API_URL = 'http://localhost:8080';
-} else {
-  API_URL = 'https://afternoon-wave-33296';
+let API_URL = window.location.protocol + '//' + window.location.hostname;
+if(window.location.port) {
+  API_URL = API_URL + `:${window.location.port}`;
 }
 
 const appState = {
@@ -25,13 +22,13 @@ function showView(viewName) {
 
 function startApp() {
   //for manually setting dream journal view
-  $('main').prop('hidden', false);
-  initDreamJournal();
-  appState.isLoggedIn = true;
-  showView('dream-journal');
+  // $('main').prop('hidden', false);
+  // initDreamJournal();
+  // appState.isLoggedIn = true;
+  // showView('dream-journal');
 
  // actual start app code
-  // initRecentDreams();
-  // showView('recent-dreams');
+  initRecentDreams();
+  showView('recent-dreams');
 }
 $(startApp);
