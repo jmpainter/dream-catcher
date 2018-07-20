@@ -5,8 +5,8 @@ const dreamSchema = Schema({
   title: {type: String, required: true},
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
   text: {type: String, required: true},
-  publishDate: {type: Date, required: true},
-  public: {type: Boolean, required: true}
+  publishDate: {type: Date, default: Date.now},
+  public: {type: Boolean, default: false}
 });
 
 dreamSchema.methods.serialize = function() {
@@ -22,5 +22,3 @@ dreamSchema.methods.serialize = function() {
 const Dream = mongoose.model('Dream', dreamSchema);
 
 module.exports = {Dream};
-
-

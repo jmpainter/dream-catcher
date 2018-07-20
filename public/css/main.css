@@ -22,19 +22,23 @@ body {
   font-family: 'Nunito Sans', sans-serif;
 }
 header {
-  padding: 20px 0px;
+  padding: 10px 0px;
   border-bottom: 1px solid #bebebe;
 }
 header h1 {
   font-family: 'Paprika', cursive;
-  font-size: 34px;
+  font-size: 31px;
   letter-spacing: -1px;
 }
 .nav-links {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 5px;
+  right: 25px;
   list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: black;
 }
 header .row {
   position: relative;
@@ -95,14 +99,29 @@ label {
   margin: 8px 0 2px;
   display: block;  
 }
+.login-message, .dream-editor-message, .dream-journal-message, .dream-detail-message {
+  display: none;
+  font-size: 17px;
+  color: rgb(243, 55, 55);
+}
+.dream-journal-list {
+  width: 100%;
+  line-height: 2.1em;
+}
 .dream-journal-list a {
   font-size: 18px;
 }
 .journal-date, .journal-public {
   font-size: 14px;
+  margin-right: 10px;
+}
+.journal-public {
+  margin-left: 11px;
+  display: inline-block;
+  margin: 0;
 }
 .journal-public-check {
-  margin: 0px 0px 0px 12px;
+  margin-left: 0;
   vertical-align: middle;
   position: relative;
   top: -1px;
@@ -110,12 +129,12 @@ label {
 .dream-journal-containter {
   width: 90%;
 }
-.dream-journal-containter h1 {
-  display: inline;
+#dream-journal h1 {
+  display: inline-block;
+  margin: 0 0 10px 0;
 }
-#new-dream {
-  float: right;
-  margin: 5px;
+.new-dream {
+  margin-top: 5px;
 }
 .dream-journal-list td {
   padding: 8px 7px 0 0;
@@ -132,9 +151,36 @@ label {
 #dream-editor {
   visibility: hidden;
 }
+#dream-editor-text {
+  width: 100%;
+}
 .logo {
   cursor: pointer;
 }
-.dream-edit {
+.dream-edit, .dream-delete {
   float: right;
+}
+.dream-delete {
+  margin-left: 10px;
+}
+.dream-editor-back {
+  float: right;
+}
+.mobile {
+  display: none;
+}
+/* Mobile */
+@media only screen and (max-width: 640px) {
+  header h1 {
+    font-size: 26px;
+  }
+  .mobile {
+    display: inline;
+  }
+  main {
+    padding-top: 20px;
+  }
+  .dream-editor-form {
+    width: 100%;
+  }
 }

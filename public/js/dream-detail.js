@@ -1,16 +1,19 @@
-function showDreamDetail(dream, backView) {
-  appState.currentDream = dream;
+function showDreamDetail(backView) {
+  dream = appState.currentDream;
   $('.dream-title').text(dream.title);
   $('.dream-author').text(dream.userName);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
-  $('.dream-text').text(dream.text);
+  $('.dream-text').html(dream.text);
   showView('dream-detail');
   handleDreamDetailBackClick(backView);
-  if(appState.isLoggedIn === true) {
+  if(appState.isLoggedIn === true && appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
     $('.dream-edit').css('visibility', 'visible');
+    $('.dream-delete').css('visibility', 'visible');
     handleDreamEditClick();
+    handleDreamDeleteClick();
   } else {
     $('.dream-edit').css('visibility', 'hidden');
+    $('.dream-delete').css('visibility', 'hidden');
   }
 }
 
@@ -24,5 +27,38 @@ function handleDreamEditClick() {
   $('.dream-edit').click(function() {
     initDreamEditor(appState.currentDream);
     showView('dream-editor');
+  });
+}
+
+function deleteDream() {
+  if(confirm('Are you sure you want to delete this dream?')) {
+    const _url = `${API_URL}/dreams/${appState.currentDream._id}`;
+    $.ajax({
+      url: _url,
+      type: 'DELETE',
+      beforeSend: function (xhr) {
+          xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+      },
+      success: deleteDreamSuccess,
+      error: deleteDreamError
+    });
+  }
+}
+
+function deleteDreamSuccess() {
+  initDreamJournal();
+  showView('dream-journal');
+}
+
+function deleteDreamError() {
+  $('.dream-detail-message')
+    .text('There was an error in deleting your dream.')
+    .css('display', 'block');
+  handleDreamDeleteClick();
+}
+
+function handleDreamDeleteClick() {
+  $('.dream-delete').off().click(function() {
+    deleteDream();
   });
 }

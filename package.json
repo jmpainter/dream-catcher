@@ -4,7 +4,7 @@
   "description": "DreamCatcher app",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --timeout 15000 --exit"
   },
   "author": "Josh Painter",
   "license": "ISC",
@@ -17,11 +17,13 @@
     "mongoose": "^5.2.2",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
+    "passport-anonymous": "^1.0.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "chai-datetime": "^1.5.0",
     "chai-http": "^4.0.0",
     "faker": "^4.1.0",
     "mocha": "^5.2.0"
