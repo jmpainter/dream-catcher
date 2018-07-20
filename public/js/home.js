@@ -17,7 +17,7 @@ function displayLatestDreams(data) {
   appState.latestDreams.forEach(dream => {
     htmlString += `
       <li class="js-dream" data-dream-id="${dream._id}">
-        <a href="javascript:void(0)">${dream.title}</a>
+        <a href="javascript:void(0)">${dream.title}</a><br class="mobile"/>
         <span class="author">by ${dream.author.screenName}</span>
         <span class="date">- ${new Date(dream.publishDate).toDateString()}</span>
       </li>

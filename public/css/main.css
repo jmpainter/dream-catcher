@@ -32,9 +32,13 @@ header h1 {
 }
 .nav-links {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 5px;
+  right: 25px;
   list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: black;
 }
 header .row {
   position: relative;
@@ -162,9 +166,21 @@ label {
 .dream-editor-back {
   float: right;
 }
+.mobile {
+  display: none;
+}
 /* Mobile */
 @media only screen and (max-width: 640px) {
   header h1 {
     font-size: 26px;
+  }
+  .mobile {
+    display: inline;
+  }
+  main {
+    padding-top: 20px;
+  }
+  .dream-editor-form {
+    width: 100%;
   }
 }
