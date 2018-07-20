@@ -4,6 +4,7 @@
   "description": "DreamCatcher app",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon server.js",
     "test": "mocha --timeout 15000 --exit"
   },
   "author": "Josh Painter",
