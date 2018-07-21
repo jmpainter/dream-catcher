@@ -135,7 +135,7 @@ function handleError(err) {
   if (err instanceof chai.AssertionError) {
     throw err;
   } else {
-    console.err(err);
+    console.error(err);
   }  
 }
 

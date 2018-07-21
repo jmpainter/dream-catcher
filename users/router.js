@@ -21,7 +21,7 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ['username', 'screenName', 'password', 'firstName'];
+  const stringFields = ['username', 'screenName', 'password', 'firstName', 'lastName'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
@@ -32,6 +32,20 @@ router.post('/', jsonParser, (req, res) => {
       reason: 'ValidationError',
       message: 'Incorrect field type: expected string',
       location: nonStringField
+    });
+  }
+
+  const explicitlyTrimmedFields = ['username', 'password'];
+  const nonExplicitlyTrimmedField = explicitlyTrimmedFields.find(
+    field => req.body[field].trim() !== req.body[field]
+  );
+
+  if(nonExplicitlyTrimmedField) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'ValidationError',
+      message: 'Can not begin or end with whitespace',
+      location: nonExplicitlyTrimmedField
     });
   }
 
@@ -69,9 +83,9 @@ router.post('/', jsonParser, (req, res) => {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
-      message: tooSmallField
-        ? `${tooSmallField} Must be at least ${sizedFields[tooSmallField].min} characters long`
-        : `${tooLargeField} Must be at most ${sizedFields[tooLargeField].max} characters long`,
+      message: tooSmallField 
+        ? `Must be at least ${sizedFields[tooSmallField].min} characters long`
+        : `Must be at most ${sizedFields[tooLargeField].max} characters long`,
       location: tooSmallField || tooLargeField
     });
   }
