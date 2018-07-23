@@ -97,7 +97,7 @@ router.post('/', jsonParser, (req, res) => {
   screenName = screenName.trim();
 
   return User.find({username})
-    .count()
+    .countDocuments()
     .then(count => {
       if(count > 0) {
         // existing user with same username

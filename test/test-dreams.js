@@ -169,7 +169,7 @@ describe('dreams API resource', function() {
           expect(res).to.have.status(200);
           // otherwise our db seeding didn't work
           expect(res.body.dreams).to.have.lengthOf.at.least(1);
-          return Dream.count();
+          return Dream.countDocuments();
         })
         .then(function(count) {
           expect(res.body.dreams).to.have.lengthOf(count);

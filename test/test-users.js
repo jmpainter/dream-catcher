@@ -243,7 +243,7 @@ describe('users API resource', function() {
         .post('/users')
         .send({
           username,
-          password: 'pass',
+          password: '123456',
           firstName,
           lastName,
           screenName
@@ -255,7 +255,94 @@ describe('users API resource', function() {
           expect(res.body.location).to.equal('password');
         })
         .catch(err => handleError(err));
-    });    
+    });
 
+    it('Should reject users with a password greater than 72 characters', function() {
+      return chai
+        .request(app)
+        .post('/users')
+        .send({
+          username,
+          password: new Array(73).fill('a').join(''),
+          firstName,
+          lastName,
+          screenName
+        })
+        .then(res => {
+          expect(res).to.have.status(422);
+          expect(res.body.reason).to.equal('ValidationError');
+          expect(res.body.message).to.equal('Must be at most 72 characters long');
+          expect(res.body.location).to.equal('password');
+        })
+        .catch(err => handleError(err));
+    });
+    
+    it('Should reject a request with a duplicate username', function() {
+      return chai
+        .request(app)
+        .post('/users')
+        .send({
+          username,
+          password,
+          firstName,
+          lastName,
+          screenName
+        })
+        .then(() => {
+          return chai
+          .request(app)
+          .post('/users')
+          .send({
+            username,
+            password,
+            firstName,
+            lastName,
+            screenName
+          })
+        })
+        .then(res => {
+          expect(res).to.have.status(422);
+          expect(res.body.reason).to.equal('ValidationError');
+          expect(res.body.message).to.equal('Username already taken');
+        })
+        .catch(err => handleError(err));
+    });
+
+    it('Should create a new user', function() {
+      let user;
+      return chai
+        .request(app)
+        .post('/users')
+        .send({
+          username,
+          password,
+          firstName,
+          lastName,
+          screenName
+        })
+        .then(res => {
+          expect(res).to.have.status(201);
+          expect(res.body).to.be.an('object');
+          expect(res.body.username).to.equal(username);
+          expect(res.body.firstName).to.equal(firstName);
+          expect(res.body.lastName).to.equal(lastName);
+          expect(res.body.screenName).to.equal(screenName);
+          user = res.body;
+          return User.findById(user.id)
+        })
+        .then(_user => {
+          expect(_user).to.not.be.null;
+          expect(_user.id).to.equal(user.id);
+          expect(_user.firstName).to.equal(user.firstName);
+          expect(_user.lastName).to.equal(user.lastName);
+          expect(_user.username).to.equal(user.username);
+          expect(_user.screenName).to.equal(user.screenName);
+          return _user.validatePassword(password);
+        })
+        .then(passwordIsCorrect => {
+          expect(passwordIsCorrect).to.be.true;
+        })
+        .catch(err => handleError(err));
+    })
   });
 });
