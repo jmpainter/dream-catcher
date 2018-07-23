@@ -27,6 +27,11 @@ function startApp() {
   // appState.isLoggedIn = true;
   // showView('dream-journal');
 
+  // $('main').prop('hidden', false);
+  // initDreamJournal();
+  // appState.isLoggedIn = true;
+  // showView('create-account');  
+
  // actual start app code
   initRecentDreams();
   showView('recent-dreams');

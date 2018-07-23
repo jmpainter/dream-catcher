@@ -2,6 +2,7 @@ function initRecentDreams() {
   getAndDisplayLatestDreams();
   handleDreamClick();
   handleLoginClick();
+  handleRegisterClick();
   handleLogoClick();
 }
 
@@ -47,9 +48,17 @@ function handleLoginClick() {
     } else {
       appState.isLoggedIn = false;
       $('.login-link').text('Log In');
+      $('.register-link').css('visibility', 'visible');
       initRecentDreams();
       showView('recent-dreams');     
     }
+  });
+}
+
+function handleRegisterClick() {
+  $('.register-link').click(function(event) {
+    initCreateAccount();
+    showView('create-account');
   });
 }
 
