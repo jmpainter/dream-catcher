@@ -16,8 +16,8 @@
       <div class="col-12">
         <h1 class="logo">Dream Catcher</h1>
         <ul class="nav-links">
-          <li class=""></li>
           <li><a class="login-link" href="javascript:void(0)">Log In</a></li>
+          <li><a class="register-link" href="javascript:void(0)">Register</a></li>
         </ul>
       </div>
     </div>
@@ -74,6 +74,34 @@
         <div class="col-4"></div>
       </div>
     </div>
+
+    <!-- Create Account Screen -->
+
+    <div class="view" id="create-account" hidden>
+      <div class="row">
+        <div class="col-6">
+          <form role="form" class="create-account-form">
+            <fieldset>
+              <legend>Create New Account</legend>
+              <span class="account-create-message"></span>
+              <span class="create-account-message"></span>
+              <label for="account-username">User Name:</label>
+              <input type="text" name="account-username" id="account-username" required>
+              <label for="account-password">Password:</label>
+              <input type="password" name="account-password" id="account-password" required>
+              <label for="account-first-name">First Name:</label>
+              <input type="text" name="account-first-name" id="account-first-name">
+              <label for="account-last-name">Last Name:</label>
+              <input type="text" name="account-last-name" id="account-last-name">
+              <label for="account-screen-name">Screen Name (for public dreams):</label>
+              <input type="text" name="account-screen-name" id="account-creen-name">
+              <button type="submit">Create</button>
+            </fieldset>
+          </form>
+        </div>
+        <div class="col-6"></div>
+      </div>
+    </div>    
     
     <!-- Dream journal screen -->
     
@@ -135,5 +163,6 @@
   <script src="js/dream-journal.js"></script>
   <script src="js/dream-editor.js"></script>
   <script src="js/login.js"></script>
+  <script src="js/create-account.js"></script>
 </body>
 </html>

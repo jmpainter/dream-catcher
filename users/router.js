@@ -30,7 +30,7 @@ router.post('/', jsonParser, (req, res) => {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
-      message: 'Incorrect field type: expected string',
+      message: 'incorrect field type: expected string',
       location: nonStringField
     });
   }
@@ -44,7 +44,7 @@ router.post('/', jsonParser, (req, res) => {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
-      message: 'Can not begin or end with whitespace',
+      message: 'can not begin or end with whitespace',
       location: nonExplicitlyTrimmedField
     });
   }
@@ -84,8 +84,8 @@ router.post('/', jsonParser, (req, res) => {
       code: 422,
       reason: 'ValidationError',
       message: tooSmallField 
-        ? `Must be at least ${sizedFields[tooSmallField].min} characters long`
-        : `Must be at most ${sizedFields[tooLargeField].max} characters long`,
+        ? `must be at least ${sizedFields[tooSmallField].min} characters long`
+        : `must be at most ${sizedFields[tooLargeField].max} characters long`,
       location: tooSmallField || tooLargeField
     });
   }
@@ -104,8 +104,7 @@ router.post('/', jsonParser, (req, res) => {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
-          location: 'username'
+          message: 'sorry, that username is already taken'
         });
       }
       // no existing user with this username
