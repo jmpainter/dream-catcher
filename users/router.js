@@ -9,7 +9,7 @@ const jsonParser = bodyParser.json();
 mongoose.Promise = global.Promise;
 
 router.post('/', jsonParser, (req, res) => {
-  const requiredFields = ['username', 'password'];
+  const requiredFields = ['username', 'password', 'screenName', 'firstName', 'lastName'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if(missingField) {
