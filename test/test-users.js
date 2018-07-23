@@ -127,7 +127,7 @@ describe('users API resource', function() {
           password,
           firstName: {value: 'value'},
           lastName,
-          username
+          screenName
         })
         .then(res => {
           expect(res).to.have.status(422);
