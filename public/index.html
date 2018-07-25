@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Dream logging and publishing service">
+  <meta name="description" content="Journal and share your dreams">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/float-grid.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans|Paprika" rel="stylesheet">
@@ -15,9 +15,15 @@
     <div class="row">
       <div class="col-12">
         <h1 class="logo">Dream Catcher</h1>
-        <ul class="nav-links">
-          <li><a class="login-link" href="javascript:void(0)">Log In</a></li>
-          <li><a class="register-link" href="javascript:void(0)">Register</a></li>
+        <ul id="my-top-nav" class="top-nav">
+          <li><a class="home-link public-link user-link" href="javascript:void(0)">Home</a></li>
+          <li><a class="logout-link user-link" href="javascript:void(0)">Log out</a></li>
+          <li><a class="login-link public-link" href="javascript:void(0)">Log In</a></li>
+          <li><a class="dream-journal-link user-link" href="javascript:void(0)">Dream Journal</a></li>
+          <li><a class="register-link public-link" href="javascript:void(0)">Register</a></li>
+          <li class="icon">
+              <a href="javascript:void(0);" class="user-link public-link" onclick="toggleNav()">&#9776;</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -29,8 +35,20 @@
 
     <div class="view" id="recent-dreams" hidden>
       <div class="row">
+        <div class="col-6">
+          <div class="splash">
+            <h1>Welcome To Dream Catcher!</h1>
+            <p>In Dream Catcher, you can create a personal dream journal
+                with the option of publishing dreams for others to view.</p>
+            <button class="get-started-button">Get Started!</button>
+          </div>
+        </div>
+        <div class="col-6">
+        </div>                
+      </div>
+      <div class="row">
         <div class="col-12">
-          <h1>Recent Dreams:</h1>
+          <h2>Recent Published Dreams:</h2>
           <ul class="dream-list">
           </ul>
         </div>
@@ -82,19 +100,18 @@
         <div class="col-6">
           <form role="form" class="create-account-form">
             <fieldset>
-              <legend>Create New Account</legend>
-              <span class="account-create-message"></span>
+              <legend>Create an Account</legend>
               <span class="create-account-message"></span>
-              <label for="account-username">User Name:</label>
+              <label for="account-username">User Name (for Login):</label>
               <input type="text" name="account-username" id="account-username" required>
               <label for="account-password">Password:</label>
               <input type="password" name="account-password" id="account-password" required>
               <label for="account-first-name">First Name:</label>
-              <input type="text" name="account-first-name" id="account-first-name">
+              <input type="text" name="account-first-name" id="account-first-name" required>
               <label for="account-last-name">Last Name:</label>
-              <input type="text" name="account-last-name" id="account-last-name">
+              <input type="text" name="account-last-name" id="account-last-name" required>
               <label for="account-screen-name">Screen Name (for public dreams):</label>
-              <input type="text" name="account-screen-name" id="account-creen-name">
+              <input type="text" name="account-screen-name" id="account-screen-name" required>
               <button type="submit">Create</button>
             </fieldset>
           </form>
@@ -111,7 +128,7 @@
           <h1>My Dream Journal</h1>
         </div>
         <div class="col-3">
-            <button class="new-dream">New Dream</button>
+          <button class="new-dream">New Dream</button>
         </div>
         <div class="col-3">
         </div>
@@ -137,12 +154,12 @@
             <fieldset>
               <legend><span class="dream-editor-mode"></span> Dream</legend>
               <span class="dream-editor-message"></span>
-              <label for="dream-editor-title">Title:</label>
-              <input type="text" name="title" id="dream-editor-title">
               <label for="dream-editor-text">Text:</label>
               <textarea name="text" id="dream-editor-text" rows="20" style="width:100%; height:100%;"></textarea></textarea>
-              <button type="submit" class="dream-editor-submit"><span class="dream-editor-submit-label"></span></button>
+              <label for="dream-editor-title">Title:</label>
+              <input type="text" name="title" id="dream-editor-title">
               <button class="dream-editor-back">Back</button>
+              <button type="submit" class="dream-editor-submit"><span class="dream-editor-submit-label"></span></button>
             </fieldset>
           </form>
         </div>      

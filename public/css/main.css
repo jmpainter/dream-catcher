@@ -30,20 +30,37 @@ header h1 {
   font-size: 31px;
   letter-spacing: -1px;
 }
-.nav-links {
-  position: absolute;
-  top: 5px;
-  right: 25px;
-  list-style: none;
+ul.top-nav {
+  list-style-type: none;
+  padding: 0;
+  overflow: hidden;
+  margin: 0;
 }
-.nav-links li {
-  display: inline;
+ul.top-nav li {
+  float:right;
 }
-.nav-links a {
-  text-decoration: none;
+ul.top-nav li a {
+  display: none;
   color: black;
-  margin-left: 24px;
+  text-align:center;
+  padding: 26px 14px 8px 10px;
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 17px;
 }
+ul.top-nav li.icon a {
+  padding: 8px 0 10px;
+}
+/* ul.top-nav li a:hover {
+  background-color: #555;
+} */
+
+/* Hide the list item that contains the link that should open and close the top-nav on small screens */
+ul.top-nav li.icon {
+  display: none;
+  margin: 0;
+}
+
 header .row {
   position: relative;
 }
@@ -55,7 +72,7 @@ h1 {
   margin: 12px 0;
 }
 h2 {
-  font-size: 17px;
+  font-size: 20px;
   margin: 10px 0;
 }
 p {
@@ -107,7 +124,7 @@ label {
 .dream-editor-message,
 .dream-journal-message,
 .dream-detail-message,
-.account-create-message {
+.create-account-message {
   display: none;
   font-size: 17px;
   color: rgb(243, 55, 55);
@@ -164,6 +181,7 @@ label {
 }
 .logo {
   cursor: pointer;
+  position: absolute;
 }
 .dream-edit, .dream-delete {
   float: right;
@@ -171,11 +189,14 @@ label {
 .dream-delete {
   margin-left: 10px;
 }
-.dream-editor-back {
+.dream-editor-submit {
   float: right;
 }
 .mobile {
   display: none;
+}
+.splash {
+  margin-bottom: 30px;
 }
 /* Mobile */
 @media only screen and (max-width: 640px) {
@@ -197,5 +218,31 @@ label {
   }
   .dream-editor-form {
     width: 100%;
+  }
+  ul.top-nav li:not(:last-child){
+    display:none;
+  }
+  ul.top-nav li.icon {
+    float:right;
+    display: inline-block;
+  }
+  ul.top-nav.responsive {
+    position:relative;
+  }
+  ul.top-nav.responsive li.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  ul.top-nav.responsive li {
+    float:none;
+    display:inline;
+  }
+  ul.top-nav.responsive li a {
+    display:block;
+    text-align:left;
+  }
+  .home-link {
+    margin-top: 30px;
   }
 }

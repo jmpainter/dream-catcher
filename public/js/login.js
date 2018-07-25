@@ -11,10 +11,8 @@ function loginUser(username, password) {
     data: JSON.stringify(data)
   })
   .done(function(data){
-    Cookies.set('_dream-catcher-token', data.authToken, {expires: 1});
-    appState.isLoggedIn = true;
-    $('.login-link').text('Log Out');
-    $('.register-link').css('visibility', 'hidden');
+    setMenu('user');
+    Cookies.set('_dream-catcher-token', data.authToken, {expires: 30});
     $('#username').val('');
     $('#password').val('');
     initDreamJournal();

@@ -1,9 +1,9 @@
 function initCreateAccount(){
   $('#account-username').val('');
   $('#account-password').val('');
-  $('#account-firstName').val('');
-  $('#account-lastName').val('');
-  $('#account-screenName').val(''); 
+  $('#account-first-name').val('');
+  $('#account-last-name').val('');
+  $('#account-screen-name').val(''); 
   $('.account-create-message').css('display', 'none');
   handleAccountCreate();
 }
@@ -12,9 +12,9 @@ function createAccount() {
   data = {
     username: $('#account-username').val(),
     password: $('#account-password').val(),
-    firstName: $('#account-firstName').val() || '',
-    lastName: $('#account-lastName').val() || '',
-    screenName: $('#account-screenName').val() || ''
+    firstName: $('#account-first-name').val(),
+    lastName: $('#account-last-name').val(),
+    screenName: $('#account-screen-name').val()
   }
 
   $.ajax({
@@ -33,7 +33,7 @@ function createAccountError(xhr, status, error) {
   message = xhrResponse.location ? xhrResponse.location + ' ' : '';
   message += xhrResponse.message;
 
-  $('.account-create-message')
+  $('.create-account-message')
   .text(message)
   .css('display', 'block');
   handleAccountCreate();

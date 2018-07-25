@@ -21,6 +21,13 @@ function displayJournalDreams(data) {
   appState.journalDreams = data.dreams;
 
   let htmlString = '';
+  console.log(appState.journalDreams);
+  if(appState.journalDreams.length === 0) {
+    htmlString = `<div class="row"><div class="col-6"><p>Start creating your first dream entry by clicking the 'New Dream' button above.
+     You will have the option of publishing the dream once it is created.</p>
+     <p>Dictating into Dream Catcher from a mobile phone is a convenient way to make entries!</p></div><div class="col-6"></div>`;
+  }
+
   appState.journalDreams.forEach(dream => {
     htmlString += `
       <div class="row">

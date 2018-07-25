@@ -4,6 +4,10 @@ function initRecentDreams() {
   handleLoginClick();
   handleRegisterClick();
   handleLogoClick();
+  handleLogoutClick();
+  handleHomeClick();
+  handleDreamJournalClick();
+  handleGetStartedClick();
 }
 
 function getLatestDreams(callback) {
@@ -42,23 +46,27 @@ function handleDreamClick() {
 
 function handleLoginClick() {
   $('.login-link').click(function(event) {
-    if(appState.isLoggedIn === false) {
-      initLogin();
-      showView('login');
-    } else {
-      appState.isLoggedIn = false;
-      $('.login-link').text('Log In');
-      $('.register-link').css('visibility', 'visible');
-      initRecentDreams();
-      showView('recent-dreams');     
-    }
+    initLogin();
+    showView('login');
+    toggleNav();
   });
+}
+
+function handleLogoutClick() {
+  $('.logout-link').click(function(event) {
+    Cookies.remove('_dream-catcher-token');
+    setMenu('public');
+    initRecentDreams();
+    showView('recent-dreams');
+    toggleNav();
+  });  
 }
 
 function handleRegisterClick() {
   $('.register-link').click(function(event) {
     initCreateAccount();
     showView('create-account');
+    toggleNav();
   });
 }
 
@@ -67,4 +75,27 @@ function handleLogoClick() {
     initRecentDreams();
     showView('recent-dreams');
   });
+}
+
+function handleHomeClick() {
+  $('.home-link').click(function(event) {
+    initRecentDreams();
+    showView('recent-dreams');
+    toggleNav();
+  });
+}
+
+function handleDreamJournalClick() {
+  $('.dream-journal-link').click(function(event) {
+    initDreamJournal();
+    showView('dream-journal');
+    toggleNav();
+  });
+}
+
+function handleGetStartedClick() {
+  $('.get-started-button').click(function(event) {
+    initCreateAccount();
+    showView('create-account');
+  })
 }

@@ -6,7 +6,7 @@ function showDreamDetail(backView) {
   $('.dream-text').html(dream.text);
   showView('dream-detail');
   handleDreamDetailBackClick(backView);
-  if(appState.isLoggedIn === true && appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
+  if(Cookies.get('_dream-catcher-token') && appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
     $('.dream-edit').css('visibility', 'visible');
     $('.dream-delete').css('visibility', 'visible');
     handleDreamEditClick();
