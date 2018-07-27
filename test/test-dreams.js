@@ -62,8 +62,8 @@ function seedData() {
       .then(results => {
         // add each dream id to dream array in user document
         const addDreamToUserPromises = [];
-        results.forEach(result => {
-          addDreamToUserPromises.push(addDreamToUser(result.author, result._id));
+        results.forEach(dream => {
+          addDreamToUserPromises.push(addDreamToUser(dream.author, dream._id));
         })
         return Promise.all(addDreamToUserPromises);
       })
@@ -394,4 +394,19 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
   });
+
+  describe('POST :id/comments endpoint', function() {
+    it('Should not allow an unauthorized user to post a comment', function() {
+      Dream.findOne()
+        .then(function(dream) {
+          return chai.request(app)
+            .post(`/${dream._id}/comments`);
+        })
+        .then(function (res) {
+          expect(res).to.have.status(404);
+        })
+        .catch(err => handleError(err));
+    });
+  });
+
 });

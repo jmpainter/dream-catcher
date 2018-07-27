@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const { Dream } = require('./models');
 const { User } = require('../users');
+const { Comment } = require('../comments');
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
@@ -85,11 +86,11 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     })
     .then(user => {
       //add dream reference to user dreams array
-      user.dreams.push(dream._id);
+      user.dreams.push(dream);
       return user.save();
     })
-    .then(user => {
-      if(user) res.status(201).json(dream.serialize());
+    .then(() => {
+      return res.status(201).json(dream.serialize());
     })
     .catch(err => {
       console.error(err);
@@ -124,7 +125,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
       }
     })
     .then(dream => {
-      if(dream) res.status(200).json(dream.serialize());
+      res.status(200).json(dream.serialize());
     })
     .catch(err => {
       console.error(err);
@@ -138,10 +139,17 @@ router.delete('/:id', jwtAuth, (req, res) => {
   .findById(req.params.id)
   .then(dream => {
     if(!dream) {
-      res.status(404).json({message: 'Not Found'});
-      throw new Error('abort promise chain');
+      return Promise.reject({
+        code: 404,
+        reason: 'AccessError',
+        message: 'Dream does not exist'
+      });
     } else if(dream.author.toString() !== req.user.id) {
-      res.status(401).json({message: 'Unauthorized'});
+      return Promise.reject({
+        code: 401,
+        reason: 'AccessError',
+        message: 'Not authorized to modify dream'
+      });      
       throw new Error('abort promise chain');
     } else {
       return Dream.findByIdAndRemove(req.params.id)
@@ -158,15 +166,66 @@ router.delete('/:id', jwtAuth, (req, res) => {
     user.dreams.splice(dreamIndex, 1);
     return user.save();
   })
-  .then(user => {
-    if(user) res.status(204).end();
+  .then(() => {
+    return res.status(204).end();
   })
   .catch(err => {
-    if(err.message !== 'abort promise chain') {
-      console.error(err);
-      res.status(500).json({message: 'Internal server error'});
+    if (err.reason === 'AccessError') {
+      return res.status(err.code).json(err);
     }
+    res.status(500).json({message: 'Internal Server Error'});
   });
-})
+});
+
+//nested route for comment creation for a dream
+router.post('/:id/comments', jsonParser, jwtAuth, (req, res) => {
+
+  if(!('text' in req.body)) {
+    const message = `Missing 'text' in req.body`
+    console.error(message);
+    return res.status(400).send(message);
+  }
+
+  let dream = null;
+
+  Dream
+    .findById(req.params.id)
+    .then(_dream => {
+      if(!_dream) {
+        return Promise.reject({
+          code: 400,
+          reason: 'AccessError',
+          message: 'Dream does not exist'
+        });
+      } else if (_dream.commentsOn === false) {
+        return Promise.reject({
+          code: 401,
+          reason: 'AccessError',
+          message: 'Dream is not open for comments'
+        });
+      } else {
+        dream = _dream;
+        return Comment
+          .create({
+            text: req.body.text,
+            author: req.user.id
+          });
+      }
+    })
+    .then(comment => {
+      dream.comments.push(comment);
+      return dream.save();
+    }) 
+    .then(dream => {
+      return res.status(201).json(dream.serialize());
+    })
+    .catch(err => {
+      console.log(err);
+      if(err.reason === 'AccessError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({message: 'Internal Server Error'});
+    });
+});
 
 module.exports = {router};

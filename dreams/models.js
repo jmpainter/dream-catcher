@@ -6,7 +6,14 @@ const dreamSchema = Schema({
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
   text: {type: String, required: true},
   publishDate: {type: Date, default: Date.now},
-  public: {type: Boolean, default: false}
+  public: {type: Boolean, default: false},
+  commentsOn: {type: Boolean, default: false},
+  comments: [
+    {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: "Comment"
+    }
+  ]
 });
 
 dreamSchema.methods.serialize = function() {
@@ -15,7 +22,9 @@ dreamSchema.methods.serialize = function() {
     title: this.title,
     text: this.text,
     publishDate: this.publishDate,
-    public: this.public
+    public: this.public,
+    commentsOn: this.commentsOn,
+    comments: this.comments
   };
 };
 
