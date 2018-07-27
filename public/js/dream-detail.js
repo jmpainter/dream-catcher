@@ -1,7 +1,9 @@
 function showDreamDetail(backView) {
-  dream = appState.currentDream;
+  const dream = appState.currentDream;
+  console.log(dream);
   $('.dream-title').text(dream.title);
-  $('.dream-author').text(dream.userName);
+  const author = dream.author ? dream.author.screenName : '';
+  $('.dream-author').text(author);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
   showView('dream-detail');

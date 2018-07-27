@@ -88,6 +88,31 @@ p {
   font-size: 17px;
   margin: 16px 0;
 }
+
+.logo {
+  cursor: pointer;
+  position: absolute;
+  font-family: 'Sniglet', cursive;
+  font-size: 41px;
+  letter-spacing: -1px;
+  margin-top: 5px;
+  color: #ffb500;
+}
+/* Dream Detail Screen */
+
+.dream-title {
+  font-size: 24px;
+  margin-bottom: 2px;
+}
+.dream-author {
+  font-size: 17px;
+  margin: 0;
+}
+.dream-publish-date {
+  font-size: 14px;
+  margin: 0;
+}
+
 .login-form {
   border: 1px solid #bebebe;
   padding: 12px;
@@ -99,7 +124,6 @@ legend {
 }
 input[type="email"],
 input[type="password"],
-input[type="submit"],
 input[type="text"] {
   display: block;
   border: 1px solid #bebebe;
@@ -213,15 +237,6 @@ label {
 #dream-editor-text {
   width: 100%;
 }
-.logo {
-  cursor: pointer;
-  position: absolute;
-  font-family: 'Sniglet', cursive;
-  font-size: 41px;
-  letter-spacing: -1px;
-  margin-top: 5px;
-  color: #ffb500;
-}
 .dream-edit, .dream-delete {
   float: right;
 }
@@ -230,9 +245,6 @@ label {
 }
 .dream-editor-submit {
   float: right;
-}
-.mobile {
-  display: none;
 }
 .splash {
   margin-bottom: 34px;
@@ -320,9 +332,6 @@ label {
   .logo {
     font-size: 33px;
     margin: 2px;
-  }
-  .mobile {
-    display: inline;
   }
   main {
     padding-top: 20px;
