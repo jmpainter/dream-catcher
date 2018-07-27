@@ -44,6 +44,7 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
         count = _count;
         return Dream
           .find({public: true})
+          .sort('-publishDate')
           .skip((perPage * page) - perPage)
           .limit(perPage)
           .populate('author', 'firstName lastName screenName');
