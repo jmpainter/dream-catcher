@@ -34,7 +34,7 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
         res.status(500).json({message: 'Internal server error'});
       })
   } else {
-    const perPage = 10;
+    const perPage = 16;
     const page = req.params.page || 1;
     let count = 0;
   
