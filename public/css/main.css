@@ -20,15 +20,28 @@ html {
 }
 body {
   font-family: 'Nunito Sans', sans-serif;
+  background-color: black;
+  color: black;
+}
+a {
+  color: black;
+  text-decoration: none;
+}
+.row {
+  background-color: #463edf;
 }
 header {
-  padding: 10px 0px;
-  border-bottom: 1px solid #bebebe;
+  padding: 0;
 }
-header h1 {
-  font-family: 'Paprika', cursive;
-  font-size: 31px;
-  letter-spacing: -1px;
+footer {
+  color: white;
+}
+footer p {
+  font-size: 13px;
+}
+header .row {
+  border-bottom: 1px solid #ffb500;
+  padding: 16px;
 }
 ul.top-nav {
   list-style-type: none;
@@ -41,19 +54,15 @@ ul.top-nav li {
 }
 ul.top-nav li a {
   display: none;
-  color: black;
+  color: #ffb500;
   text-align:center;
   padding: 26px 14px 8px 10px;
-  text-decoration: none;
   transition: 0.3s;
   font-size: 17px;
 }
 ul.top-nav li.icon a {
   padding: 8px 0 10px;
 }
-/* ul.top-nav li a:hover {
-  background-color: #555;
-} */
 
 /* Hide the list item that contains the link that should open and close the top-nav on small screens */
 ul.top-nav li.icon {
@@ -65,7 +74,7 @@ header .row {
   position: relative;
 }
 main {
-  padding-top: 33px;
+  padding: 0;
 }
 h1 {
   font-size: 24px;
@@ -79,25 +88,13 @@ p {
   font-size: 17px;
   margin: 16px 0;
 }
-.dream-list {
-  list-style: none;
-  line-height: 2em;
-  padding: 0;
-}
-.dream-list li a {
-  font-size: 19px;
-}
-.dream-list .author, .dream-list .date {
-  font-size: 14px;
-}
 .login-form {
   border: 1px solid #bebebe;
   padding: 12px;
-  /* width: 33%; */
   border-radius: 3px;
 }
 legend {
-  font-size: 20px;
+  font-size: 26px;
   padding: 5px 0;
 }
 input[type="email"],
@@ -107,18 +104,54 @@ input[type="text"] {
   display: block;
   border: 1px solid #bebebe;
   border-radius: 3px;
-  /* background: #fcfcfc; */
+  background: #fcfcfc;
   width: 90%;
   font-size: 18px;
   text-align: left;
   padding: 2px;
+  margin-bottom: 18px;
 }
 button {
-  margin: 12px 0;
+  margin: 15px 0;
+  background-color: #463edf;
+  padding: 0 16px;
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: 28px;
+  min-height: 28px;
+  border: 2px solid #4b4b4b;
+  -webkit-border-radius: 16px;
+  border-radius: 16px;
+  color: white;
+  display: inline-block;
+  font-size: 15px;
+  height: auto;
+  outline: none;
+  -webkit-transition: all .15s ease-in-out;
+  -o-transition: all .15s ease-in-out;
+  transition: all .15s ease-in-out;
+  width: auto;
+  cursor: pointer;
 }
 label {
   margin: 8px 0 2px;
   display: block;  
+}
+#dream-detail .col-6, #create-account .col-6, #login .col-4 {
+  background-color: white;
+  padding: 15px;
+  margin: 15px;
+  border-radius: 5px;
+  margin-bottom: 40px;
+}
+#dream-journal .row, #dream-editor .row {
+  background-color: white;
+}
+.dream-journal-header {
+  margin-top: 14px;
+}
+.dream-journal-footer {
+  margin-bottom: 30px;
 }
 .login-message,
 .dream-editor-message,
@@ -166,6 +199,7 @@ label {
 }
 .dream-editor-form {
   width: 80%;
+  padding-top: 20px;
 }
 .dream-editor textarea {
   width: 100%;
@@ -182,6 +216,11 @@ label {
 .logo {
   cursor: pointer;
   position: absolute;
+  font-family: 'Sniglet', cursive;
+  font-size: 41px;
+  letter-spacing: -1px;
+  margin-top: 5px;
+  color: #ffb500;
 }
 .dream-edit, .dream-delete {
   float: right;
@@ -196,22 +235,94 @@ label {
   display: none;
 }
 .splash {
-  margin-bottom: 30px;
+  margin-bottom: 34px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 9px 15px;
+  margin-top: 30px;
+  border: 1px solid black;
 }
+.splash h1 {
+  font-size: 27px;
+  line-height: 1em;
+}
+.splash button {
+  display: block;
+  margin: 12px auto;
+}
+.flex-container {
+	max-width: 1000px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.flex-col {
+  margin-bottom: 20px;
+}
+.home-dream-details {
+  background-color: white;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+.home-title {
+  margin: 0;  
+}
+.home-title a {
+  font-size: 19px;
+  font-weight: 800;
+}
+.home-author {
+  margin: 0;
+  font-size: 14px;  
+}
+.home-publish-date {
+  margin: 0;
+  font-size: 14px;
+}
+.dream-icon {
+  width: 100px;
+  cursor: pointer;
+  display: block;
+  margin: 15px auto;
+}
+#recent-dreams h2 {
+  font-size: 21px;
+  color: #ffb500;
+}
+
+/* Flex box */
+
+.flex-col {
+	width: 100%;
+}
+@media only screen and (min-width: 310px) {
+  .flex-col {
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 510px) {
+  .flex-col {
+    width: 33.33%;
+  }
+}
+@media only screen and (min-width: 815px) {
+	.flex-col {
+    /* width: 16.66%; */
+    width: 25%;
+	}
+}
+
+
 /* Mobile */
 @media only screen and (max-width: 640px) {
-  header h1 {
-    font-size: 26px;
+  .logo {
+    font-size: 33px;
     margin: 2px;
   }
   .mobile {
     display: inline;
-  }
-  .nav-links li {
-    display: block;
-  }
-  .nav-links {
-    top: -15px;
   }
   main {
     padding-top: 20px;
@@ -244,5 +355,8 @@ label {
   }
   .home-link {
     margin-top: 30px;
+  }
+  .splash {
+    margin-bottom: 12px;
   }
 }

@@ -39,10 +39,6 @@ function displayJournalDreams(data) {
           <label for="public-check" class="journal-public">Public</span>;
           <input data-dream-id="${dream._id}" type="checkbox" id="public-check" class="journal-public-check" ${dream.public ? 'checked' : ''}>
         </div>
-        <div class="col-3">
-        </div>
-        <div class="col-3">
-        </div>
       </div>
     `;
   });

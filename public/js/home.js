@@ -19,16 +19,20 @@ function displayLatestDreams(data) {
   $('main').prop('hidden', false);
 
   let htmlString = '';
+
   appState.latestDreams.forEach(dream => {
     htmlString += `
-      <li class="js-dream" data-dream-id="${dream._id}">
-        <a href="javascript:void(0)">${dream.title}</a><br class="mobile"/>
-        <span class="author">by ${dream.author.screenName || dream.author.username}</span>
-        <span class="date">- ${new Date(dream.publishDate).toDateString()}</span>
-      </li>
+      <div class="flex-col" data-dream-id="${dream._id}">
+        <img class="dream-icon" src="img/dream-icon${Math.floor(Math.random() * 100) + 1}.svg">
+        <div class="home-dream-details">
+          <p class="home-title"><a href="javascript:void(0)">${dream.title}</a></p>
+          <p class="home-author">by ${dream.author.screenName || dream.author.username}</p>
+          <p class="home-publish-date">${new Date(dream.publishDate).toDateString()}</p>
+        </div>
+      </div>      
     `;
   });
-  $('.dream-list').html(htmlString);
+  $('.flex-container').html(htmlString);
   showView('recent-dreams');
 }
 
@@ -37,7 +41,7 @@ function getAndDisplayLatestDreams() {
 }
 
 function handleDreamClick() {
-  $('.dream-list').on('click', '.js-dream', function(event) {
+  $('.flex-container').on('click', '.flex-col', function(event) {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.latestDreams.find(dream => dream._id === dreamId );
     showDreamDetail('recent-dreams');
