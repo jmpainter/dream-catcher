@@ -23,6 +23,10 @@ chai.use(require('chai-datetime'));
 let testUser = {};
 let testUserToken;
 
+
+//save off a dream for adding comments
+let testDream = {};
+
 //first create users collection in order to give each dream an author
 function seedData() {
   console.info('seeding data');
@@ -62,7 +66,11 @@ function seedData() {
       .then(results => {
         // add each dream id to dream array in user document
         const addDreamToUserPromises = [];
-        results.forEach(dream => {
+        results.forEach((dream, index) => {
+          if(index === 0) {
+            testDream = dream;
+            testDream['id'] = dream.id;
+          }
           addDreamToUserPromises.push(addDreamToUser(dream.author, dream._id));
         })
         return Promise.all(addDreamToUserPromises);
@@ -104,6 +112,14 @@ function generateDreamData(userId) {
     text: faker.lorem.paragraphs(),
     publishDate: faker.date.past(),
     public: true
+  }
+}
+
+function generateCommentData(userId) {
+  return {
+    author: userId,
+    text: faker.lorem.paragraphs(),
+    publishDate: faker.date.past()
   }
 }
 
@@ -287,7 +303,7 @@ describe('dreams API resource', function() {
           expect(res).to.have.status(201);
           expect(res).to.be.json;
           expect(res).to.be.a('object');
-          expect(res.body).to.include.keys('id', 'title', 'text', 'publishDate', 'public');
+          expect(res.body).to.include.keys('id', 'title', 'text', 'publishDate', 'public', 'commentsOn', 'comments');
           expect(res.body.id).to.not.be.null;
           expect(res.body.title).to.equal(newDream.title);
           expect(res.body.text).to.equal(newDream.text);
@@ -397,16 +413,79 @@ describe('dreams API resource', function() {
 
   describe('POST :id/comments endpoint', function() {
     it('Should not allow an unauthorized user to post a comment', function() {
-      Dream.findOne()
-        .then(function(dream) {
-          return chai.request(app)
-            .post(`/${dream._id}/comments`);
-        })
-        .then(function (res) {
+
+      return chai.request(app)
+        .post(`/dreams/${testDream._id}/comments`)
+      .then(function (res) {
+        expect(res).to.have.status(401);
+      })
+      .catch(err => handleError(err));
+    });
+
+    it("Should return an error if a dream does not exist", function() {
+      const newComment = generateCommentData(testUser.id);
+
+      return chai.request(app)
+      //send fake objectid as parameter
+        .post(`/dreams/${new Array(24).fill(0).join('')}/comments`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .send(newComment)
+        .then(function(res) {
           expect(res).to.have.status(404);
         })
         .catch(err => handleError(err));
     });
-  });
 
+    it("Should not add a comment with incorrect fields", function() {
+      return chai.request(app)
+        .post(`/dreams/${testDream._id}/comments`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .send({fake: 'fake'})
+      .then(function(res) {
+        expect(res).to.have.status(400);
+      })
+      .catch(err => handleError(err));
+    });
+
+    it("Should not add a comment if the dream is not public", function() {
+      const newComment = generateCommentData(testUser.id);
+
+      return chai.request(app)
+        .post(`/dreams/${testDream._id}/comments`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .send(newComment)         
+        .then(function(res) {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => handleError(err));
+    });
+    
+    it("Should add a comment if the dream has comments turned on", function() {
+      const newComment = generateCommentData(testUser.id);
+      
+      return Dream.findByIdAndUpdate(testDream._id, {$set: {commentsOn: true}})
+        .then(function() {
+          return chai.request(app)
+            .post(`/dreams/${testDream._id}/comments`)
+            .set('authorization', `Bearer ${testUserToken}`)
+            .send(newComment)         
+        })
+        .then(function(res) {
+          expect(res).to.have.status(201);
+          expect(res).to.be.json;
+          expect(res).to.be.a('object');
+          expect(res.body).to.include.keys('id', 'text', 'author', 'publishDate');
+          expect(res.body.id).to.not.be.null;
+          expect(res.body.text).to.equal(newComment.text);
+          expect(res.body.author).to.equal(newComment.author);
+
+          return Comment.findById(res.body.id)
+        })
+        .then(function(comment) {
+          expect(comment.author).to.equal(newComment.author);
+          expect(comment.text).to.equal(newComment.text);
+        })
+        .catch(err => handleError(err));
+    });
+  });
 });

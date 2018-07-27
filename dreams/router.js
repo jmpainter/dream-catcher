@@ -86,7 +86,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     })
     .then(user => {
       //add dream reference to user dreams array
-      user.dreams.push(dream);
+      user.dreams.push(dream._id);
       return user.save();
     })
     .then(() => {
@@ -136,45 +136,45 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 router.delete('/:id', jwtAuth, (req, res) => {
   // Make sure that dream to delete is actually one of the user's dreams 
   Dream
-  .findById(req.params.id)
-  .then(dream => {
-    if(!dream) {
-      return Promise.reject({
-        code: 404,
-        reason: 'AccessError',
-        message: 'Dream does not exist'
-      });
-    } else if(dream.author.toString() !== req.user.id) {
-      return Promise.reject({
-        code: 401,
-        reason: 'AccessError',
-        message: 'Not authorized to modify dream'
-      });      
-      throw new Error('abort promise chain');
-    } else {
-      return Dream.findByIdAndRemove(req.params.id)
-    }
-  })
-  .then(dream => {
-    if(dream) {
-      return User.findById(req.user.id);
-    }
-  })
-  .then(user => {
-    //delete dream from ebedded user's list of dreams
-    const dreamIndex = user.dreams.indexOf(mongoose.Types.ObjectId(req.params.id));
-    user.dreams.splice(dreamIndex, 1);
-    return user.save();
-  })
-  .then(() => {
-    return res.status(204).end();
-  })
-  .catch(err => {
-    if (err.reason === 'AccessError') {
-      return res.status(err.code).json(err);
-    }
-    res.status(500).json({message: 'Internal Server Error'});
-  });
+    .findById(req.params.id)
+    .then(dream => {
+      if(!dream) {
+        return Promise.reject({
+          code: 404,
+          reason: 'AccessError',
+          message: 'Dream does not exist'
+        });
+      } else if(dream.author.toString() !== req.user.id) {
+        return Promise.reject({
+          code: 401,
+          reason: 'AccessError',
+          message: 'Not authorized to modify dream'
+        });      
+        throw new Error('abort promise chain');
+      } else {
+        return Dream.findByIdAndRemove(req.params.id)
+      }
+    })
+    .then(dream => {
+      if(dream) {
+        return User.findById(req.user.id);
+      }
+    })
+    .then(user => {
+      //delete dream from ebedded user's list of dreams
+      const dreamIndex = user.dreams.indexOf(mongoose.Types.ObjectId(req.params.id));
+      user.dreams.splice(dreamIndex, 1);
+      return user.save();
+    })
+    .then(() => {
+      return res.status(204).end();
+    })
+    .catch(err => {
+      if (err.reason === 'AccessError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({message: 'Internal Server Error'});
+    });
 });
 
 //nested route for comment creation for a dream
@@ -187,15 +187,16 @@ router.post('/:id/comments', jsonParser, jwtAuth, (req, res) => {
   }
 
   let dream = null;
+  let comment = null;
 
   Dream
     .findById(req.params.id)
     .then(_dream => {
       if(!_dream) {
         return Promise.reject({
-          code: 400,
+          code: 404,
           reason: 'AccessError',
-          message: 'Dream does not exist'
+          message: 'Dream was not found'
         });
       } else if (_dream.commentsOn === false) {
         return Promise.reject({
@@ -212,12 +213,13 @@ router.post('/:id/comments', jsonParser, jwtAuth, (req, res) => {
           });
       }
     })
-    .then(comment => {
-      dream.comments.push(comment);
+    .then(_comment => {
+      comment = _comment;
+      dream.comments.push(_comment._id);
       return dream.save();
     }) 
-    .then(dream => {
-      return res.status(201).json(dream.serialize());
+    .then(() => {
+      return res.status(201).json(comment.serialize());
     })
     .catch(err => {
       console.log(err);

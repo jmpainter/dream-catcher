@@ -10,6 +10,7 @@ const commentSchema = Schema({
 commentSchema.methods.serialize = function() {
   return {
     id: this._id,
+    author: this.author,
     text: this.text,
     publishDate: this.publishDate
   };
