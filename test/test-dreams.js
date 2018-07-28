@@ -10,8 +10,9 @@ const expect = chai.expect;
 
 mongoose.Promise = global.Promise;
 
-const {Dream} = require('../dreams');
-const {User} = require('../users');
+const {Dream} = require('../dreams/models');
+const {User} = require('../users/models');
+const {Comment} = require('../comments/models');
 
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');

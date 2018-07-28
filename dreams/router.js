@@ -6,8 +6,8 @@ const jsonParser = bodyParser.json()
 const mongoose = require('mongoose');
 
 const { Dream } = require('./models');
-const { User } = require('../users');
-const { Comment } = require('../comments');
+const { User } = require('../users/models');
+const { Comment } = require('../comments/models');
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
@@ -24,7 +24,14 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
   if (req.user && req.query.personal === "true") {
     User
       .findById(req.user.id)
-      .populate('dreams', 'title text publishDate public')
+      .populate({
+        path: 'dreams',
+        model: 'Dream',
+        populate: {
+          path: 'comments',
+          model: 'Comment'
+        }
+      })
       .then(user => {
         res.json({
           dreams: user.dreams
@@ -35,7 +42,7 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
         res.status(500).json({message: 'Internal server error'});
       })
   } else {
-    const perPage = 16;
+    const perPage = 99;
     const page = req.params.page || 1;
     let count = 0;
   
@@ -48,7 +55,8 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
           .sort('-publishDate')
           .skip((perPage * page) - perPage)
           .limit(perPage)
-          .populate('author', 'firstName lastName screenName');
+          .populate('author', 'firstName lastName screenName')
+          .populate({path: 'comments', model: 'Comment'})
       })
       .then(dreams => {
         res.json({
@@ -148,17 +156,14 @@ router.delete('/:id', jwtAuth, (req, res) => {
         return Promise.reject({
           code: 401,
           reason: 'AccessError',
-          message: 'Not authorized to modify dream'
+          message: 'Not authorized to delete dream'
         });      
-        throw new Error('abort promise chain');
       } else {
         return Dream.findByIdAndRemove(req.params.id)
       }
     })
-    .then(dream => {
-      if(dream) {
-        return User.findById(req.user.id);
-      }
+    .then(() => {
+      return User.findById(req.user.id);
     })
     .then(user => {
       //delete dream from ebedded user's list of dreams
@@ -171,59 +176,6 @@ router.delete('/:id', jwtAuth, (req, res) => {
     })
     .catch(err => {
       if (err.reason === 'AccessError') {
-        return res.status(err.code).json(err);
-      }
-      res.status(500).json({message: 'Internal Server Error'});
-    });
-});
-
-//nested route for comment creation for a dream
-router.post('/:id/comments', jsonParser, jwtAuth, (req, res) => {
-
-  if(!('text' in req.body)) {
-    const message = `Missing 'text' in req.body`
-    console.error(message);
-    return res.status(400).send(message);
-  }
-
-  let dream = null;
-  let comment = null;
-
-  Dream
-    .findById(req.params.id)
-    .then(_dream => {
-      if(!_dream) {
-        return Promise.reject({
-          code: 404,
-          reason: 'AccessError',
-          message: 'Dream was not found'
-        });
-      } else if (_dream.commentsOn === false) {
-        return Promise.reject({
-          code: 401,
-          reason: 'AccessError',
-          message: 'Dream is not open for comments'
-        });
-      } else {
-        dream = _dream;
-        return Comment
-          .create({
-            text: req.body.text,
-            author: req.user.id
-          });
-      }
-    })
-    .then(_comment => {
-      comment = _comment;
-      dream.comments.push(_comment._id);
-      return dream.save();
-    }) 
-    .then(() => {
-      return res.status(201).json(comment.serialize());
-    })
-    .catch(err => {
-      console.log(err);
-      if(err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }
       res.status(500).json({message: 'Internal Server Error'});

@@ -30,4 +30,4 @@ dreamSchema.methods.serialize = function() {
 
 const Dream = mongoose.model('Dream', dreamSchema);
 
-module.exports = {Dream};
+module.exports = { Dream };

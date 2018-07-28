@@ -1,4 +1,4 @@
-const { Dream } = require('./models');
+const { Dream, dreamTest } = require('./models');
 const { router } = require('./router');
 
-module.exports = {Dream, router};
+module.exports = {Dream, router}
