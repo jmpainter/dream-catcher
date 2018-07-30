@@ -6,6 +6,7 @@ function initCreateAccount(){
   $('#account-screen-name').val(''); 
   $('.account-create-message').css('display', 'none');
   handleAccountCreate();
+  showView('create-account');
 }
 
 function createAccount() {

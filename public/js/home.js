@@ -51,7 +51,6 @@ function handleDreamClick() {
 function handleLoginClick() {
   $('.login-link').click(function(event) {
     initLogin();
-    showView('login');
     toggleNav();
   });
 }
@@ -61,7 +60,6 @@ function handleLogoutClick() {
     Cookies.remove('_dream-catcher-token');
     setMenu('public');
     initRecentDreams();
-    showView('recent-dreams');
     toggleNav();
   });  
 }
@@ -69,7 +67,6 @@ function handleLogoutClick() {
 function handleRegisterClick() {
   $('.register-link').click(function(event) {
     initCreateAccount();
-    showView('create-account');
     toggleNav();
   });
 }
@@ -77,14 +74,12 @@ function handleRegisterClick() {
 function handleLogoClick() {
   $('.logo').click(function(event) {
     initRecentDreams();
-    showView('recent-dreams');
   });
 }
 
 function handleHomeClick() {
   $('.home-link').click(function(event) {
     initRecentDreams();
-    showView('recent-dreams');
     toggleNav();
   });
 }
@@ -92,7 +87,6 @@ function handleHomeClick() {
 function handleDreamJournalClick() {
   $('.dream-journal-link').click(function(event) {
     initDreamJournal();
-    showView('dream-journal');
     toggleNav();
   });
 }
@@ -100,6 +94,5 @@ function handleDreamJournalClick() {
 function handleGetStartedClick() {
   $('.get-started-button').click(function(event) {
     initCreateAccount();
-    showView('create-account');
   })
 }

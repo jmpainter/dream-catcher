@@ -6,16 +6,30 @@ function showDreamDetail(backView) {
   $('.dream-author').text(author);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
+  let commentsHTML = '';
+  for(let comment of dream.comments) {
+    commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;
+  }
+  $('.dream-comments').html(commentsHTML);
   showView('dream-detail');
   handleDreamDetailBackClick(backView);
-  if(Cookies.get('_dream-catcher-token') && appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
-    $('.dream-edit').css('visibility', 'visible');
-    $('.dream-delete').css('visibility', 'visible');
-    handleDreamEditClick();
-    handleDreamDeleteClick();
-  } else {
-    $('.dream-edit').css('visibility', 'hidden');
-    $('.dream-delete').css('visibility', 'hidden');
+
+  //if user is logged in
+  if(Cookies.get('_dream-catcher-token')) {
+    //if this is one of theird dreams, show edit and delete buttons, hide the comment button
+    if(appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
+      $('.dream-edit').css('display', 'block');
+      $('.dream-delete').css('display', 'block');
+      $('.dream-comment').css('display', 'none');
+      handleDreamEditClick();
+      handleDreamDeleteClick();
+    } else {
+      //show the comment button
+      $('.dream-edit').css('display', 'none');
+      $('.dream-delete').css('display', 'none');
+      $('.dream-comment').css('display', 'block');
+      handleDreamCommentClick();
+    }
   }
 }
 
@@ -28,7 +42,6 @@ function handleDreamDetailBackClick(backView) {
 function handleDreamEditClick() {
   $('.dream-edit').click(function() {
     initDreamEditor(appState.currentDream);
-    showView('dream-editor');
   });
 }
 
@@ -49,7 +62,6 @@ function deleteDream() {
 
 function deleteDreamSuccess() {
   initDreamJournal();
-  showView('dream-journal');
 }
 
 function deleteDreamError() {
@@ -63,4 +75,8 @@ function handleDreamDeleteClick() {
   $('.dream-delete').off().click(function() {
     deleteDream();
   });
+}
+
+function handleDreamCommentClick() {
+
 }

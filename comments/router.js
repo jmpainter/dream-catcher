@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 
 const { Comment } = require('./models');
 const { Dream } = require('../dreams/models');
-const { User } = require('../users/models');
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 

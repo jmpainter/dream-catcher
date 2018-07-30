@@ -56,7 +56,14 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (
           .skip((perPage * page) - perPage)
           .limit(perPage)
           .populate('author', 'firstName lastName screenName')
-          .populate({path: 'comments', model: 'Comment'})
+          .populate({
+            path: 'comments',
+            model: 'Comment',
+            populate: {
+              path: 'author',
+              model: 'User'
+            }
+          })
       })
       .then(dreams => {
         res.json({

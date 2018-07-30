@@ -59,20 +59,31 @@
 
     <!-- Dream Detail Screen -->
 
-    <div class="view" id="dream-detail" hidden>
+    <div class="view" id="dream-detail">
       <div class="row">
-        <div class="col-6">
-          <span class="dream-detail-message"></span>
-          <h1 class="dream-title"></h1>
-          <p class="dream-author"></p> 
-          <p class="dream-publish-date"></p>
-          <p class="dream-text"></p>
-          <button class="dream-back">Back</button>
-          <button class="dream-delete">Delete</button>
-          <button class="dream-edit">Edit</button>
-        </div>
+        <div class="col-12">
+          <div class="container">
+            <span class="dream-detail-message"></span>
+            <h1 class="dream-title"></h1>
+            <p class="dream-author"></p> 
+            <p class="dream-publish-date"></p>
+            <p class="dream-text"></p>
+            <ul class="dream-comments"></ul>                
+            <form role="form" class="comment-add-form">
+              <legend>Leave a Comment:</legend>
+              <label for="comment-text">Comment:</label>
+              <textarea name="comment-text" id="comment-text" rows="20"></textarea>
+              <button type="submit">Add Comment</button>
+            </form>
+            <div class="clr"></div>  
+            <button class="dream-back">Back</button>
+            <button class="dream-delete">Delete</button>
+            <button class="dream-edit">Edit</button>
+            <button class="dream-comment">Comment</button>          
+          </div>
+        </div>      
       </div>
-    </div>
+    </div>    
 
     <!-- Login Screen -->
 
@@ -123,8 +134,6 @@
     <!-- Dream journal screen -->
     
     <div class="view" id="dream-journal" hidden>
-
-
       <div class="row">
         <div class="col-3 dream-journal-header">
           <h1>My Dream Journal</h1>
@@ -145,28 +154,27 @@
       <div class="row">
         <div class="col-3 dream-journal-footer"></div>
       </div>      
-
-
     </div>    
-
 
     <!-- Dream Editor Screen -->
 
     <div class="view" id="dream-editor">
       <div class="row">
         <div class="col-12">
-          <form role="form" class="dream-editor-form">
-            <fieldset>
-              <legend><span class="dream-editor-mode"></span> Dream</legend>
-              <span class="dream-editor-message"></span>
-              <label for="dream-editor-text">Text:</label>
-              <textarea name="text" id="dream-editor-text" rows="20" style="width:100%; height:100%;"></textarea></textarea>
-              <label for="dream-editor-title">Title:</label>
-              <input type="text" name="title" id="dream-editor-title">
-              <button class="dream-editor-back">Back</button>
-              <button type="submit" class="dream-editor-submit"><span class="dream-editor-submit-label"></span></button>
-            </fieldset>
-          </form>
+          <div class="container">
+            <form role="form" class="dream-editor-form'">
+              <fieldset>
+                <legend><span class="dream-editor-mode"></span> Dream</legend>
+                <span class="dream-editor-message"></span>
+                <label for="dream-editor-text">Text:</label>
+                <textarea name="dream-editor-text" id="dream-editor-text" rows="20"></textarea>
+                <label for="dream-editor-title">Title:</label>
+                <input type="text" name="title" id="dream-editor-title">
+                <button class="dream-editor-back">Back</button>
+                <button type="submit" class="dream-editor-submit"><span class="dream-editor-submit-label"></span></button>
+              </fieldset>
+            </form>
+          </div>
         </div>      
       </div>
     </div>

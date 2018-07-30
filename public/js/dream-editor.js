@@ -17,6 +17,7 @@ function initDreamEditor(dream){
   $('.dream-editor-message').css('display', 'none');
   handleDreamEditSubmit();
   handleDreamEditBack();
+  showView('dream-journal');
 }
 
 function postOrPutDream(postOrPut) {

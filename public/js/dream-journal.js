@@ -12,7 +12,7 @@ function getJournalDreams(callback) {
         xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
     },
     data: {},
-    success: displayJournalDreams
+    success: callback
   })
   .catch(err => console.error(err));
 }
@@ -21,7 +21,6 @@ function displayJournalDreams(data) {
   appState.journalDreams = data.dreams;
 
   let htmlString = '';
-  console.log(appState.journalDreams);
   if(appState.journalDreams.length === 0) {
     htmlString = `<div class="row"><div class="col-6"><p>Start creating your first dream entry by clicking the 'New Dream' button above.
      You will have the option of publishing the dream once it is created.</p>

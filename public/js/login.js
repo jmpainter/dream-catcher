@@ -1,5 +1,6 @@
 function initLogin() {
   handleLoginSubmit();
+  showView('login');
 }
 
 function loginUser(username, password) {
@@ -16,7 +17,6 @@ function loginUser(username, password) {
     $('#username').val('');
     $('#password').val('');
     initDreamJournal();
-    showView('dream-journal');
   })
   .catch(err => {
     if(err.responseText === 'Unauthorized') {

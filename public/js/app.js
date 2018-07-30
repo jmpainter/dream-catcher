@@ -14,7 +14,7 @@ function showView(viewName) {
   $('.view').hide();
   $('#dream-editor').css('visibility', 'hidden');
   $('#' + viewName).show();
-  if(viewName = 'dream-editor') {
+  if(viewName === 'dream-editor') {
     $('#dream-editor').css('visibility', 'visible');
   }
 }
@@ -39,19 +39,22 @@ function setMenu(type) {
   }
 }
 
+function setJournalDreams(data) {
+  appState.journalDreams = data.dreams;
+}
+
 function startApp() {
   //for manually setting dream journal view
   // $('main').prop('hidden', false);
   // initDreamJournal();
-  // showView('dream-journal');
 
  // actual start app code
   if(Cookies.get('_dream-catcher-token')) {
     setMenu('user');
+    getJournalDreams(setJournalDreams);
   } else {
     setMenu('public');
   }
   initRecentDreams();
-  showView('recent-dreams');
 }
 $(startApp);

@@ -168,7 +168,7 @@ label {
   border-radius: 5px;
   margin-bottom: 40px;
 }
-#dream-journal .row, #dream-editor .row {
+#dream-journal .row, #dream-editor .row, #dream-detail .row {
   background-color: white;
 }
 .dream-journal-header {
@@ -221,11 +221,11 @@ label {
 .dream-journal-list td {
   padding: 8px 7px 0 0;
 }
-.dream-editor-form {
+.nicedit-form {
   width: 80%;
   padding-top: 20px;
 }
-.dream-editor textarea {
+textarea {
   width: 100%;
 }
 #dream-editor-title {
@@ -234,10 +234,10 @@ label {
 #dream-editor {
   visibility: hidden;
 }
-#dream-editor-text {
+#dream-editor-text, #comment-text {
   width: 100%;
 }
-.dream-edit, .dream-delete {
+.dream-edit, .dream-delete, .dream-comment {
   float: right;
 }
 .dream-delete {
@@ -303,6 +303,31 @@ label {
   font-size: 21px;
   color: #ffb500;
 }
+.dream-comments {
+  list-style: none;
+}
+.dream-comment-text {
+  margin: 10px 0 0 0;
+}
+.dream-comment-author {
+  margin: 0;
+}
+.add-comment-form {
+  display: inline;
+}
+.add-comment-form legend {
+  font-size: 20px;
+}
+.comment-add-form button{
+  margin: 10px 0 20px;
+  float: right;
+}
+.container {
+  width: 80%;
+}
+.clr {
+  clear: both;
+}
 
 /* Flex box */
 
@@ -336,7 +361,7 @@ label {
   main {
     padding-top: 20px;
   }
-  .dream-editor-form {
+  .container {
     width: 100%;
   }
   ul.top-nav li:not(:last-child){
