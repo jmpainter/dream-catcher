@@ -16,7 +16,7 @@ mongoose.Promise = global.Promise;
 
 //This endpoint allows an unauthenticated user to get public dreams
 //or an authenticated user to get public dreams or their personal dream list
-router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }), (req, res) => {
+router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (req, res) => {
   if(!req.user && req.query.personal === "true") {
     return res.status(401).json({message: 'Unauthorized'});
   }
@@ -67,6 +67,19 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], { session: false }),
       })
   }
 });
+
+// router.get('/:id', passport.authenticate(['jwt', 'anonymous'], {session: false}), (req, res) => {
+//   Dream.findById(req.params.id)
+//     .then(dream => {
+//       if(!dream) {
+//         return res.status(404).json({message: 'Not found'});
+//       } else if (dream.public !== true && req.user.id !== dream.author) {
+//         return res.status(401).json({message: 'Not authorized'});
+//       } else {
+//         return res.status(200).json(dream.serialize());
+//       }
+//     })
+// });
 
 router.post('/', jsonParser, jwtAuth, (req, res) => {
   const requiredFields = ['title', 'text'];
@@ -143,9 +156,13 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 
 router.delete('/:id', jwtAuth, (req, res) => {
   // Make sure that dream to delete is actually one of the user's dreams 
+
+  let dream = null;
+
   Dream
     .findById(req.params.id)
-    .then(dream => {
+    .then(_dream => {
+      dream = _dream
       if(!dream) {
         return Promise.reject({
           code: 404,
@@ -159,17 +176,8 @@ router.delete('/:id', jwtAuth, (req, res) => {
           message: 'Not authorized to delete dream'
         });      
       } else {
-        return Dream.findByIdAndRemove(req.params.id)
+        return dream.remove();
       }
-    })
-    .then(() => {
-      return User.findById(req.user.id);
-    })
-    .then(user => {
-      //delete dream from ebedded user's list of dreams
-      const dreamIndex = user.dreams.indexOf(mongoose.Types.ObjectId(req.params.id));
-      user.dreams.splice(dreamIndex, 1);
-      return user.save();
     })
     .then(() => {
       return res.status(204).end();

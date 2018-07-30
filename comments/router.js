@@ -25,7 +25,6 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
 
   let dream = null;
   let comment = null;
-  console.log('FROM ROUTER: ' + req.params.id);
   Dream
     .findById(req.params.id)
     .then(_dream => {
@@ -45,8 +44,9 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
         dream = _dream;
         return Comment
           .create({
-            text: req.body.text,
-            author: req.user.id
+            dream: req.params.id,
+            author: req.user.id,
+            text: req.body.text
           });
       }
     })
@@ -68,43 +68,51 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.delete('/:comment_id', jsonParser, jwtAuth, (req, res) => {
-  // Make sure that comment to delete is actually one of the user's comments 
-  Comment
-    .findById(req.comment_id)
+  // Make sure that comment to delete is actually one of the user's or is on the user's dream
+  // When comment is deleted, the reference in the user's dream is deleted also
+  let dream;
+
+  Dream
+    .findById(req.params.id)
+    .then(_dream => {
+      dream = _dream;
+      if(!dream) {
+        return Promise.reject({
+          code: 404,
+          reason: 'AccessError',
+          message: 'Dream was not found'
+        });
+      } else {
+        return Comment
+          .findById(req.params.comment_id);
+      }
+    })
     .then(comment => {
       if(!comment) {
         return Promise.reject({
           code: 404,
           reason: 'AccessError',
-          message: 'Comment does not exist'
+          message: 'Comment was not found'
         });
-      } else if(comment.author.toString() !== req.user.id) {
+      } else if(comment.author.toString() === req.user.id || dream.author.toString() === req.user.id) {
+        return comment.remove();
+      } else {
         return Promise.reject({
           code: 401,
           reason: 'AccessError',
           message: 'Not authorized to delete comment'
         });      
-      } else {
-        return Comment.findByIdAndRemove(req.params.id)
       }
-    })
-    .then(() => {
-      return Dream.findById(req.params.id);
-    })
-    .then(dream => {
-      //delete comment from ebedded dreams's list of comments
-      const dreamIndex = dream.comments.indexOf(mongoose.Types.ObjectId(req.params.id));
-      user.dreams.splice(dreamIndex, 1);
-      return user.save();
     })
     .then(() => {
       return res.status(204).end();
     })
     .catch(err => {
+      console.error(err);
       if (err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({message: 'Internal Server Error'});
+      res.status(500).json({message: JSON.stringify(err)});
     });
 })
 

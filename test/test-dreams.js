@@ -20,12 +20,14 @@ const {TEST_DATABASE_URL} = require('../config');
 chai.use(chaiHttp);
 chai.use(require('chai-datetime'));
 
-//save off a user for authenticated tests
+//save off two users for authenticated tests
 let testUser = {};
+let testUser2 = {};
 let testUserToken;
+let testUser2Token;
 
 
-//save off a dream for adding comments
+//save off a dream for comment tests
 let testDream = {};
 
 //first create users collection in order to give each dream an author
@@ -55,7 +57,12 @@ function seedData() {
         if(index === 0) {
           testUser = user;
           testUser['id'] = user.id;
-          testUserToken = generateTestUserToken();
+          testUserToken = generateTestUserToken(user);
+        }
+        if(index === 1) {
+          testUser2 = user;
+          testUser2['id'] = user.id;
+          testUser2Token = generateTestUserToken(user);
         }
         const dreamPromises = [];
         //create three dreams for each user
@@ -116,28 +123,29 @@ function generateDreamData(userId) {
   }
 }
 
-function generateCommentData(userId) {
+function generateCommentData(userId, dreamId) {
   return {
     author: userId,
+    dream: dreamId,
     text: faker.lorem.paragraphs(),
     publishDate: faker.date.past()
   }
 }
 
-function generateTestUserToken() {
+function generateTestUserToken(user) {
   return jwt.sign(
     {
       user: {
-        id: testUser.id,
-        username: testUser.username,
-        firstName: testUser.firstName,
-        lastName: testUser.lastName
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName
       }
     },
     JWT_SECRET,
     {
       algorithm: 'HS256',
-      subject: testUser.username,
+      subject: user.username,
       expiresIn: '7d'
     }
   );
@@ -416,7 +424,7 @@ describe('dreams API resource', function() {
     it('Should not allow an unauthorized user to post a comment', function() {
 
       return chai.request(app)
-        .post(`/dreams/${testDream._id}/comments`)
+        .post(`/dreams/${testDream.id}/comments`)
       .then(function (res) {
         expect(res).to.have.status(401);
       })
@@ -424,7 +432,7 @@ describe('dreams API resource', function() {
     });
 
     it("Should return an error if a dream does not exist", function() {
-      const newComment = generateCommentData(testUser.id);
+      const newComment = generateCommentData(testUser.id, testDream.id);
 
       return chai.request(app)
       //send fake objectid as parameter
@@ -439,7 +447,7 @@ describe('dreams API resource', function() {
 
     it("Should not add a comment with incorrect fields", function() {
       return chai.request(app)
-        .post(`/dreams/${testDream._id}/comments`)
+        .post(`/dreams/${testDream.id}/comments`)
         .set('authorization', `Bearer ${testUserToken}`)
         .send({fake: 'fake'})
       .then(function(res) {
@@ -449,10 +457,10 @@ describe('dreams API resource', function() {
     });
 
     it("Should not add a comment if the dream is not public", function() {
-      const newComment = generateCommentData(testUser.id);
+      const newComment = generateCommentData(testUser.id, testDream.id);
 
       return chai.request(app)
-        .post(`/dreams/${testDream._id}/comments`)
+        .post(`/dreams/${testDream.id}/comments`)
         .set('authorization', `Bearer ${testUserToken}`)
         .send(newComment)         
         .then(function(res) {
@@ -464,10 +472,10 @@ describe('dreams API resource', function() {
     it("Should add a comment if the dream has comments turned on", function() {
       const newComment = generateCommentData(testUser.id);
       
-      return Dream.findByIdAndUpdate(testDream._id, {$set: {commentsOn: true}})
+      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
         .then(function() {
           return chai.request(app)
-            .post(`/dreams/${testDream._id}/comments`)
+            .post(`/dreams/${testDream.id}/comments`)
             .set('authorization', `Bearer ${testUserToken}`)
             .send(newComment)         
         })
@@ -483,10 +491,100 @@ describe('dreams API resource', function() {
           return Comment.findById(res.body.id)
         })
         .then(function(comment) {
-          expect(comment.author).to.equal(newComment.author);
+          expect(comment.author.toString()).to.equal(newComment.author);
           expect(comment.text).to.equal(newComment.text);
         })
         .catch(err => handleError(err));
     });
   });
+
+  describe('/dreams/:id/comments/:comment_id DELETE endpoint', function() {
+
+    it('Should return 404 for a dream that could not be found', function() {
+      return chai.request(app)
+        .delete(`/dreams/${new Array(12).fill(0).join('')}/comments/${new Array(12).fill(0).join('')}`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .then(function(res) {
+          expect(res).to.have.status(404);
+        })
+        .catch(err => handleError(err));
+    });
+
+    it('Should return 404 for a comment that could not be found', function() {
+      return chai.request(app)
+        .delete(`/dreams/${testDream.id}/comments/${new Array(12).fill(0).join('')}`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .then(function(res) {
+          expect(res).to.have.status(404);
+        })
+        .catch(err => handleError(err));
+    });    
+
+    it('Should not allow a user to delete a comment that is not theirs on a dream that is not theirs', function() {
+        const newComment = generateCommentData(testUser2.id, testDream.id);
+
+        return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser2.id}})
+          .then(function() {
+            return chai.request(app)
+              .post(`/dreams/${testDream.id}/comments`)
+              .set('authorization', `Bearer ${testUser2Token}`)
+              .send(newComment)
+          })
+          .then(res => {
+            expect(res).to.have.status(201);
+            return chai.request(app)
+              .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
+              .set('authorization', `Bearer ${testUserToken}`)
+          })
+          .then(res => {
+            expect(res).to.have.status(401);
+          })
+          .catch(err => handleError(err));        
+    });
+
+    it('Should allow a user to delete a comment that belongs to the user', function() {
+      const newComment = generateCommentData(testUser.id);
+      
+      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true}})
+        .then(function() {
+          return chai.request(app)
+            .post(`/dreams/${testDream.id}/comments`)
+            .set('authorization', `Bearer ${testUserToken}`)
+            .send(newComment)         
+        })
+        .then(res => {
+          expect(res).to.have.status(201);
+          return chai.request(app)
+            .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
+            .set('authorization', `Bearer ${testUserToken}`)
+        })
+        .then(res => {
+          expect(res).to.have.status(204)
+        })
+        .catch(err => handleError(err));        
+    })
+
+    it('Should allow a user to delete a comment that is not theirs on a dream that is theirs', function() {
+      const newComment = generateCommentData(testUser2.id, testDream.id);
+
+      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
+        .then(function() {
+          return chai.request(app)
+            .post(`/dreams/${testDream.id}/comments`)
+            .set('authorization', `Bearer ${testUser2Token}`)
+            .send(newComment)
+        })
+        .then(res => {
+          expect(res).to.have.status(201);
+          return chai.request(app)
+            .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
+            .set('authorization', `Bearer ${testUserToken}`)
+        })
+        .then(res => {
+          expect(res).to.have.status(204);
+        })
+        .catch(err => handleError(err));      
+    })
+  });
+
 });

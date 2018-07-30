@@ -28,6 +28,17 @@ dreamSchema.methods.serialize = function() {
   };
 };
 
+//Mongoose middelware function that will delete dream reference in
+//User document's dreams array when a dream is deleted
+dreamSchema.pre('remove', function (next) {
+  var dream = this;
+  dream.model('User').update(
+    { _id: dream.author}, 
+    { $pull: { dreams: dream._id } },
+    next
+  );
+});
+
 const Dream = mongoose.model('Dream', dreamSchema);
 
 module.exports = { Dream };
