@@ -181,7 +181,8 @@ label {
 .dream-editor-message,
 .dream-journal-message,
 .dream-detail-message,
-.create-account-message {
+.create-account-message,
+.create-comment-message {
   display: none;
   font-size: 17px;
   color: rgb(243, 55, 55);
@@ -312,10 +313,10 @@ textarea {
 .dream-comment-author {
   margin: 0;
 }
-.add-comment-form {
-  display: inline;
+.comment-add-form {
+  display: none;
 }
-.add-comment-form legend {
+.comment-add-form legend {
   font-size: 20px;
 }
 .comment-add-form button{

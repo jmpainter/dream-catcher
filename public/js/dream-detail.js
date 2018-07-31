@@ -6,31 +6,35 @@ function showDreamDetail(backView) {
   $('.dream-author').text(author);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
-  let commentsHTML = '';
-  for(let comment of dream.comments) {
-    commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;
-  }
-  $('.dream-comments').html(commentsHTML);
-  showView('dream-detail');
+  $('.dream-edit').css('display', 'none');
+  $('.dream-delete').css('display', 'none');
+  $('.dream-comment').css('display', 'none');
+  showComments();
   handleDreamDetailBackClick(backView);
-
+  
   //if user is logged in
   if(Cookies.get('_dream-catcher-token')) {
     //if this is one of theird dreams, show edit and delete buttons, hide the comment button
     if(appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
       $('.dream-edit').css('display', 'block');
       $('.dream-delete').css('display', 'block');
-      $('.dream-comment').css('display', 'none');
       handleDreamEditClick();
       handleDreamDeleteClick();
-    } else {
+    } else if(dream.commentsOn === true) {
       //show the comment button
-      $('.dream-edit').css('display', 'none');
-      $('.dream-delete').css('display', 'none');
       $('.dream-comment').css('display', 'block');
       handleDreamCommentClick();
     }
   }
+  showView('dream-detail');
+}
+
+function showComments() {
+  let commentsHTML = '';
+  for(let comment of appState.currentDream.comments) {
+    commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;
+  }
+  $('.dream-comments').html(commentsHTML);
 }
 
 function handleDreamDetailBackClick(backView) {
@@ -67,7 +71,7 @@ function deleteDreamSuccess() {
 function deleteDreamError() {
   $('.dream-detail-message')
     .text('There was an error in deleting your dream.')
-    .css('display', 'block');
+    .css('visibility', 'visible');
   handleDreamDeleteClick();
 }
 
@@ -77,6 +81,44 @@ function handleDreamDeleteClick() {
   });
 }
 
-function handleDreamCommentClick() {
+function addComment() {
+  data = {
+    text: $('#comment-text').val(),
+  }
+  
+  $.ajax({
+    url: `${API_URL}/dreams/${appState.currentDream._id}/comments`,
+    type: 'POST',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+    },    
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: showComments,
+    error: createCommentError
+  });
+}
 
+function createCommentError(xhr, status, error) {
+  $('.create-comment-message')
+  .text('There was an error in creating your comment.')
+  .css('display', 'block');
+}
+
+function handleCommentSubmitClick() {
+  $('.comment-add-form').submit(function(event) {
+    event.preventDefault();
+    addComment();
+  });
+}
+
+function handleDreamCommentClick() {
+  $('.dream-comment').click(function() {
+    $('.comment-add-form').css('display', 'block');
+    $('.nicEdit-panelContain').parent().width('100%');
+    $('.nicEdit-panelContain').parent().next().width('100%');
+    $('.nicEdit-main').width('100%');
+    $('.nicEdit-main').height('92px');
+    handleCommentSubmitClick();
+  })
 }

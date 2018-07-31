@@ -42,7 +42,7 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (
         res.status(500).json({message: 'Internal server error'});
       })
   } else {
-    const perPage = 99;
+    const perPage = 16;
     const page = req.params.page || 1;
     let count = 0;
   
@@ -56,14 +56,6 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (
           .skip((perPage * page) - perPage)
           .limit(perPage)
           .populate('author', 'firstName lastName screenName')
-          .populate({
-            path: 'comments',
-            model: 'Comment',
-            populate: {
-              path: 'author',
-              model: 'User'
-            }
-          })
       })
       .then(dreams => {
         res.json({
@@ -72,21 +64,39 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (
           pages: Math.ceil(count / perPage)
         });
       })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error'});
+      });      
   }
 });
 
-// router.get('/:id', passport.authenticate(['jwt', 'anonymous'], {session: false}), (req, res) => {
-//   Dream.findById(req.params.id)
-//     .then(dream => {
-//       if(!dream) {
-//         return res.status(404).json({message: 'Not found'});
-//       } else if (dream.public !== true && req.user.id !== dream.author) {
-//         return res.status(401).json({message: 'Not authorized'});
-//       } else {
-//         return res.status(200).json(dream.serialize());
-//       }
-//     })
-// });
+router.get('/:id', passport.authenticate(['jwt', 'anonymous'], {session: false}), (req, res) => {
+  Dream
+    .findById(req.params.id)
+    .populate('author', 'firstName lastName screenName')
+    .populate({
+      path: 'comments',
+      model: 'Comment',
+      populate: {
+        path: 'author',
+        model: 'User'
+      }
+    })
+    .then(dream => {
+      if(!dream) {
+        return res.status(404).json({message: 'Not found'});
+      } else if (dream.public === false && (!req.user || req.user.id !== dream.author._id.toString())) {
+        return res.status(401).json({message: 'Not authorized'});
+      } else {
+        return res.status(200).json(dream);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error'});
+    });      
+});
 
 router.post('/', jsonParser, jwtAuth, (req, res) => {
   const requiredFields = ['title', 'text'];

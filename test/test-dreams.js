@@ -184,7 +184,7 @@ describe('dreams API resource', function() {
 
   describe('GET endpoint - unauthorized', function() {
 
-    it('should return all public dreams', function() {
+    it('Should return all public dreams', function() {
       let res;
       return chai.request(app)
         .get('/dreams')
@@ -202,7 +202,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('should return public dreams with the right fields', function() {
+    it('Should return public dreams with the right fields', function() {
       let resDream;
       return chai.request(app)
         .get('/dreams')
@@ -247,7 +247,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('should return user dreams with the right fields', function() {
+    it('Should return user dreams with the right fields', function() {
       let resDream;
       return chai.request(app)
         .get('/dreams?personal=true')
@@ -275,7 +275,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('should return the correct number of user dreams', function() {
+    it('Should return the correct number of user dreams', function() {
       let resDreamCount;
       return chai.request(app)
         .get('/dreams?personal=true')
@@ -289,6 +289,85 @@ describe('dreams API resource', function() {
         })
         .catch(err => handleError(err));
     });
+  });
+
+  describe('GET /dreams/:id', function() {
+    // user is not logged in
+    //   requests public dream
+    //   requests private dream of other
+    // user is logged in
+    //   requests private dream of his own
+    //   requests private dream of other user
+
+    it('Should allow an unathorized user to request a public dream', function() {
+      return chai.request(app)
+        .get(`/dreams/${testDream.id}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('_id', 'title', 'author', 'text', 'publishDate');
+          expect(res.body._id).to.equal(testDream.id);
+          expect(res.body.title).to.equal(testDream.title);
+          expect(res.body.text).to.equal(testDream.text);
+          expect(new Date(res.body.publishDate)).to.equalDate(new Date(dream.publishDate));
+        })
+        .catch(err => handleError(err));
+    });
+
+    it('Should not allow an unathorized user to request a private dream', function() {
+      return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false}})
+        .then(function() {
+          return chai.request(app)
+            .get(`/dreams/${testDream.id}`)
+        })
+        .then(res => {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => handleError(err));
+      });
+
+      it('Should allow an authorized user to request a public dream', function() {
+        return chai.request(app)
+        .get(`/dreams/${testDream.id}`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('_id', 'title', 'author', 'text', 'publishDate');
+          expect(res.body._id).to.equal(testDream.id);
+          expect(res.body.title).to.equal(testDream.title);
+          expect(res.body.text).to.equal(testDream.text);
+          expect(new Date(res.body.publishDate)).to.equalDate(new Date(dream.publishDate));
+        })
+        .catch(err => handleError(err));        
+      });
+
+      it('Should allow an authorized user to request a private dream of theirs', function() {
+        return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false, author: testUser.id}})
+        .then(function() {
+          return chai.request(app)
+            .get(`/dreams/${testDream.id}`)
+            .set('authorization', `Bearer ${testUserToken}`)
+        })
+        .then(res => {
+          expect(res).to.have.status(200);
+        })
+        .catch(err => handleError(err));
+      });      
+      
+      it('Should not allow an authorized user to request a private dream not of theirs', function() {
+        return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false, author: testUser2.id}})
+        .then(function() {
+          return chai.request(app)
+            .get(`/dreams/${testDream.id}`)
+            .set('authorization', `Bearer ${testUserToken}`)
+        })
+        .then(res => {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => handleError(err));
+      });        
+
   });
 
   describe('POST endpoint', function() {
