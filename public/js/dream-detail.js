@@ -43,6 +43,8 @@ function displayCurrentDream(dream) {
       handleDreamCommentClick();
     }
   }
+  //need to check if a comment is the current user's or 
+  //if the comment is on the user's dream
   let commentsHTML = '';
   for(let comment of dream.comments) {
     commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;

@@ -87,7 +87,7 @@ function handleJournalDreamClick() {
   $('.dream-journal-list').on('click', 'a', function(event) {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.journalDreams.find(dream => dream._id === dreamId );
-    showDreamDetail('dream-journal');
+    initDreamDetail('dream-journal');
   });
 
   $('.dream-journal-list').on('click', 'input', function(event) {

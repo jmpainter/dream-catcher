@@ -1,10 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const faker = require('faker');
-const jwt = require('jsonwebtoken');
-
 const mongoose = require('mongoose');
-const {JWT_SECRET} = require('../config');
 
 const expect = chai.expect;
 
@@ -17,8 +13,14 @@ const {Comment} = require('../comments/models');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
-chai.use(chaiHttp);
-chai.use(require('chai-datetime'));
+const {
+  seedData,
+  generateDreamData,
+  generateCommentData,
+  generateTestUserToken,
+  tearDownDb,
+  handleError
+} = require('./seeds.js');
 
 //save off two users for authenticated tests
 let testUser = {};
@@ -26,142 +28,29 @@ let testUser2 = {};
 let testUserToken;
 let testUser2Token;
 
-
 //save off a dream for comment tests
 let testDream = {};
 
-//first create users collection in order to give each dream an author
-function seedData() {
-  console.info('seeding data');
+chai.use(chaiHttp);
+chai.use(require('chai-datetime'));
 
-  const userSeedData = [];
-  
-  //create three users
-  for (let i = 1; i <= 3; i++) {
-    userSeedData.push(generateUserData());
-  }
-  
-  const promises = [];
-
-  //each user is created with password 'test'
-
-  userSeedData.forEach((seed, index) => {
-    promises.push(
-      User.hashPassword('test').
-      then(password => {
-        seed["password"] = password;
-        return User.create(seed);
-      })
-      .then(user => {
-        //save off a user for authenticated tests
-        if(index === 0) {
-          testUser = user;
-          testUser['id'] = user.id;
-          testUserToken = generateTestUserToken(user);
-        }
-        if(index === 1) {
-          testUser2 = user;
-          testUser2['id'] = user.id;
-          testUser2Token = generateTestUserToken(user);
-        }
-        const dreamPromises = [];
-        //create three dreams for each user
-        for (let i = 1; i <= 3; i++) {
-          dreamPromises.push(Dream.create(generateDreamData(user._id)))
-        }
-        return Promise.all(dreamPromises);
-      })
-      .then(results => {
-        // add each dream id to dream array in user document
-        const addDreamToUserPromises = [];
-        results.forEach((dream, index) => {
-          if(index === 0) {
-            testDream = dream;
-            testDream['id'] = dream.id;
-          }
-          addDreamToUserPromises.push(addDreamToUser(dream.author, dream._id));
-        })
-        return Promise.all(addDreamToUserPromises);
-      })
-      .catch(err => handleError(err))
-    )
-  });
-
-  return Promise.all(promises);
-}
-
-function addDreamToUser(userId, dreamId) {
-  return User.findById(userId)
+function seedDataAndGenerateTestUsers() {
+  return seedData()
+    .then(() => User.findOne())
     .then(user => {
-      user.dreams.push(dreamId);
-      return user.save();
+      testUser = user;
+      testUserToken = generateTestUserToken(user);
+      return User.findOne({_id: {$ne: user.id}});
     })
-    .then(user => {
-      if(!user) {
-        throw new Error('User not created');
-      }
+    .then(user2 => {
+      testUser2 = user2;
+      testUser2Token = generateTestUserToken(user2);
+      return Dream.findOne();
     })
-    .catch(err => handleError(err));
-}
-
-function generateUserData() {
-  return {
-    username: faker.internet.userName(),
-    screenName: faker.name.firstName(),
-    firstName: faker.name.lastName(),
-    lastName: faker.name.lastName()
-  }
-}
-
-function generateDreamData(userId) {
-  return {
-    title: faker.lorem.sentence(),
-    author: userId,
-    text: faker.lorem.paragraphs(),
-    publishDate: faker.date.past(),
-    public: true
-  }
-}
-
-function generateCommentData(userId, dreamId) {
-  return {
-    author: userId,
-    dream: dreamId,
-    text: faker.lorem.paragraphs(),
-    publishDate: faker.date.past()
-  }
-}
-
-function generateTestUserToken(user) {
-  return jwt.sign(
-    {
-      user: {
-        id: user.id,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName
-      }
-    },
-    JWT_SECRET,
-    {
-      algorithm: 'HS256',
-      subject: user.username,
-      expiresIn: '7d'
-    }
-  );
-}
-
-function tearDownDb() {
-  console.warn('Deleting database');
-  return mongoose.connection.dropDatabase();
-}
-
-function handleError(err) {
-  if (err instanceof chai.AssertionError) {
-    throw err;
-  } else {
-    console.error(err);
-  }  
+    .then(dream => {
+      testDream = dream;
+    })
+    .catch(err => console.error(err));
 }
 
 describe('dreams API resource', function() {
@@ -171,7 +60,7 @@ describe('dreams API resource', function() {
   });
   
   beforeEach(function() {
-    return seedData();
+    return seedDataAndGenerateTestUsers();
   });
 
   afterEach(function() {
@@ -292,21 +181,15 @@ describe('dreams API resource', function() {
   });
 
   describe('GET /dreams/:id', function() {
-    // user is not logged in
-    //   requests public dream
-    //   requests private dream of other
-    // user is logged in
-    //   requests private dream of his own
-    //   requests private dream of other user
 
     it('Should allow an unathorized user to request a public dream', function() {
       return chai.request(app)
-        .get(`/dreams/${testDream.id}`)
+        .get(`/dreams/${testDream._id}`)
         .then(res => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.a('object');
           expect(res.body).to.include.keys('_id', 'title', 'author', 'text', 'publishDate');
-          expect(res.body._id).to.equal(testDream.id);
+          expect(res.body._id).to.equal(testDream._id.toString());
           expect(res.body.title).to.equal(testDream.title);
           expect(res.body.text).to.equal(testDream.text);
           expect(new Date(res.body.publishDate)).to.equalDate(new Date(dream.publishDate));
@@ -497,172 +380,4 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
   });
-
-  describe('POST :id/comments endpoint', function() {
-    it('Should not allow an unauthorized user to post a comment', function() {
-
-      return chai.request(app)
-        .post(`/dreams/${testDream.id}/comments`)
-      .then(function (res) {
-        expect(res).to.have.status(401);
-      })
-      .catch(err => handleError(err));
-    });
-
-    it("Should return an error if a dream does not exist", function() {
-      const newComment = generateCommentData(testUser.id, testDream.id);
-
-      return chai.request(app)
-      //send fake objectid as parameter
-        .post(`/dreams/${new Array(24).fill(0).join('')}/comments`)
-        .set('authorization', `Bearer ${testUserToken}`)
-        .send(newComment)
-        .then(function(res) {
-          expect(res).to.have.status(404);
-        })
-        .catch(err => handleError(err));
-    });
-
-    it("Should not add a comment with incorrect fields", function() {
-      return chai.request(app)
-        .post(`/dreams/${testDream.id}/comments`)
-        .set('authorization', `Bearer ${testUserToken}`)
-        .send({fake: 'fake'})
-      .then(function(res) {
-        expect(res).to.have.status(400);
-      })
-      .catch(err => handleError(err));
-    });
-
-    it("Should not add a comment if the dream is not public", function() {
-      const newComment = generateCommentData(testUser.id, testDream.id);
-
-      return chai.request(app)
-        .post(`/dreams/${testDream.id}/comments`)
-        .set('authorization', `Bearer ${testUserToken}`)
-        .send(newComment)         
-        .then(function(res) {
-          expect(res).to.have.status(401);
-        })
-        .catch(err => handleError(err));
-    });
-    
-    it("Should add a comment if the dream has comments turned on", function() {
-      const newComment = generateCommentData(testUser.id);
-      
-      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
-        .then(function() {
-          return chai.request(app)
-            .post(`/dreams/${testDream.id}/comments`)
-            .set('authorization', `Bearer ${testUserToken}`)
-            .send(newComment)         
-        })
-        .then(function(res) {
-          expect(res).to.have.status(201);
-          expect(res).to.be.json;
-          expect(res).to.be.a('object');
-          expect(res.body).to.include.keys('id', 'text', 'author', 'publishDate');
-          expect(res.body.id).to.not.be.null;
-          expect(res.body.text).to.equal(newComment.text);
-          expect(res.body.author).to.equal(newComment.author);
-
-          return Comment.findById(res.body.id)
-        })
-        .then(function(comment) {
-          expect(comment.author.toString()).to.equal(newComment.author);
-          expect(comment.text).to.equal(newComment.text);
-        })
-        .catch(err => handleError(err));
-    });
-  });
-
-  describe('/dreams/:id/comments/:comment_id DELETE endpoint', function() {
-
-    it('Should return 404 for a dream that could not be found', function() {
-      return chai.request(app)
-        .delete(`/dreams/${new Array(12).fill(0).join('')}/comments/${new Array(12).fill(0).join('')}`)
-        .set('authorization', `Bearer ${testUserToken}`)
-        .then(function(res) {
-          expect(res).to.have.status(404);
-        })
-        .catch(err => handleError(err));
-    });
-
-    it('Should return 404 for a comment that could not be found', function() {
-      return chai.request(app)
-        .delete(`/dreams/${testDream.id}/comments/${new Array(12).fill(0).join('')}`)
-        .set('authorization', `Bearer ${testUserToken}`)
-        .then(function(res) {
-          expect(res).to.have.status(404);
-        })
-        .catch(err => handleError(err));
-    });    
-
-    it('Should not allow a user to delete a comment that is not theirs on a dream that is not theirs', function() {
-        const newComment = generateCommentData(testUser2.id, testDream.id);
-
-        return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser2.id}})
-          .then(function() {
-            return chai.request(app)
-              .post(`/dreams/${testDream.id}/comments`)
-              .set('authorization', `Bearer ${testUser2Token}`)
-              .send(newComment)
-          })
-          .then(res => {
-            expect(res).to.have.status(201);
-            return chai.request(app)
-              .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
-              .set('authorization', `Bearer ${testUserToken}`)
-          })
-          .then(res => {
-            expect(res).to.have.status(401);
-          })
-          .catch(err => handleError(err));        
-    });
-
-    it('Should allow a user to delete a comment that belongs to the user', function() {
-      const newComment = generateCommentData(testUser.id);
-      
-      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true}})
-        .then(function() {
-          return chai.request(app)
-            .post(`/dreams/${testDream.id}/comments`)
-            .set('authorization', `Bearer ${testUserToken}`)
-            .send(newComment)         
-        })
-        .then(res => {
-          expect(res).to.have.status(201);
-          return chai.request(app)
-            .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
-            .set('authorization', `Bearer ${testUserToken}`)
-        })
-        .then(res => {
-          expect(res).to.have.status(204)
-        })
-        .catch(err => handleError(err));        
-    })
-
-    it('Should allow a user to delete a comment that is not theirs on a dream that is theirs', function() {
-      const newComment = generateCommentData(testUser2.id, testDream.id);
-
-      return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
-        .then(function() {
-          return chai.request(app)
-            .post(`/dreams/${testDream.id}/comments`)
-            .set('authorization', `Bearer ${testUser2Token}`)
-            .send(newComment)
-        })
-        .then(res => {
-          expect(res).to.have.status(201);
-          return chai.request(app)
-            .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
-            .set('authorization', `Bearer ${testUserToken}`)
-        })
-        .then(res => {
-          expect(res).to.have.status(204);
-        })
-        .catch(err => handleError(err));      
-    })
-  });
-
 });
