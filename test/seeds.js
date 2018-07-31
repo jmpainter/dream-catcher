@@ -68,9 +68,6 @@ function seedData() {
   return Promise.all(promises);
 }
 
-function getTestUser(notId) {
-}
-
 function addDreamToUser(userId, dreamId) {
   return User.findById(userId)
     .then(user => {

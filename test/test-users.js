@@ -1,20 +1,56 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-
-const { app, runServer, closeServer } = require('../server');
-const { User } = require('../users/models');
-const { TEST_DATABASE_URL } = require('../config');
+const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
-chai.use(chaiHttp);
+mongoose.Promise = global.Promise;
 
-function handleError(err) {
-  if (err instanceof chai.AssertionError) {
-    throw err;
-  } else {
-    console.error(err);
-  }  
+const {Dream} = require('../dreams/models');
+const {User} = require('../users/models');
+const {Comment} = require('../comments/models');
+
+const {app, runServer, closeServer} = require('../server');
+const {TEST_DATABASE_URL} = require('../config');
+
+const {
+  seedData,
+  generateDreamData,
+  generateCommentData,
+  generateTestUserToken,
+  tearDownDb,
+  handleError
+} = require('./seeds.js');
+
+//save off two users for authenticated tests
+let testUser = {};
+let testUser2 = {};
+let testUserToken;
+let testUser2Token;
+
+//save off a dream for comment tests
+let testDream = {};
+
+chai.use(chaiHttp);
+chai.use(require('chai-datetime'));
+
+function seedDataAndGenerateTestUsers() {
+  return seedData()
+    .then(() => User.findOne())
+    .then(user => {
+      testUser = user;
+      testUserToken = generateTestUserToken(user);
+      return User.findOne({_id: {$ne: user.id}});
+    })
+    .then(user2 => {
+      testUser2 = user2;
+      testUser2Token = generateTestUserToken(user2);
+      return Dream.findOne();
+    })
+    .then(dream => {
+      testDream = dream;
+    })
+    .catch(err => console.error(err));
 }
 
 describe('users API resource', function() {
@@ -27,18 +63,20 @@ describe('users API resource', function() {
   before(function() {
     return runServer(TEST_DATABASE_URL);
   });
+  
+  beforeEach(function() {
+    return seedDataAndGenerateTestUsers();
+  });
+
+  afterEach(function() {
+    return tearDownDb();
+  });
 
   after(function() {
     return closeServer();
-  });
+  });  
 
-  beforeEach(function() { });
-
-  afterEach(function() {
-    return User.remove({});
-  });
-
-  describe('POST', function() {
+  describe('POST /users', function() {
 
     it('Should reject users with missing usernname', function() {
       return chai
@@ -344,5 +382,44 @@ describe('users API resource', function() {
         })
         .catch(err => handleError(err));
     })
+  });
+
+  describe('GET /users', function() {
+
+    it('Should not allow an unregistered user to get', function() {
+      return chai.request(app)
+        .get(`/users/${new Array(12).fill(0).join('')}`)
+        .then(res => {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => handleError(err));
+    });
+
+    it('Should not allow a registered user to get information about another user', function() {
+      return chai.request(app)
+        .get(`/users/${testUser2.id}`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .then(res => {
+          expect(res).to.have.status(401);
+        })
+        .catch(err => handleError(err));
+    });
+
+    it('Should allow a registered user to get their information', function() {
+      return chai.request(app)
+        .get(`/users/${testUser.id}`)
+        .set('authorization', `Bearer ${testUserToken}`)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.id).to.equal(testUser.id);
+          expect(res.body.username).to.equal(testUser.username);
+          expect(res.body.firstName).to.equal(testUser.firstName);
+          expect(res.body.lastName).to.equal(testUser.lastName);
+          expect(res.body.screenName).to.equal(testUser.screenName);
+        })
+        .catch(err => handleError(err));
+    });
+
   });
 });

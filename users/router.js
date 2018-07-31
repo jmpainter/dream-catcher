@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const { User } = require('./models');
 const jsonParser = bodyParser.json();
 
 mongoose.Promise = global.Promise;
+
+const jwtAuth = passport.authenticate('jwt', {session: false});
 
 router.post('/', jsonParser, (req, res) => {
   const requiredFields = ['username', 'password', 'screenName', 'firstName', 'lastName'];
@@ -129,5 +132,24 @@ router.post('/', jsonParser, (req, res) => {
       res.status(500).json({message: 'Internal Server Error'});
     });
 });
+
+router.get('/:id', jwtAuth, (req, res) => {
+  if(req.params.id !== req.user.id) {
+    return res.status(401).json({message: 'Unauthorized'});
+  } else {
+    User.findById(req.params.id)
+      .then(user => {
+        if(!user) {
+          return res.status(404).json({message: 'Not found'});
+        } else {
+          return res.status(200).json(user.serialize());
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'})
+      });
+  }
+})
 
 module.exports = {router};
