@@ -1,17 +1,34 @@
-function showDreamDetail(backView) {
-  const dream = appState.currentDream;
-  console.log(dream);
+function initDreamDetail(backView) {
+  handleDreamDetailBackClick(backView);
+  getCurrentDream();
+}
+
+function getCurrentDream() {
+  $.ajax({
+    url: `${API_URL}/dreams/${appState.currentDream._id}`,
+    type: 'GET',
+    beforeSend: Cookies.get('_dream-catcher-token') ? setHeader : null,
+    data: {},
+    success: displayCurrentDream,
+    error: getCurrentDreamError
+  })
+  .catch(err => console.error(err));
+}
+
+const setHeader = function (xhr) {
+  xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+}
+
+function displayCurrentDream(dream) {
   $('.dream-title').text(dream.title);
   const author = dream.author ? dream.author.screenName : '';
   $('.dream-author').text(author);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
+
   $('.dream-edit').css('display', 'none');
   $('.dream-delete').css('display', 'none');
   $('.dream-comment').css('display', 'none');
-  showComments();
-  handleDreamDetailBackClick(backView);
-  
   //if user is logged in
   if(Cookies.get('_dream-catcher-token')) {
     //if this is one of theird dreams, show edit and delete buttons, hide the comment button
@@ -26,15 +43,19 @@ function showDreamDetail(backView) {
       handleDreamCommentClick();
     }
   }
-  showView('dream-detail');
-}
-
-function showComments() {
   let commentsHTML = '';
-  for(let comment of appState.currentDream.comments) {
+  for(let comment of dream.comments) {
     commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;
   }
   $('.dream-comments').html(commentsHTML);
+
+  showView('dream-detail');
+}
+
+function getCurrentDreamError() {
+  $('.dream-detail-message')
+    .text('There was an error in retrieving your dream.')
+    .css('visibility', 'visible');  
 }
 
 function handleDreamDetailBackClick(backView) {
@@ -94,7 +115,7 @@ function addComment() {
     },    
     contentType: 'application/json',
     data: JSON.stringify(data),
-    success: showComments,
+    success: getCurrentDream,
     error: createCommentError
   });
 }
@@ -108,6 +129,7 @@ function createCommentError(xhr, status, error) {
 function handleCommentSubmitClick() {
   $('.comment-add-form').submit(function(event) {
     event.preventDefault();
+    $('.comment-add-form').css('display', 'none');
     addComment();
   });
 }

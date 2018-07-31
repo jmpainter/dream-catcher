@@ -367,7 +367,6 @@ describe('dreams API resource', function() {
         })
         .catch(err => handleError(err));
       });        
-
   });
 
   describe('POST endpoint', function() {

@@ -44,7 +44,7 @@ function handleDreamClick() {
   $('.flex-container').on('click', '.flex-col', function(event) {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.latestDreams.find(dream => dream._id === dreamId );
-    showDreamDetail('recent-dreams');
+    initDreamDetail('recent-dreams');
   });
 }
 
