@@ -386,19 +386,9 @@ describe('users API resource', function() {
 
   describe('GET /users', function() {
 
-    it('Should not allow an unregistered user to get', function() {
+    it('Should not allow an unregistered user to get user information', function() {
       return chai.request(app)
-        .get(`/users/${new Array(12).fill(0).join('')}`)
-        .then(res => {
-          expect(res).to.have.status(401);
-        })
-        .catch(err => handleError(err));
-    });
-
-    it('Should not allow a registered user to get information about another user', function() {
-      return chai.request(app)
-        .get(`/users/${testUser2.id}`)
-        .set('authorization', `Bearer ${testUserToken}`)
+        .get('/users')
         .then(res => {
           expect(res).to.have.status(401);
         })
@@ -407,7 +397,7 @@ describe('users API resource', function() {
 
     it('Should allow a registered user to get their information', function() {
       return chai.request(app)
-        .get(`/users/${testUser.id}`)
+        .get('/users')
         .set('authorization', `Bearer ${testUserToken}`)
         .then(res => {
           expect(res).to.have.status(200);

@@ -32,7 +32,7 @@ function displayCurrentDream(dream) {
   //if user is logged in
   if(Cookies.get('_dream-catcher-token')) {
     //if this is one of theird dreams, show edit and delete buttons, hide the comment button
-    if(appState.journalDreams.find(dream => dream._id === appState.currentDream._id)) {
+    if(dream.author == appState.userInfo.id) {
       $('.dream-edit').css('display', 'block');
       $('.dream-delete').css('display', 'block');
       handleDreamEditClick();
@@ -47,7 +47,10 @@ function displayCurrentDream(dream) {
   //if the comment is on the user's dream
   let commentsHTML = '';
   for(let comment of dream.comments) {
-    commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p></li>`;
+    commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p>`;
+    if(comment.author._id === appState.userInfo.id || dream.author._id == appState.userInfo.id) {
+      commentsHTML += `<p class="comment-delete"><a href="javascript:void(0)" data-comment-id=${comment._id}>delete</a></p>`;
+    }
   }
   $('.dream-comments').html(commentsHTML);
 

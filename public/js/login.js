@@ -3,6 +3,29 @@ function initLogin() {
   showView('login');
 }
 
+function getUserInfo(errorCallback) {
+  $.ajax({
+    url: `${API_URL}/users`,
+    type: 'GET',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+    },
+    data: {},
+    error: errorCallback,
+    success: getUserSuccess
+  });
+}
+
+function getUserSuccess(user) {
+  appState.userInfo = user;
+}
+
+function getUserOnLoginError() {
+  $('.login-message')
+  .text('There was an error in retrieving your user information.')
+  .css('display', 'block');  
+}
+
 function loginUser(username, password) {
   const data = {username, password};
   $.ajax({

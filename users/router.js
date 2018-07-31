@@ -133,23 +133,19 @@ router.post('/', jsonParser, (req, res) => {
     });
 });
 
-router.get('/:id', jwtAuth, (req, res) => {
-  if(req.params.id !== req.user.id) {
-    return res.status(401).json({message: 'Unauthorized'});
-  } else {
-    User.findById(req.params.id)
-      .then(user => {
-        if(!user) {
-          return res.status(404).json({message: 'Not found'});
-        } else {
-          return res.status(200).json(user.serialize());
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        res.status(500).json({message: 'Internal Server Error'})
-      });
-  }
+router.get('/', jwtAuth, (req, res) => {
+  User.findById(req.user.id)
+    .then(user => {
+      if(!user) {
+        return res.status(404).json({message: 'Not found'});
+      } else {
+        return res.status(200).json(user.serialize());
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({message: 'Internal Server Error'})
+    });
 })
 
 module.exports = {router};

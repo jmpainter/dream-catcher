@@ -4,6 +4,7 @@ if(window.location.port) {
 }
 
 const appState = {
+  userInfo: null,
   latestDreams: [],
   journalDreams: [],
   currentDream: null,
@@ -43,6 +44,12 @@ function setJournalDreams(data) {
   appState.journalDreams = data.dreams;
 }
 
+function getUserOnAppStartError() {
+  $('.home-screen-message')
+  .text('There was an error in retrieving your user information.')
+  .css('display', 'block');  
+}
+
 function startApp() {
   //for manually setting dream journal view
   // $('main').prop('hidden', false);
@@ -52,6 +59,7 @@ function startApp() {
   if(Cookies.get('_dream-catcher-token')) {
     setMenu('user');
     getJournalDreams(setJournalDreams);
+    getUserInfo(getUserOnAppStartError);
   } else {
     setMenu('public');
   }
