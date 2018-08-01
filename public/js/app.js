@@ -12,12 +12,8 @@ const appState = {
 };
 
 function showView(viewName) {
-  $('.view').hide();
-  $('#dream-editor').css('visibility', 'hidden');
-  $('#' + viewName).show();
-  if(viewName === 'dream-editor') {
-    $('#dream-editor').css('visibility', 'visible');
-  }
+  $('.view').css('display', 'none');
+  $('#' + viewName).css('display', 'block');
 }
 
 function toggleNav(){

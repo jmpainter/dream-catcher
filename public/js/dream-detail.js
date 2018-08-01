@@ -76,7 +76,7 @@ function handleDreamDetailBackClick(backView) {
 
 function handleDreamEditClick() {
   $('.dream-edit').click(function() {
-    initDreamEditor(appState.currentDream);
+    initDreamEditor(false);
   });
 }
 
@@ -89,14 +89,10 @@ function deleteDream() {
       beforeSend: function (xhr) {
           xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
       },
-      success: deleteSuccess,
+      success: initDreamJournal,
       error: deleteDreamError
     });
   }
-}
-
-function deleteSuccess() {
-  initDreamJournal();
 }
 
 function deleteDreamError() {
@@ -121,7 +117,7 @@ function deleteComment(commentId) {
       beforeSend: function (xhr) {
           xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
       },
-      success: initDreamDetail,
+      success: commentSuccess,
       error: deleteCommentError
     });
   }  
@@ -136,12 +132,10 @@ function deleteCommentError() {
 
 function handleCommentDeleteClick() {
   $('.dream-comments').off().on('click', '.delete-comment-button', function(event) {
-    console.log('click');
     commentId = $(this).attr('data-comment-id');
     deleteComment(commentId);
   });
 }
-
 
 function addComment() {
   data = {
@@ -156,9 +150,13 @@ function addComment() {
     },    
     contentType: 'application/json',
     data: JSON.stringify(data),
-    success: getCurrentDream,
+    success: commentSuccess,
     error: createCommentError
   });
+}
+
+function commentSuccess() {
+  setTimeout(initDreamDetail('recent-dreams'), 1000);
 }
 
 function createCommentError(xhr, status, error) {

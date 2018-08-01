@@ -1,7 +1,8 @@
 function initDreamJournal() {
-  getAndDisplayJournalDreams();
   handleJournalDreamClick(); 
   handleNewDreamClick();
+  getJournalDreams(displayJournalDreams);
+  showView('dream-journal');
 }
 
 function getJournalDreams(callback) {
@@ -12,9 +13,15 @@ function getJournalDreams(callback) {
         xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
     },
     data: {},
-    success: callback
-  })
-  .catch(err => console.error(err));
+    success: callback,
+    error: getJournalDreamsError
+  });
+}
+
+function getJournalDreamsError() {
+  $('.dream-journal-message')
+    .text('Dream journal retrieval was unsuccessful.')
+    .css('display', 'block');  
 }
 
 function displayJournalDreams(data) {
@@ -49,13 +56,7 @@ function displayJournalDreams(data) {
       </div>`;
   });
   $('.dream-journal-list').html(htmlString);
-  showView('dream-journal');
 }
-
-function getAndDisplayJournalDreams() {
-  getJournalDreams(displayJournalDreams);
-}
-
 
 function updateDream(dreamId, checkOrUncheck, type) {
   const updateData = {id: dreamId};
@@ -77,7 +78,7 @@ function updateDream(dreamId, checkOrUncheck, type) {
     },
     contentType: 'application/json',
     data: JSON.stringify(updateData),
-    success: getAndDisplayJournalDreams,
+    success: displayJournalDreams,
     error: updateDreamError
   });
 }
@@ -116,8 +117,7 @@ function handleJournalDreamClick() {
 
 function handleNewDreamClick() {
   $('.new-dream').click(function() {
-    initDreamEditor();
     $('#dream-editor').css('visibility', 'visible');
-    showView('dream-editor');
+    initDreamEditor(true);
   });
 }

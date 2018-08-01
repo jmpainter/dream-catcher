@@ -1,9 +1,10 @@
-function initDreamEditor(dream){
+function initDreamEditor(isNew){
+  const dream = appState.currentDream;
   //clean out any old text
   $('#dream-editor-title').val('');
   nicEditors.findEditor('dream-editor-text').setContent('');
 
-  if(!dream) {
+  if(isNew) {
     appState.editorMode = 'new';
     $('.dream-editor-mode').text('New');
     $('.dream-editor-submit-label').text('Create');
@@ -15,9 +16,14 @@ function initDreamEditor(dream){
     nicEditors.findEditor('dream-editor-text').setContent(dream.text);
   }
   $('.dream-editor-message').css('display', 'none');
+  $('.dream-editor-form').css('display', 'block');
+  $('.nicEdit-panelContain').parent().width('100%');
+  $('.nicEdit-panelContain').parent().next().width('98%');
+  $('.nicEdit-main').width('100%');
+  $('.nicEdit-main').height('300px');
   handleDreamEditSubmit();
   handleDreamEditBack();
-  showView('dream-journal');
+  showView('dream-editor');
 }
 
 function postOrPutDream(postOrPut) {
@@ -55,7 +61,6 @@ function postOrPutDream(postOrPut) {
 
 function postOrPutSuccess() {
   initDreamJournal();
-  showView('dream-journal');    
 }
 
 function postOrPutError() {
@@ -78,7 +83,7 @@ function handleDreamEditSubmit() {
 
 function handleDreamEditBack() {
   $('.dream-editor-back').click(function(event) {
-    initDreamJournal();
-    showView('dream-journal');    
+    event.preventDefault();
+    showView('dream-journal');
   });
 }

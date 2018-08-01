@@ -98,6 +98,10 @@ p {
   margin-top: 5px;
   color: #ffb500;
 }
+
+.view {
+  display: none;
+}
 /* Dream Detail Screen */
 
 .dream-title {
@@ -232,9 +236,6 @@ textarea {
 }
 #dream-editor-title {
   width: 100%;
-}
-#dream-editor {
-  visibility: hidden;
 }
 #dream-editor-text, #comment-text {
   width: 100%;
