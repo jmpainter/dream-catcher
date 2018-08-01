@@ -204,7 +204,7 @@ label {
   display: inline-block;
   margin: 0;
 }
-.journal-public-check {
+.journal-check {
   margin-left: 0;
   vertical-align: middle;
   position: relative;
@@ -265,6 +265,7 @@ textarea {
   margin: 12px auto;
 }
 .flex-container {
+  padding-top: 20px;
 	max-width: 1000px;
 	display: flex;
 	flex-direction: row;
@@ -359,15 +360,11 @@ textarea {
 	}
 }
 
-
 /* Mobile */
 @media only screen and (max-width: 640px) {
   .logo {
     font-size: 33px;
     margin: 2px;
-  }
-  main {
-    padding-top: 20px;
   }
   .container {
     width: 100%;

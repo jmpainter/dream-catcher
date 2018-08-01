@@ -1,5 +1,10 @@
 function initDreamDetail(backView) {
+  $('.dream-edit').css('display', 'none');
+  $('.dream-delete').css('display', 'none');
+  $('.dream-comment').css('display', 'none');
+
   handleDreamDetailBackClick(backView);
+  handleCommentDeleteClick();
   getCurrentDream();
 }
 
@@ -26,30 +31,30 @@ function displayCurrentDream(dream) {
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
 
-  $('.dream-edit').css('display', 'none');
-  $('.dream-delete').css('display', 'none');
-  $('.dream-comment').css('display', 'none');
   //if user is logged in
   if(Cookies.get('_dream-catcher-token')) {
-    //if this is one of theird dreams, show edit and delete buttons, hide the comment button
-    if(dream.author == appState.userInfo.id) {
+    //if this is one of the user's dreams, show edit and delete buttons, hide the comment button
+    if(dream.author._id === appState.userInfo.id) {
       $('.dream-edit').css('display', 'block');
       $('.dream-delete').css('display', 'block');
       handleDreamEditClick();
       handleDreamDeleteClick();
-    } else if(dream.commentsOn === true) {
-      //show the comment button
-      $('.dream-comment').css('display', 'block');
-      handleDreamCommentClick();
+    } else {
+      if(dream.commentsOn === true) {
+        //show the comment button
+        $('.dream-comment').css('display', 'block');
+        handleDreamCommentClick();
+      }
     }
-  }
+  }  
+
   //need to check if a comment is the current user's or 
   //if the comment is on the user's dream
   let commentsHTML = '';
   for(let comment of dream.comments) {
     commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p>`;
     if(comment.author._id === appState.userInfo.id || dream.author._id == appState.userInfo.id) {
-      commentsHTML += `<p class="comment-delete"><a href="javascript:void(0)" data-comment-id=${comment._id}>delete</a></p>`;
+      commentsHTML += `<p class="comment-delete"><button class="delete-comment-button" data-comment-id=${comment._id}>Delete Comment</button></p>`;
     }
   }
   $('.dream-comments').html(commentsHTML);
@@ -84,13 +89,13 @@ function deleteDream() {
       beforeSend: function (xhr) {
           xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
       },
-      success: deleteDreamSuccess,
+      success: deleteSuccess,
       error: deleteDreamError
     });
   }
 }
 
-function deleteDreamSuccess() {
+function deleteSuccess() {
   initDreamJournal();
 }
 
@@ -106,6 +111,37 @@ function handleDreamDeleteClick() {
     deleteDream();
   });
 }
+
+function deleteComment(commentId) {
+  if(confirm('Are you sure you want to delete this comment?')) {
+    const _url = `${API_URL}/dreams/${appState.currentDream._id}/comments/${commentId}`;
+    $.ajax({
+      url: _url,
+      type: 'DELETE',
+      beforeSend: function (xhr) {
+          xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+      },
+      success: initDreamDetail,
+      error: deleteCommentError
+    });
+  }  
+}
+
+function deleteCommentError() {
+  $('.dream-detail-message')
+    .text('There was an error in deleting your comment.')
+    .css('visibility', 'visible');
+  handleCommentDeleteClick();
+}
+
+function handleCommentDeleteClick() {
+  $('.dream-comments').off().on('click', '.delete-comment-button', function(event) {
+    console.log('click');
+    commentId = $(this).attr('data-comment-id');
+    deleteComment(commentId);
+  });
+}
+
 
 function addComment() {
   data = {
@@ -132,7 +168,7 @@ function createCommentError(xhr, status, error) {
 }
 
 function handleCommentSubmitClick() {
-  $('.comment-add-form').submit(function(event) {
+  $('.comment-add-form').off().submit(function(event) {
     event.preventDefault();
     $('.comment-add-form').css('display', 'none');
     addComment();

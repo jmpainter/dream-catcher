@@ -39,6 +39,7 @@ function loginUser(username, password) {
     Cookies.set('_dream-catcher-token', data.authToken, {expires: 30});
     $('#username').val('');
     $('#password').val('');
+    getUserInfo();
     initDreamJournal();
   })
   .catch(err => {

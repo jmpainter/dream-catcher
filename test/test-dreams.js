@@ -302,7 +302,9 @@ describe('dreams API resource', function() {
     it('Should update dream document with supplied fields', function() {
       const updateData = {
         title: 'New Title',
-        text: 'New text'
+        text: 'New text',
+        public: false,
+        commentsOn: false
       }
 
       return Dream
@@ -322,6 +324,8 @@ describe('dreams API resource', function() {
         .then(function(dream) {
           expect(dream.title).to.equal(updateData.title);
           expect(dream.text).to.equal(updateData.text);
+          expect(dream.public).to.equal(updateData.public);
+          expect(dream.commentsOn,).to.equal(updateData.commentsOn);
         })
         .catch(err => handleError(err));
     });

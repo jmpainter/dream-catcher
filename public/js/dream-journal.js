@@ -35,11 +35,18 @@ function displayJournalDreams(data) {
         </div>
         <div class="col-3">
           <span class="journal-date">${new Date(dream.publishDate).toDateString()}</span>
-          <label for="public-check" class="journal-public">Public</span>;
-          <input data-dream-id="${dream._id}" type="checkbox" id="public-check" class="journal-public-check" ${dream.public ? 'checked' : ''}>
         </div>
-      </div>
-    `;
+        <div class="col-3">
+          <span class="journal-public">Public</span>;
+          <input data-dream-id="${dream._id}" type="checkbox" class="journal-check public-check" ${dream.public ? 'checked' : ''}>`;
+    if(dream.public) {
+      htmlString += `
+          <span class="journal-public">Comments</span>;
+          <input data-dream-id="${dream._id}" type="checkbox" id="" class="journal-check comments-check" ${dream.commentsOn ? 'checked' : ''}>`
+    }
+    htmlString += `
+        </div>
+      </div>`;
   });
   $('.dream-journal-list').html(htmlString);
   showView('dream-journal');
@@ -49,35 +56,33 @@ function getAndDisplayJournalDreams() {
   getJournalDreams(displayJournalDreams);
 }
 
-function toggleDreamPublic(dreamId, checkOrUncheck) {
 
-  let _url = `${API_URL}/dreams/${dreamId}`;
-  let _data = {id: dreamId};
+function updateDream(dreamId, checkOrUncheck, type) {
+  const updateData = {id: dreamId};
 
   if(checkOrUncheck === 'check') {
-    _data['public'] = true;
+    updateData[type] = true;
   } else {
-    _data['public'] = false;
+    updateData[type] = false;
+    if(type === 'public') {
+      updateData['commentsOn'] = false;
+    }
   }
-  
+  console.log(updateData);
   $.ajax({
-    url: _url,
+    url: `${API_URL}/dreams/${dreamId}`,
     type: 'PUT',
     beforeSend: function (xhr) {
         xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
     },
     contentType: 'application/json',
-    data: JSON.stringify(_data),
-    success: toggleDreamPublicSuccess,
-    error: toggleDreamPublicError
+    data: JSON.stringify(updateData),
+    success: getAndDisplayJournalDreams,
+    error: updateDreamError
   });
 }
 
-function toggleDreamPublicSuccess() {
-  getAndDisplayJournalDreams();
-}
-
-function toggleDreamPublicError() {
+function updateDreamError() {
   $('.dream-journal-message')
     .text('Dream status update was unsuccessful.')
     .css('display', 'block');  
@@ -90,14 +95,23 @@ function handleJournalDreamClick() {
     initDreamDetail('dream-journal');
   });
 
-  $('.dream-journal-list').on('click', 'input', function(event) {
+  $('.dream-journal-list').on('click', '.public-check', function(event) {
     dreamId = $(this).attr('data-dream-id');
     let checkOrUncheck = 'check';
     if($(this).attr('checked')) {
       checkOrUncheck = 'uncheck';
     }
-    toggleDreamPublic(dreamId, checkOrUncheck);
+    updateDream(dreamId, checkOrUncheck, 'public');
   });
+
+  $('.dream-journal-list').on('click', '.comments-check', function(event) {
+    dreamId = $(this).attr('data-dream-id');
+    let checkOrUncheck = 'check';
+    if($(this).attr('checked')) {
+      checkOrUncheck = 'uncheck';
+    }
+    updateDream(dreamId, checkOrUncheck, 'commentsOn');
+  });  
 }
 
 function handleNewDreamClick() {

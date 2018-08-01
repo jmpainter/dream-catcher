@@ -144,7 +144,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
   }
 
   const toUpdate = {};
-  const updateableFields = ['title', 'text', 'publishDate', 'public'];
+  const updateableFields = ['title', 'text', 'publishDate', 'public', 'commentsOn'];
 
   updateableFields.forEach(field => {
     if(field in req.body) {
