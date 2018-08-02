@@ -156,7 +156,7 @@ function addComment() {
 }
 
 function commentSuccess() {
-  setTimeout(initDreamDetail('recent-dreams'), 1000);
+  setTimeout(initDreamDetail, 250, 'recent-dreams');
 }
 
 function createCommentError(xhr, status, error) {

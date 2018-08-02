@@ -26,7 +26,6 @@ function getJournalDreamsError() {
 
 function displayJournalDreams(data) {
   appState.journalDreams = data.dreams;
-
   let htmlString = '';
   if(appState.journalDreams.length === 0) {
     htmlString = `<div class="row"><div class="col-6"><p>Start creating your first dream entry by clicking the 'New Dream' button above.
@@ -35,6 +34,7 @@ function displayJournalDreams(data) {
   }
 
   appState.journalDreams.forEach(dream => {
+    console.log(dream);
     htmlString += `
       <div class="row">
         <div class="col-3">
@@ -78,9 +78,13 @@ function updateDream(dreamId, checkOrUncheck, type) {
     },
     contentType: 'application/json',
     data: JSON.stringify(updateData),
-    success: displayJournalDreams,
+    success: updateDreamSuccess,
     error: updateDreamError
   });
+}
+
+function updateDreamSuccess() {
+  window.setTimeout(getJournalDreams, 250, displayJournalDreams);
 }
 
 function updateDreamError() {
@@ -98,18 +102,18 @@ function handleJournalDreamClick() {
 
   $('.dream-journal-list').on('click', '.public-check', function(event) {
     dreamId = $(this).attr('data-dream-id');
-    let checkOrUncheck = 'check';
-    if($(this).attr('checked')) {
-      checkOrUncheck = 'uncheck';
+    let checkOrUncheck = 'uncheck';
+    if($(this).is(':checked')) {
+      checkOrUncheck = 'check';
     }
     updateDream(dreamId, checkOrUncheck, 'public');
   });
 
   $('.dream-journal-list').on('click', '.comments-check', function(event) {
     dreamId = $(this).attr('data-dream-id');
-    let checkOrUncheck = 'check';
-    if($(this).attr('checked')) {
-      checkOrUncheck = 'uncheck';
+    let checkOrUncheck = 'uncheck';
+    if($(this).is(':checked')) {
+      checkOrUncheck = 'check';
     }
     updateDream(dreamId, checkOrUncheck, 'commentsOn');
   });  

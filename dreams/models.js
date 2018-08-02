@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { Comment } = require('../comments/models');
+
+mongoose.Promise = global.Promise;
+
 
 const dreamSchema = Schema({
   title: {type: String, required: true},
@@ -29,14 +33,20 @@ dreamSchema.methods.serialize = function() {
 };
 
 //Mongoose middelware function that will delete dream reference in
-//User document's dreams array when a dream is deleted
+//User document's dreams array and any comments the dream had when a dream is deleted
 dreamSchema.pre('remove', function (next) {
   var dream = this;
-  dream.model('User').update(
-    { _id: dream.author}, 
-    { $pull: { dreams: dream._id } },
-    next
-  );
+  promiseArr = [];
+  console.log(dream.comments);
+  Comment.deleteMany({'_id': {$in: dream.comments}})
+    .then(() => {
+      dream.model('User').update(
+        { _id: dream.author}, 
+        { $pull: { dreams: dream._id } },
+        next
+      );
+    })
+    .catch(err => console.log(err));
 });
 
 const Dream = mongoose.model('Dream', dreamSchema);
