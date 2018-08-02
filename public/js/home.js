@@ -1,4 +1,5 @@
 function initRecentDreams() {
+  appState.viewStack.push('recent-dreams');
   getAndDisplayLatestDreams();
   handleDreamClick();
   handleLoginClick();
@@ -41,23 +42,24 @@ function getAndDisplayLatestDreams() {
 }
 
 function handleDreamClick() {
-  $('.flex-container').on('click', '.flex-col', function(event) {
+  $('.flex-container').off('click', '.flex-col').on('click', '.flex-col', function(event) {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.latestDreams.find(dream => dream._id === dreamId );
-    initDreamDetail('recent-dreams');
+    initDreamDetail();
   });
 }
 
 function handleLoginClick() {
-  $('.login-link').click(function(event) {
+  $('.login-link').off().click(function(event) {
     initLogin();
     toggleNav();
   });
 }
 
 function handleLogoutClick() {
-  $('.logout-link').click(function(event) {
+  $('.logout-link').off().click(function(event) {
     Cookies.remove('_dream-catcher-token');
+    appState.userInfo = null;
     setMenu('public');
     initRecentDreams();
     toggleNav();
@@ -65,34 +67,34 @@ function handleLogoutClick() {
 }
 
 function handleRegisterClick() {
-  $('.register-link').click(function(event) {
+  $('.register-link').off().click(function(event) {
     initCreateAccount();
     toggleNav();
   });
 }
 
 function handleLogoClick() {
-  $('.logo').click(function(event) {
+  $('.logo').off().click(function(event) {
     initRecentDreams();
   });
 }
 
 function handleHomeClick() {
-  $('.home-link').click(function(event) {
+  $('.home-link').off().click(function(event) {
     initRecentDreams();
     toggleNav();
   });
 }
 
 function handleDreamJournalClick() {
-  $('.dream-journal-link').click(function(event) {
+  $('.dream-journal-link').off().click(function(event) {
     initDreamJournal();
     toggleNav();
   });
 }
 
 function handleGetStartedClick() {
-  $('.get-started-button').click(function(event) {
+  $('.get-started-button').off().click(function(event) {
     initCreateAccount();
   })
 }

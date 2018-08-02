@@ -1,4 +1,5 @@
 function initDreamJournal() {
+  appState.viewStack.push('dream-journal');
   handleJournalDreamClick(); 
   handleNewDreamClick();
   getJournalDreams(displayJournalDreams);
@@ -94,13 +95,13 @@ function updateDreamError() {
 }
 
 function handleJournalDreamClick() {
-  $('.dream-journal-list').on('click', 'a', function(event) {
+  $('.dream-journal-list').off('click', 'a').on('click', 'a', function(event) {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.journalDreams.find(dream => dream._id === dreamId );
-    initDreamDetail('dream-journal');
+    initDreamDetail();
   });
 
-  $('.dream-journal-list').on('click', '.public-check', function(event) {
+  $('.dream-journal-list').off('click', '.public-check').on('click', '.public-check', function(event) {
     dreamId = $(this).attr('data-dream-id');
     let checkOrUncheck = 'uncheck';
     if($(this).is(':checked')) {
@@ -109,7 +110,7 @@ function handleJournalDreamClick() {
     updateDream(dreamId, checkOrUncheck, 'public');
   });
 
-  $('.dream-journal-list').on('click', '.comments-check', function(event) {
+  $('.dream-journal-list').off('click', '.comments-check').on('click', '.comments-check', function(event) {
     dreamId = $(this).attr('data-dream-id');
     let checkOrUncheck = 'uncheck';
     if($(this).is(':checked')) {
@@ -120,7 +121,7 @@ function handleJournalDreamClick() {
 }
 
 function handleNewDreamClick() {
-  $('.new-dream').click(function() {
+  $('.new-dream').off().click(function() {
     $('#dream-editor').css('visibility', 'visible');
     initDreamEditor(true);
   });

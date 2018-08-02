@@ -8,8 +8,36 @@ const appState = {
   latestDreams: [],
   journalDreams: [],
   currentDream: null,
-  editorMode: ''
+  editorMode: '',
+  viewStack: []
 };
+
+//used for returning from POST PUT or DELETE where updated data
+//from previous screen must be shown
+function initPreviousScreen() {
+  //pop off currend screen;
+  appState.viewStack.pop();
+  //get previous screen
+  const prevScreen = appState.viewStack.pop();
+  if(prevScreen === 'recent-dreams') {
+    initRecentDreams();
+  } else if (prevScreen === 'dream-detail') {
+    initDreamDetail();
+  } else if (prevScreen === 'dream-editor') {
+    initDreamEditor();
+  } else if (prevScreen === 'dream-journal') {
+    initDreamJournal();
+  }
+}
+
+//used for back button when no initialization of prevous screen is necessary
+function returnToPreviousScreen() {
+  //pop off currend screen;
+  appState.viewStack.pop();
+  //get previous screen
+  const prevScreen = appState.viewStack[appState.viewStack.length - 1];
+  showView(prevScreen);
+}
 
 function showView(viewName) {
   $('.view').css('display', 'none');

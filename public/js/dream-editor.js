@@ -1,4 +1,5 @@
 function initDreamEditor(isNew){
+  appState.viewStack.push('dream-editor');
   const dream = appState.currentDream;
   //clean out any old text
   $('#dream-editor-title').val('');
@@ -54,13 +55,14 @@ function postOrPutDream(postOrPut) {
     },
     contentType: 'application/json',
     data: JSON.stringify(_data),
-    success: postOrPutSuccess,
+    success: postOrPutDreamSuccess,
     error: postOrPutError
   });
 }
 
-function postOrPutSuccess() {
-  initDreamJournal();
+function postOrPutDreamSuccess() {
+  appState.viewStack.pop();
+  initPreviousScreen();
 }
 
 function postOrPutError() {
@@ -82,8 +84,8 @@ function handleDreamEditSubmit() {
 }
 
 function handleDreamEditBack() {
-  $('.dream-editor-back').click(function(event) {
+  $('.dream-editor-back').off().click(function(event) {
     event.preventDefault();
-    showView('dream-journal');
+    returnToPreviousScreen();
   });
 }

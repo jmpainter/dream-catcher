@@ -105,8 +105,8 @@ p {
 /* Dream Detail Screen */
 
 .dream-title {
-  font-size: 24px;
-  margin-bottom: 2px;
+  font-size: 26px;
+  margin: 12px 0 0;
 }
 .dream-author {
   font-size: 17px;
@@ -116,7 +116,14 @@ p {
   font-size: 14px;
   margin: 0;
 }
-
+.delete-comment-link {
+  margin: 5px 0 10px;
+  font-size: 13px;
+  line-height: 16px;
+  padding: 0 9px;
+  color: #463edf;
+  cursor: pointer;
+}
 .login-form {
   border: 1px solid #bebebe;
   padding: 12px;
@@ -288,6 +295,7 @@ textarea {
 .home-title a {
   font-size: 19px;
   font-weight: 800;
+  line-height: 1em;
 }
 .home-author {
   margin: 0;
@@ -318,9 +326,6 @@ textarea {
 }
 .comment-delete {
   margin: 0;
-}
-.comment-delete a {
-  color: rgb(48, 12, 167);
 }
 .comment-add-form {
   display: none;

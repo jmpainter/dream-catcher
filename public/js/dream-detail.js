@@ -1,9 +1,10 @@
-function initDreamDetail(backView) {
+function initDreamDetail() {
+  appState.viewStack.push('dream-detail');
   $('.dream-edit').css('display', 'none');
   $('.dream-delete').css('display', 'none');
   $('.dream-comment').css('display', 'none');
 
-  handleDreamDetailBackClick(backView);
+  handleDreamDetailBackClick();
   handleCommentDeleteClick();
   getCurrentDream();
 }
@@ -53,8 +54,8 @@ function displayCurrentDream(dream) {
   let commentsHTML = '';
   for(let comment of dream.comments) {
     commentsHTML += `<li><p class="dream-comment-text">${comment.text}</p><p class="dream-comment-author">${comment.author.screenName}</p>`;
-    if(comment.author._id === appState.userInfo.id || dream.author._id == appState.userInfo.id) {
-      commentsHTML += `<p class="comment-delete"><button class="delete-comment-button" data-comment-id=${comment._id}>Delete Comment</button></p>`;
+    if(Cookies.get('_dream-catcher-token') && (comment.author._id === appState.userInfo.id || dream.author._id == appState.userInfo.id)) {
+      commentsHTML += `<p class="comment-delete"><a class="delete-comment-link" data-comment-id=${comment._id}>delete comment</a></p>`;
     }
   }
   $('.dream-comments').html(commentsHTML);
@@ -69,13 +70,13 @@ function getCurrentDreamError() {
 }
 
 function handleDreamDetailBackClick(backView) {
-  $('.dream-back').click(function() {
-    showView(backView);
+  $('.dream-back').off().click(function() {
+    returnToPreviousScreen();
   });
 }
 
 function handleDreamEditClick() {
-  $('.dream-edit').click(function() {
+  $('.dream-edit').off().click(function() {
     initDreamEditor(false);
   });
 }
@@ -89,7 +90,7 @@ function deleteDream() {
       beforeSend: function (xhr) {
           xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
       },
-      success: initDreamJournal,
+      success: initPreviousScreen,
       error: deleteDreamError
     });
   }
@@ -131,7 +132,7 @@ function deleteCommentError() {
 }
 
 function handleCommentDeleteClick() {
-  $('.dream-comments').off().on('click', '.delete-comment-button', function(event) {
+  $('.dream-comments').off('click', '.delete-comment-link').on('click', '.delete-comment-link', function(event) {
     commentId = $(this).attr('data-comment-id');
     deleteComment(commentId);
   });
@@ -156,7 +157,7 @@ function addComment() {
 }
 
 function commentSuccess() {
-  setTimeout(initDreamDetail, 250, 'recent-dreams');
+  setTimeout(initDreamDetail, 250);
 }
 
 function createCommentError(xhr, status, error) {
