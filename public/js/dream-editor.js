@@ -61,7 +61,9 @@ function postOrPutDream(postOrPut) {
 }
 
 function postOrPutDreamSuccess() {
-  appState.viewStack.pop();
+  if(appState.viewStack[appState.viewStack.length - 2] !== 'dream-journal') {
+    appState.viewStack.pop();
+  }
   initPreviousScreen();
 }
 

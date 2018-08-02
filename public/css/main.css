@@ -52,16 +52,23 @@ ul.top-nav {
 ul.top-nav li {
   float:right;
 }
-ul.top-nav li a {
+ul.top-nav li a, .dreams-nav-link{
   display: none;
   color: #ffb500;
-  text-align:center;
-  padding: 26px 14px 8px 10px;
-  transition: 0.3s;
+  text-align: center;
   font-size: 17px;
+}
+.dreams-nav-link {
+  padding: 15px 0;
+}
+ul.top-nav li a {
+  padding: 26px 14px 8px 10px;
 }
 ul.top-nav li.icon a {
   padding: 8px 0 10px;
+}
+.dreams-previous{
+  margin-right: 14px;
 }
 
 /* Hide the list item that contains the link that should open and close the top-nav on small screens */

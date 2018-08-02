@@ -43,7 +43,7 @@ router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (
       })
   } else {
     const perPage = 16;
-    const page = req.params.page || 1;
+    const page = req.query.page || 1;
     let count = 0;
   
     Dream

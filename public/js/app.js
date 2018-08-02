@@ -8,6 +8,8 @@ const appState = {
   latestDreams: [],
   journalDreams: [],
   currentDream: null,
+  currentPage: null,
+  totalPages: null,
   editorMode: '',
   viewStack: []
 };
