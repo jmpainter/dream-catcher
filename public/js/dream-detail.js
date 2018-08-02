@@ -1,5 +1,7 @@
 function initDreamDetail() {
-  appState.viewStack.push('dream-detail');
+  if(appState.viewStack[appState.viewStack.length - 1] !== 'dream-detail') {
+    appState.viewStack.push('dream-detail');
+  }
   $('.dream-edit').css('display', 'none');
   $('.dream-delete').css('display', 'none');
   $('.dream-comment').css('display', 'none');
