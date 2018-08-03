@@ -45,12 +45,12 @@ function displayJournalDreams(data) {
           <span class="journal-date">${new Date(dream.publishDate).toDateString()}</span>
         </div>
         <div class="col-3">
-          <span class="journal-public">Public</span>;
-          <input data-dream-id="${dream._id}" type="checkbox" class="journal-check public-check" ${dream.public ? 'checked' : ''}>`;
+          <label for="public${dream._id}" class="journal-public">Public</label>;
+          <input id="public${dream._id}" data-dream-id="${dream._id}" type="checkbox" class="journal-check public-check" ${dream.public ? 'checked' : ''}>`;
     if(dream.public) {
       htmlString += `
-          <span class="journal-public">Comments</span>;
-          <input data-dream-id="${dream._id}" type="checkbox" id="" class="journal-check comments-check" ${dream.commentsOn ? 'checked' : ''}>`
+          <label for="comments${dream._id}" class="journal-public">Comments</label>;
+          <input id="comments${dream._id}" data-dream-id="${dream._id}" type="checkbox" id="" class="journal-check comments-check" ${dream.commentsOn ? 'checked' : ''}>`
     }
     htmlString += `
         </div>

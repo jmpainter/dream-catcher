@@ -2,7 +2,7 @@ function initRecentDreams() {
   if(appState.viewStack[appState.viewStack.length - 1] !== 'recent-dreams') {
     appState.viewStack.push('recent-dreams');
   }  
-  getLatestDreams();
+  getLatestDreams(appState.currentPage);
   handleDreamClick();
   handleLoginClick();
   handleRegisterClick();
@@ -18,7 +18,6 @@ function getLatestDreams(page = 1) {
 }
 
 function displayLatestDreams(data) {
-  console.log(data);
   appState.latestDreams = data.dreams;
   appState.currentPage =  parseInt(data.current);
   appState.totalPages =  parseInt(data.pages);
@@ -30,7 +29,7 @@ function displayLatestDreams(data) {
   appState.latestDreams.forEach(dream => {
     htmlString += `
       <div class="flex-col" data-dream-id="${dream._id}">
-        <img class="dream-icon" src="img/dream-icon${Math.floor(Math.random() * 100) + 1}.svg">
+        <img class="dream-icon" src="img/dream-icon${Math.floor(Math.random() * 100) + 1}.svg" alt="dream icon">
         <div class="home-dream-details">
           <p class="home-title"><a href="javascript:void(0)">${dream.title}</a></p>
           <p class="home-author">by ${dream.author.screenName || dream.author.username}</p>

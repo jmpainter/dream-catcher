@@ -27,17 +27,93 @@ a {
   color: black;
   text-decoration: none;
 }
-.row {
-  background-color: #463edf;
-}
-header {
+main {
   padding: 0;
+}
+h1 {
+  font-size: 24px;
+  margin: 12px 0;
+}
+h2 {
+  font-size: 20px;
+  margin: 10px 0;
+}
+p {
+  font-size: 17px;
+  margin: 16px 0;
+}
+.row {
+  /* background-color: #463edf; */
+  background-color: #352EDB;
+}
+.view {
+  display: none;
 }
 footer {
   color: white;
 }
 footer p {
   font-size: 13px;
+}
+button {
+  margin: 15px 0;
+  /* background-color: #463edf; */
+  background-color: #352EDB;
+  padding: 0 16px;
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: 28px;
+  min-height: 28px;
+  border: 2px solid #4b4b4b;
+  -webkit-border-radius: 16px;
+  border-radius: 16px;
+  color: white;
+  display: inline-block;
+  font-size: 15px;
+  height: auto;
+  outline: none;
+  -webkit-transition: all .15s ease-in-out;
+  -o-transition: all .15s ease-in-out;
+  transition: all .15s ease-in-out;
+  width: auto;
+  cursor: pointer;
+}
+label {
+  margin: 8px 0 2px;
+  display: block;  
+}
+.login-message,
+.dream-editor-message,
+.dream-journal-message,
+.dream-detail-message,
+.create-account-message,
+.create-comment-message,
+.home-screen-message {
+  display: none;
+  font-size: 17px;
+  color: rgb(243, 55, 55);
+}
+#dream-journal .row, #dream-editor .row, #dream-detail .row {
+  background-color: white;
+}
+#create-account .col-6, #login .col-4 {
+  background-color: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+  margin-bottom: 40px;
+}
+.container {
+  width: 80%;
+}
+.clr {
+  clear: both;
+}
+
+/* Home Screen */
+
+header {
+  padding: 0;
 }
 header .row {
   border-bottom: 1px solid #ffb500;
@@ -70,202 +146,6 @@ ul.top-nav li.icon a {
 .dreams-previous{
   margin-right: 14px;
 }
-
-/* Hide the list item that contains the link that should open and close the top-nav on small screens */
-ul.top-nav li.icon {
-  display: none;
-  margin: 0;
-}
-
-header .row {
-  position: relative;
-}
-main {
-  padding: 0;
-}
-h1 {
-  font-size: 24px;
-  margin: 12px 0;
-}
-h2 {
-  font-size: 20px;
-  margin: 10px 0;
-}
-p {
-  font-size: 17px;
-  margin: 16px 0;
-}
-
-.logo {
-  cursor: pointer;
-  position: absolute;
-  font-family: 'Sniglet', cursive;
-  font-size: 41px;
-  letter-spacing: -1px;
-  margin-top: 5px;
-  color: #ffb500;
-}
-
-.view {
-  display: none;
-}
-/* Dream Detail Screen */
-
-.dream-title {
-  font-size: 26px;
-  margin: 12px 0 0;
-}
-.dream-author {
-  font-size: 17px;
-  margin: 0;
-}
-.dream-publish-date {
-  font-size: 14px;
-  margin: 0;
-}
-.dream-text {
-  margin-bottom: 40px;
-}
-.delete-comment-link {
-  margin: 5px 0 10px;
-  font-size: 13px;
-  line-height: 16px;
-  padding: 0 9px;
-  color: #463edf;
-  cursor: pointer;
-}
-.login-form {
-  border: 1px solid #bebebe;
-  padding: 12px;
-  border-radius: 3px;
-}
-legend {
-  font-size: 26px;
-  padding: 5px 0;
-}
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  display: block;
-  border: 1px solid #bebebe;
-  border-radius: 3px;
-  background: #fcfcfc;
-  width: 90%;
-  font-size: 18px;
-  text-align: left;
-  padding: 2px;
-  margin-bottom: 18px;
-}
-button {
-  margin: 15px 0;
-  background-color: #463edf;
-  padding: 0 16px;
-  white-space: nowrap;
-  font-weight: 700;
-  line-height: 28px;
-  min-height: 28px;
-  border: 2px solid #4b4b4b;
-  -webkit-border-radius: 16px;
-  border-radius: 16px;
-  color: white;
-  display: inline-block;
-  font-size: 15px;
-  height: auto;
-  outline: none;
-  -webkit-transition: all .15s ease-in-out;
-  -o-transition: all .15s ease-in-out;
-  transition: all .15s ease-in-out;
-  width: auto;
-  cursor: pointer;
-}
-label {
-  margin: 8px 0 2px;
-  display: block;  
-}
-#create-account .col-6, #login .col-4 {
-  background-color: white;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 5px;
-  margin-bottom: 40px;
-}
-#dream-journal .row, #dream-editor .row, #dream-detail .row {
-  background-color: white;
-}
-.dream-journal-header {
-  margin-top: 14px;
-}
-.dream-journal-footer {
-  margin-bottom: 30px;
-}
-.login-message,
-.dream-editor-message,
-.dream-journal-message,
-.dream-detail-message,
-.create-account-message,
-.create-comment-message,
-.home-screen-message {
-  display: none;
-  font-size: 17px;
-  color: rgb(243, 55, 55);
-}
-.dream-journal-list {
-  width: 100%;
-  line-height: 2.1em;
-}
-.dream-journal-list a {
-  font-size: 18px;
-}
-.journal-date, .journal-public {
-  font-size: 14px;
-  margin-right: 10px;
-}
-.journal-public {
-  margin-left: 11px;
-  display: inline-block;
-  margin: 0;
-}
-.journal-check {
-  margin-left: 0;
-  vertical-align: middle;
-  position: relative;
-  top: -1px;
-}
-.dream-journal-containter {
-  width: 90%;
-}
-#dream-journal h1 {
-  display: inline-block;
-  margin: 0 0 10px 0;
-}
-.new-dream {
-  margin-top: 5px;
-}
-.dream-journal-list td {
-  padding: 8px 7px 0 0;
-}
-.nicedit-form {
-  width: 80%;
-  padding-top: 20px;
-}
-textarea {
-  width: 100%;
-}
-#dream-editor-title {
-  width: 100%;
-}
-#dream-editor-text, #comment-text {
-  width: 100%;
-}
-.dream-edit, .dream-delete, .dream-comment {
-  float: right;
-}
-.dream-delete {
-  margin-left: 10px;
-}
-.dream-editor-submit {
-  float: right;
-}
 .splash {
   margin-bottom: 34px;
   background-color: white;
@@ -281,6 +161,25 @@ textarea {
 .splash button {
   display: block;
   margin: 12px auto;
+}
+/* Hide the list item that contains the link that should open
+ and close the top-nav on small screens */
+ul.top-nav li.icon {
+  display: none;
+  margin: 0;
+}
+header .row {
+  position: relative;
+}
+
+.logo {
+  cursor: pointer;
+  position: absolute;
+  font-family: 'Sniglet', cursive;
+  font-size: 41px;
+  letter-spacing: -1px;
+  margin-top: 5px;
+  color: #ffb500;
 }
 .flex-container {
   padding-top: 20px;
@@ -325,6 +224,104 @@ textarea {
   font-size: 21px;
   color: #ffb500;
 }
+
+/* Dream Detail Screen */
+
+.dream-title {
+  font-size: 26px;
+  margin: 20px 0 0;
+}
+.dream-details {
+  margin: 0;
+}
+.dream-author {
+  font-size: 18px;
+  margin: 0;
+}
+.dream-publish-date {
+  font-size: 12px;
+  margin: 0;
+}
+.dream-text {
+  margin-bottom: 40px;
+}
+.delete-comment-link {
+  margin: 5px 0 10px;
+  font-size: 13px;
+  line-height: 16px;
+  padding: 0 9px;
+  color: #463edf;
+  cursor: pointer;
+}
+
+/* Login Screen */
+
+.login-form {
+  border: 1px solid #bebebe;
+  padding: 12px;
+  border-radius: 3px;
+}
+legend {
+  font-size: 26px;
+  padding: 5px 0;
+}
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  display: block;
+  border: 1px solid #bebebe;
+  border-radius: 3px;
+  background: #fcfcfc;
+  width: 90%;
+  font-size: 18px;
+  text-align: left;
+  padding: 2px;
+  margin-bottom: 18px;
+}
+
+/* Dream Journal Screen */
+
+.dream-journal-header {
+  margin-top: 14px;
+}
+.dream-journal-footer {
+  margin-bottom: 30px;
+}
+.dream-journal-list {
+  width: 100%;
+  line-height: 2.1em;
+}
+.dream-journal-list a {
+  font-size: 18px;
+}
+.journal-date, .journal-public {
+  font-size: 14px;
+  margin-right: 10px;
+}
+.journal-public {
+  margin-left: 11px;
+  display: inline-block;
+  margin: 0;
+}
+.journal-check {
+  margin-left: 0;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+.dream-journal-containter {
+  width: 90%;
+}
+#dream-journal h1 {
+  display: inline-block;
+  margin: 18px 0;
+}
+.new-dream {
+  margin-top: 17px;
+}
+.dream-journal-list td {
+  padding: 8px 7px 0 0;
+}
 .dream-comments {
   list-style: none;
 }
@@ -348,14 +345,36 @@ textarea {
   margin: 10px 0 20px;
   float: right;
 }
-.container {
+
+/* Dream Editor Screen */
+
+.nicedit-form {
   width: 80%;
+  padding-top: 20px;
 }
-.clr {
-  clear: both;
+textarea {
+  width: 100%;
+}
+#dream-editor-title {
+  width: 100%;
+}
+#dream-editor-text, #comment-text {
+  width: 100%;
+}
+.dream-edit, .dream-delete, .dream-comment {
+  float: right;
+}
+.dream-delete {
+  margin-left: 10px;
+}
+.dream-editor-form {
+  margin-top: 14px;
+}
+.dream-editor-submit {
+  float: right;
 }
 
-/* Flex box */
+/* Flexbox */
 
 .flex-col {
 	width: 100%;
@@ -390,7 +409,7 @@ textarea {
     display:none;
   }
   ul.top-nav li.icon {
-    float:right;
+    float: right;
     display: inline-block;
   }
   ul.top-nav.responsive {

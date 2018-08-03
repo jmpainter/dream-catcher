@@ -1,5 +1,8 @@
 function initLogin() {
   handleLoginSubmit();
+  $('.login-message')
+    .text('')
+    .css('display', 'none');    
   showView('login');
 }
 
