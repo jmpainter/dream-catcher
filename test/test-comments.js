@@ -195,6 +195,7 @@ describe('dreams API resource', function() {
 
     it('Should allow a user to delete a comment that belongs to the user', function() {
       const newComment = generateCommentData(testUser.id);
+      let comment;
       
       return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true}})
         .then(function() {
@@ -205,12 +206,21 @@ describe('dreams API resource', function() {
         })
         .then(res => {
           expect(res).to.have.status(201);
+          comment = res.body;
+          return Dream.findById(testDream.id);
+        })
+        .then(dream => {
+          expect(dream.comments).to.include(comment.id);
           return chai.request(app)
             .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
             .set('authorization', `Bearer ${testUserToken}`)
         })
         .then(res => {
-          expect(res).to.have.status(204)
+          expect(res).to.have.status(204);
+          return Dream.findById(testUser.id);
+        })
+        .then(dream => {
+          expect(dream.comments).to.not.include(comment.id);
         })
         .catch(err => handleError(err));        
     })
@@ -227,12 +237,21 @@ describe('dreams API resource', function() {
         })
         .then(res => {
           expect(res).to.have.status(201);
+          comment = res.body;
+          return Dream.findById(testDream.id);
+        })
+        .then(dream => {
+          expect(dream.comments).to.include(comment.id);
           return chai.request(app)
             .delete(`/dreams/${testDream.id}/comments/${res.body.id}`)
             .set('authorization', `Bearer ${testUserToken}`)
         })
         .then(res => {
           expect(res).to.have.status(204);
+          return Dream.findById(testUser.id);
+        })
+        .then(dream => {
+          expect(dream.comments).to.not.include(comment.id);
         })
         .catch(err => handleError(err));      
     })

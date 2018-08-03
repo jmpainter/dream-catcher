@@ -123,6 +123,9 @@ p {
   font-size: 14px;
   margin: 0;
 }
+.dream-text {
+  margin-bottom: 40px;
+}
 .delete-comment-link {
   margin: 5px 0 10px;
   font-size: 13px;
@@ -179,10 +182,10 @@ label {
   margin: 8px 0 2px;
   display: block;  
 }
-#dream-detail .col-6, #create-account .col-6, #login .col-4 {
+#create-account .col-6, #login .col-4 {
   background-color: white;
   padding: 15px;
-  margin: 15px;
+  margin: 15px 0;
   border-radius: 5px;
   margin-bottom: 40px;
 }
@@ -330,6 +333,7 @@ textarea {
 }
 .dream-comment-author {
   margin: 0;
+  font-size: 14px;
 }
 .comment-delete {
   margin: 0;

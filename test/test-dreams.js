@@ -359,23 +359,40 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });       
 
-    it('Should delete a dream by id', function() {
+    it('Should delete a dream by id, delete any comments on it, and update dream reference in user document', function() {
+      const newComment = generateCommentData(testUser2.id);
       let dream;
+      let comment
 
       return Dream
         .findOne({author: testUser.id})
         .then(function(_dream) {
           dream = _dream;
+          return Dream
+            .findByIdAndUpdate(testDream.id, {$set: {commentsOn: true}});
+        })
+        .then(() => {
+          return chai.request(app)
+            .post(`/dreams/${dream.id}/comments`)
+            .set('authorization', `Bearer ${testUser2Token}`)
+            .send(newComment)
+        })
+        .then(res => {
+          comment = res.body;
+          return Dream.findById(testDream.id);
+        })
+        .then(dream => {
+          expect(dream.comments).to.include(comment.id);
           return chai.request(app)
             .delete(`/dreams/${dream.id}`)
             .set('authorization', `Bearer ${testUserToken}`);
         })
         .then(function(res) {
           expect(res).to.have.status(204);
-          return Dream.findById(dream.id);
+          return Comment.findById(comment.id);
         })
-        .then(function(dream) {
-          expect(dream).to.be.null;
+        .then(comment => {
+          expect(comment).to.be.null;
           return User.findById(testUser.id);
         })
         .then(function(user) {
