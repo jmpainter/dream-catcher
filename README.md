@@ -6,7 +6,7 @@
 
 ## Summary:
 
-Dream Catcher is a combined private dream journal and public dream repository. A user can create and maintain a list of dream for themselves using a rich text editor. The dreams can be set to be public, where the will be available for public viewing on the home screen. A public dream can be set to be open to comments so registered users will be able to leave comments. A user can delete comments made on their dreams and also comments made by them.
+Dream Catcher is a combined private dream journal and public dream repository. A user can create and maintain a list of dream for themselves using a rich text editor. The dreams can be set to be public, where the will be available for public viewing on the home screen. A public dream can be set to be open to comments so registered users will be able to leave comments. A user can delete comments made on their dreams and also their own comments on other dreams.
 
 ## Motivation:
 
