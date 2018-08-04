@@ -6,11 +6,11 @@
 
 ## Summary:
 
-Dream Catcher is a combined private dream journal and public dream repository. A user can create and maintain a list of dream for themselves using a rich text editor. The dreams can be set to be public, where the will be available for public viewing on the home screen. A public dream can be set to be open to comments so registered users will be able to leave comments. A user can delete comments made on their dreams and also comments made by them
+Dream Catcher is a combined private dream journal and public dream repository. A user can create and maintain a list of dream for themselves using a rich text editor. The dreams can be set to be public, where the will be available for public viewing on the home screen. A public dream can be set to be open to comments so registered users will be able to leave comments. A user can delete comments made on their dreams and also comments made by them.
 
 ## Motivation:
 
-I created this app from my own interest in keeping a dream journal and prefer to keep digital records rather than using pen and paper. Dream journaling is rewarding way to record interesting memories and learn more about oneself. Although there are dream journal apps available, I believe that this is the first one that allows the user to publish dreams and browse through other people’s dreams as well 
+I created this app from my own interest in keeping a dream journal and prefer to keep digital records rather than using pen and paper. Dream journaling is rewarding way to record interesting memories and learn more about oneself. Although there are dream journal apps available, I believe that this is the first one that allows the user to publish dreams and browse through other people’s dreams as well.
 
 ## Technologies Used:
 
