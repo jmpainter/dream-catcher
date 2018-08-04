@@ -434,4 +434,17 @@ textarea {
   .splash {
     margin-bottom: 12px;
   }
+  .new-dream {
+    margin-top: 0;
+  }
+  #dream-journal h1 {
+    margin: 0;
+  }
+  .dream-journal-list .row .col-3:nth-child(2), .dream-journal-list .row .col-3:nth-child(3)  {
+    margin-top: -12px;
+  }
+  .dream-journal-list a {
+    margin-top: 7px;
+    display: inline-block;
+  }
 }
