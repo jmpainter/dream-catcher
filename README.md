@@ -39,15 +39,21 @@ Dream editor
 POST /login - for user authetication
 
 POST /users - for user account creation
+
 GET /users - for retrieval of an authenticated user’s non-sensitive account information
 
 GET /dreams - allows an unauthenticated user to get public dreams or an authenticated user to get public dreams or their personal dream list
+
 GET /dreams/:id - retrieve dream details of public dreams or private dreams of authenticated user
+
 POST /dreams - create dream for authenticated user
+
 PUT /dreams - update dream of authenticated user 
+
 DELETE /dreams - delete dream of authenticated user 
 
 POST /dreams/:id/comments - create a comment on a particular dream
+
 DELETE /dreams/:id/comments/:comment_id - delete a comment from a particular dream
 
 ## Author:
