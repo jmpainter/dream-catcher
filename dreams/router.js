@@ -1,8 +1,6 @@
 const express = require('express');
-const router = express.Router();
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json()
 const mongoose = require('mongoose');
 
 const { Dream } = require('./models');
@@ -10,12 +8,13 @@ const { User } = require('../users/models');
 const { Comment } = require('../comments/models');
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
+const jsonParser = bodyParser.json()
+const router = express.Router();
 
 mongoose.Promise = global.Promise;
 
-
-//This endpoint allows an unauthenticated user to get public dreams
-//or an authenticated user to get public dreams or their personal dream list
+// This endpoint allows an unauthenticated user to get public dreams
+// or an authenticated user to get their personal dream list or public dreams with personal=true query parameter 
 router.get('/', passport.authenticate(['jwt', 'anonymous'], {session: false}), (req, res) => {
   if(!req.user && req.query.personal === "true") {
     return res.status(401).json({message: 'Unauthorized'});
@@ -111,7 +110,6 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
   }
 
   let dream = null;
-
   Dream
     .create({
       title: req.body.title,
@@ -157,9 +155,9 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
     .findById(req.params.id)
     .then(dream => {
       if(dream.author.toString() !== req.user.id) {
-        return res.status(401).json({message: 'Unauthorized'});
+        return res.status(401).json({ message: 'Unauthorized' });
       } else {
-        return Dream.findByIdAndUpdate(req.params.id, {$set: toUpdate}, {'new': true})
+        return Dream.findByIdAndUpdate(req.params.id, { $set: toUpdate }, { 'new': true })
       }
     })
     .then(dream => {
@@ -173,9 +171,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 
 router.delete('/:id', jwtAuth, (req, res) => {
   // Make sure that dream to delete is actually one of the user's dreams 
-
   let dream = null;
-
   Dream
     .findById(req.params.id)
     .then(_dream => {
@@ -203,8 +199,8 @@ router.delete('/:id', jwtAuth, (req, res) => {
       if (err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({message: 'Internal Server Error'});
+      res.status(500).json({ message: 'Internal Server Error' });
     });
 });
 
-module.exports = {router};
+module.exports = { router };

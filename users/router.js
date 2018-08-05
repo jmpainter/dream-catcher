@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const { User } = require('./models');
+
 const jsonParser = bodyParser.json();
 
 mongoose.Promise = global.Promise;
@@ -148,4 +149,4 @@ router.get('/', jwtAuth, (req, res) => {
     });
 })
 
-module.exports = {router};
+module.exports = { router };

@@ -1,15 +1,16 @@
 const express = require('express');
-const router  = express.Router({mergeParams: true});
-
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json()
 const mongoose = require('mongoose');
 
 const { Comment } = require('./models');
 const { Dream } = require('../dreams/models');
 
-const jwtAuth = passport.authenticate('jwt', {session: false});
+const router  = express.Router({ mergeParams: true });
+const jsonParser = bodyParser.json();
+
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 mongoose.Promise = global.Promise;
 
@@ -27,20 +28,20 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
   Dream
     .findById(req.params.id)
     .then(_dream => {
-      if(!_dream) {
+      dream = _dream;
+      if(!dream) {
         return Promise.reject({
           code: 404,
           reason: 'AccessError',
           message: 'Dream was not found'
         });
-      } else if (_dream.commentsOn === false) {
+      } else if (dream.commentsOn === false) {
         return Promise.reject({
           code: 401,
           reason: 'AccessError',
           message: 'Dream is not open for comments'
         });
       } else {
-        dream = _dream;
         return Comment
           .create({
             dream: req.params.id,
@@ -51,14 +52,14 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     })
     .then(_comment => {
       comment = _comment;
-      dream.comments.push(_comment._id);
+      dream.comments.push(comment._id);
       return dream.save();
     }) 
     .then(() => {
       return res.status(201).json(comment.serialize());
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       if(err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }
@@ -66,7 +67,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     });
 });
 
-router.delete('/:comment_id', jsonParser, jwtAuth, (req, res) => {
+router.delete('/:comment_id', jwtAuth, (req, res) => {
   // Make sure that comment to delete is actually one of the user's or is on the user's dream
   // When comment is deleted, the reference in the user's dream is deleted also
   let dream;
@@ -115,4 +116,4 @@ router.delete('/:comment_id', jsonParser, jwtAuth, (req, res) => {
     });
 })
 
-module.exports = {router};
+module.exports = { router };

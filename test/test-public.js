@@ -8,16 +8,16 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('Dream Catcher public html tests', function() {
-  before(function() {
+describe('Dream Catcher public html tests', () => {
+  before(() => {
     return runServer();
   });
 
-  after(function() {
+  after(() => {
     return closeServer();
   });
 
-  it('Should serve index.html', function() {
+  it('Should serve index.html', () => {
     return chai.request(app)
       .get('/index.html')
       .then(function(res) {

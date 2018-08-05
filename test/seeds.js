@@ -1,48 +1,31 @@
 const faker = require('faker');
 const chai = require('chai');
 const mongoose = require('mongoose');
-const {JWT_SECRET} = require('../config');
+const { JWT_SECRET } = require('../config');
 const jwt = require('jsonwebtoken');
+
+const { Dream } = require('../dreams/models');
+const { User } = require('../users/models');
 
 mongoose.Promise = global.Promise;
 
-const {Dream} = require('../dreams/models');
-const {User} = require('../users/models');
-
-//first create users collection in order to give each dream an author
 function seedData() {
   console.info('seeding data');
-
   const userSeedData = [];
-  
-  //create three users
+  //create data for three new users
   for (let i = 1; i <= 3; i++) {
     userSeedData.push(generateUserData());
   }
-  
   const promises = [];
-
   //each user is created with password 'test'
-
   userSeedData.forEach((seed, index) => {
     promises.push(
-      User.hashPassword('test').
+      User.hashPassword(seed.password).
       then(password => {
         seed["password"] = password;
         return User.create(seed);
       })
       .then(user => {
-        //save off a user for authenticated tests
-        if(index === 0) {
-          testUser = user;
-          testUser['id'] = user.id;
-          testUserToken = generateTestUserToken(user);
-        }
-        if(index === 1) {
-          testUser2 = user;
-          testUser2['id'] = user.id;
-          testUser2Token = generateTestUserToken(user);
-        }
         const dreamPromises = [];
         //create three dreams for each user
         for (let i = 1; i <= 3; i++) {
@@ -54,10 +37,6 @@ function seedData() {
         // add each dream id to dream array in user document
         const addDreamToUserPromises = [];
         results.forEach((dream, index) => {
-          if(index === 0) {
-            testDream = dream;
-            testDream['id'] = dream.id;
-          }
           addDreamToUserPromises.push(addDreamToUser(dream.author, dream._id));
         })
         return Promise.all(addDreamToUserPromises);
@@ -74,11 +53,6 @@ function addDreamToUser(userId, dreamId) {
       user.dreams.push(dreamId);
       return user.save();
     })
-    .then(user => {
-      if(!user) {
-        throw new Error('User not created');
-      }
-    })
     .catch(err => handleError(err));
 }
 
@@ -87,7 +61,8 @@ function generateUserData() {
     username: faker.internet.userName(),
     screenName: faker.name.firstName(),
     firstName: faker.name.lastName(),
-    lastName: faker.name.lastName()
+    lastName: faker.name.lastName(),
+    password: 'password'
   }
 }
 

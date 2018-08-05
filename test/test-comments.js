@@ -53,26 +53,26 @@ function seedDataAndGenerateTestUsers() {
     .catch(err => console.error(err));
 }
 
-describe('dreams API resource', function() {
+describe('dreams API resource', () => {
   
-  before(function() {
+  before(() => {
     return runServer(TEST_DATABASE_URL);
   });
   
-  beforeEach(function() {
+  beforeEach(() => {
     return seedDataAndGenerateTestUsers();
   });
 
-  afterEach(function() {
+  afterEach(() => {
     return tearDownDb();
   });
 
-  after(function() {
+  after(() => {
     return closeServer();
   });  
 
-  describe('POST :id/comments endpoint', function() {
-    it('Should not allow an unauthorized user to post a comment', function() {
+  describe('POST :id/comments endpoint', () => {
+    it('Should not allow an unauthorized user to post a comment', () => {
 
       return chai.request(app)
         .post(`/dreams/${testDream.id}/comments`)
@@ -82,7 +82,7 @@ describe('dreams API resource', function() {
       .catch(err => handleError(err));
     });
 
-    it("Should return an error if a dream does not exist", function() {
+    it("Should return an error if a dream does not exist", () => {
       const newComment = generateCommentData(testUser.id, testDream.id);
 
       return chai.request(app)
@@ -96,7 +96,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it("Should not add a comment with incorrect fields", function() {
+    it("Should not add a comment with incorrect fields", () => {
       return chai.request(app)
         .post(`/dreams/${testDream.id}/comments`)
         .set('authorization', `Bearer ${testUserToken}`)
@@ -107,7 +107,7 @@ describe('dreams API resource', function() {
       .catch(err => handleError(err));
     });
 
-    it("Should not add a comment if the dream is not public", function() {
+    it("Should not add a comment if the dream is not public", () => {
       const newComment = generateCommentData(testUser.id, testDream.id);
 
       return chai.request(app)
@@ -120,11 +120,11 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
     
-    it("Should add a comment if the dream has comments turned on", function() {
+    it("Should add a comment if the dream has comments turned on", () => {
       const newComment = generateCommentData(testUser.id);
       
       return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .post(`/dreams/${testDream.id}/comments`)
             .set('authorization', `Bearer ${testUserToken}`)
@@ -149,9 +149,9 @@ describe('dreams API resource', function() {
     });
   });
 
-  describe('/dreams/:id/comments/:comment_id DELETE endpoint', function() {
+  describe('/dreams/:id/comments/:comment_id DELETE endpoint', () => {
 
-    it('Should return 404 for a dream that could not be found', function() {
+    it('Should return 404 for a dream that could not be found', () => {
       return chai.request(app)
         .delete(`/dreams/${new Array(12).fill(0).join('')}/comments/${new Array(12).fill(0).join('')}`)
         .set('authorization', `Bearer ${testUserToken}`)
@@ -161,7 +161,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should return 404 for a comment that could not be found', function() {
+    it('Should return 404 for a comment that could not be found', () => {
       return chai.request(app)
         .delete(`/dreams/${testDream.id}/comments/${new Array(12).fill(0).join('')}`)
         .set('authorization', `Bearer ${testUserToken}`)
@@ -171,11 +171,11 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });    
 
-    it('Should not allow a user to delete a comment that is not theirs on a dream that is not theirs', function() {
+    it('Should not allow a user to delete a comment that is not theirs on a dream that is not theirs', () => {
         const newComment = generateCommentData(testUser2.id, testDream.id);
 
         return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser2.id}})
-          .then(function() {
+          .then(() => {
             return chai.request(app)
               .post(`/dreams/${testDream.id}/comments`)
               .set('authorization', `Bearer ${testUser2Token}`)
@@ -193,12 +193,12 @@ describe('dreams API resource', function() {
           .catch(err => handleError(err));        
     });
 
-    it('Should allow a user to delete a comment that belongs to the user', function() {
+    it('Should allow a user to delete a comment that belongs to the user', () => {
       const newComment = generateCommentData(testUser.id);
       let comment;
       
       return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .post(`/dreams/${testDream.id}/comments`)
             .set('authorization', `Bearer ${testUserToken}`)
@@ -225,11 +225,11 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));        
     })
 
-    it('Should allow a user to delete a comment that is not theirs on a dream that is theirs', function() {
+    it('Should allow a user to delete a comment that is not theirs on a dream that is theirs', () => {
       const newComment = generateCommentData(testUser2.id, testDream.id);
 
       return Dream.findByIdAndUpdate(testDream.id, {$set: {commentsOn: true, author: testUser.id}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .post(`/dreams/${testDream.id}/comments`)
             .set('authorization', `Bearer ${testUser2Token}`)

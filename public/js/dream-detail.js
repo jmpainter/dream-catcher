@@ -23,17 +23,12 @@ function getCurrentDream() {
   .catch(err => console.error(err));
 }
 
-const setHeader = function (xhr) {
-  xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
-}
-
 function displayCurrentDream(dream) {
   $('.dream-title').text(dream.title);
   const author = dream.author ? dream.author.screenName : '';
   $('.dream-author').text(author);
   $('.dream-publish-date').text(new Date(dream.publishDate).toDateString());
   $('.dream-text').html(dream.text);
-
   //if user is logged in
   if(Cookies.get('_dream-catcher-token')) {
     //if this is one of the user's dreams, show edit and delete buttons, hide the comment button
@@ -44,13 +39,18 @@ function displayCurrentDream(dream) {
       handleDreamDeleteClick();
     } else {
       if(dream.commentsOn === true) {
-        //show the comment button
+        //if comments are set to on for the dream, show the comment button
         $('.dream-comment').css('display', 'block');
         handleDreamCommentClick();
       }
     }
-  }  
+  }
+  let commentsHTML = getCommentsHTML(dream);
+  $('.dream-comments').html(commentsHTML);
+  showView('dream-detail');
+}
 
+function getCommentsHTML(dream) {
   //need to check if a comment is the current user's or 
   //if the comment is on the user's dream
   let commentsHTML = '';
@@ -60,9 +60,7 @@ function displayCurrentDream(dream) {
       commentsHTML += `<p class="comment-delete"><a class="delete-comment-link" data-comment-id=${comment._id}>delete comment</a></p>`;
     }
   }
-  $('.dream-comments').html(commentsHTML);
-
-  showView('dream-detail');
+  return commentsHTML;
 }
 
 function getCurrentDreamError() {
@@ -89,9 +87,7 @@ function deleteDream() {
     $.ajax({
       url: _url,
       type: 'DELETE',
-      beforeSend: function (xhr) {
-          xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
-      },
+      beforeSend: setHeader,
       success: initPreviousScreen,
       error: deleteDreamError
     });
@@ -106,7 +102,7 @@ function deleteDreamError() {
 }
 
 function handleDreamDeleteClick() {
-  $('.dream-delete').off().click(function() {
+  $('.dream-delete').off().click(() => {
     deleteDream();
   });
 }
@@ -117,9 +113,7 @@ function deleteComment(commentId) {
     $.ajax({
       url: _url,
       type: 'DELETE',
-      beforeSend: function (xhr) {
-          xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
-      },
+      beforeSend: setHeader,
       success: commentSuccess,
       error: deleteCommentError
     });
@@ -134,7 +128,7 @@ function deleteCommentError() {
 }
 
 function handleCommentDeleteClick() {
-  $('.dream-comments').off('click', '.delete-comment-link').on('click', '.delete-comment-link', function(event) {
+  $('.dream-comments').off('click', '.delete-comment-link').on('click', '.delete-comment-link', function() {
     commentId = $(this).attr('data-comment-id');
     deleteComment(commentId);
   });
@@ -148,9 +142,7 @@ function addComment() {
   $.ajax({
     url: `${API_URL}/dreams/${appState.currentDream._id}/comments`,
     type: 'POST',
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
-    },    
+    beforeSend: setHeader,
     contentType: 'application/json',
     data: JSON.stringify(data),
     success: commentSuccess,
@@ -169,7 +161,7 @@ function createCommentError(xhr, status, error) {
 }
 
 function handleCommentSubmitClick() {
-  $('.comment-add-form').off().submit(function(event) {
+  $('.comment-add-form').off().submit(event => {
     event.preventDefault();
     $('.comment-add-form').css('display', 'none');
     addComment();
@@ -177,7 +169,7 @@ function handleCommentSubmitClick() {
 }
 
 function handleDreamCommentClick() {
-  $('.dream-comment').click(function() {
+  $('.dream-comment').click(() => {
     $('.comment-add-form').css('display', 'block');
     $('.nicEdit-panelContain').parent().width('100%');
     $('.nicEdit-panelContain').parent().next().width('100%');

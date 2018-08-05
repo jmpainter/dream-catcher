@@ -6,12 +6,12 @@ const expect = chai.expect;
 
 mongoose.Promise = global.Promise;
 
-const {Dream} = require('../dreams/models');
-const {User} = require('../users/models');
-const {Comment} = require('../comments/models');
+const { Dream } = require('../dreams/models');
+const { User } = require('../users/models');
+const { Comment } = require('../comments/models');
 
-const {app, runServer, closeServer} = require('../server');
-const {TEST_DATABASE_URL} = require('../config');
+const { app, runServer, closeServer } = require('../server');
+const { TEST_DATABASE_URL } = require('../config');
 
 const {
   seedData,
@@ -53,32 +53,32 @@ function seedDataAndGenerateTestUsers() {
     .catch(err => console.error(err));
 }
 
-describe('users API resource', function() {
+describe('users API resource', () => {
   const username = 'exampleUser';
   const password = 'examplePass';
   const firstName = 'Example';
   const lastName = 'User';
   const screenName = 'Name';
 
-  before(function() {
+  before(() => {
     return runServer(TEST_DATABASE_URL);
   });
   
-  beforeEach(function() {
+  beforeEach(() => {
     return seedDataAndGenerateTestUsers();
   });
 
-  afterEach(function() {
+  afterEach(() => {
     return tearDownDb();
   });
 
-  after(function() {
+  after(() => {
     return closeServer();
   });  
 
-  describe('POST /users', function() {
+  describe('POST /users', () => {
 
-    it('Should reject users with missing usernname', function() {
+    it('Should reject users with missing usernname', () => {
       return chai
         .request(app)
         .post('/users')
@@ -97,7 +97,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a missing password', function() {
+    it('Should reject users with a missing password', () => {
       return chai
         .request(app)
         .post('/users')
@@ -116,7 +116,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a non-string username', function() {
+    it('Should reject users with a non-string username', () => {
       return chai
         .request(app)
         .post('/users')
@@ -136,7 +136,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a non-string password', function() {
+    it('Should reject users with a non-string password', () => {
       return chai
         .request(app)
         .post('/users')
@@ -156,7 +156,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a non-string first name', function() {
+    it('Should reject users with a non-string first name', () => {
       return chai
         .request(app)
         .post('/users')
@@ -176,7 +176,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a non-string last name', function() {
+    it('Should reject users with a non-string last name', () => {
       return chai
         .request(app)
         .post('/users')
@@ -195,7 +195,7 @@ describe('users API resource', function() {
         });
     });
 
-    it('Should reject users with a non-string screen name', function() {
+    it('Should reject users with a non-string screen name', () => {
       return chai
         .request(app)
         .post('/users')
@@ -215,7 +215,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a non-trimmed user name', function() {
+    it('Should reject users with a non-trimmed user name', () => {
       return chai
         .request(app)
         .post('/users')
@@ -235,7 +235,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject usesrs with a non-trimmed password', function() {
+    it('Should reject usesrs with a non-trimmed password', () => {
       return chai
         .request(app)
         .post('/users')
@@ -255,7 +255,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with an empty username', function() {
+    it('Should reject users with an empty username', () => {
       return chai
         .request(app)
         .post('/users')
@@ -275,7 +275,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a password less than 7 characters', function() {
+    it('Should reject users with a password less than 7 characters', () => {
       return chai
         .request(app)
         .post('/users')
@@ -295,7 +295,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should reject users with a password greater than 72 characters', function() {
+    it('Should reject users with a password greater than 72 characters', () => {
       return chai
         .request(app)
         .post('/users')
@@ -315,7 +315,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
     
-    it('Should reject a request with a duplicate username', function() {
+    it('Should reject a request with a duplicate username', () => {
       return chai
         .request(app)
         .post('/users')
@@ -346,7 +346,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should create a new user', function() {
+    it('Should create a new user', () => {
       let user;
       return chai
         .request(app)
@@ -384,9 +384,9 @@ describe('users API resource', function() {
     })
   });
 
-  describe('GET /users', function() {
+  describe('GET /users', () => {
 
-    it('Should not allow an unregistered user to get user information', function() {
+    it('Should not allow an unregistered user to get user information', () => {
       return chai.request(app)
         .get('/users')
         .then(res => {
@@ -395,7 +395,7 @@ describe('users API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should allow a registered user to get their information', function() {
+    it('Should allow a registered user to get their information', () => {
       return chai.request(app)
         .get('/users')
         .set('authorization', `Bearer ${testUserToken}`)

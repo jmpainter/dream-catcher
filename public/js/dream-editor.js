@@ -50,9 +50,7 @@ function postOrPutDream(postOrPut) {
   $.ajax({
     url: _url,
     type: postOrPut,
-    beforeSend: function (xhr) {
-        xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
-    },
+    beforeSend:setHeader,
     contentType: 'application/json',
     data: JSON.stringify(_data),
     success: postOrPutDreamSuccess,
@@ -61,6 +59,7 @@ function postOrPutDream(postOrPut) {
 }
 
 function postOrPutDreamSuccess() {
+  //go back two screens after edit to bypass dream detail screen
   if(appState.viewStack[appState.viewStack.length - 2] !== 'dream-journal') {
     appState.viewStack.pop();
   }
@@ -75,7 +74,7 @@ function postOrPutError() {
 }
 
 function handleDreamEditSubmit() {
-  $('.dream-editor-form').off().submit(function(event) {
+  $('.dream-editor-form').off().submit(event => {
     event.preventDefault();
     if(appState.editorMode === 'new') {
       postOrPutDream('POST');
@@ -86,7 +85,7 @@ function handleDreamEditSubmit() {
 }
 
 function handleDreamEditBack() {
-  $('.dream-editor-back').off().click(function(event) {
+  $('.dream-editor-back').off().click(event => {
     event.preventDefault();
     returnToPreviousScreen();
   });

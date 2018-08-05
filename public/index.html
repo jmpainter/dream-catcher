@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Journal and share your dreams">
+  <meta name="description" content="Create a personal dream journal and share your dreams with others">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/float-grid.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans|Sniglet" rel="stylesheet">  
@@ -15,14 +15,14 @@
     <div class="row">
       <div class="col-12">
         <h1 class="logo">Dream Catcher</h1>
-        <ul id="my-top-nav" class="top-nav">
+        <ul class="top-nav">
           <li><a class="home-link public-link user-link" href="javascript:void(0)">Home</a></li>
           <li><a class="logout-link user-link" href="javascript:void(0)">Log out</a></li>
           <li><a class="login-link public-link" href="javascript:void(0)">Log In</a></li>
           <li><a class="dream-journal-link user-link" href="javascript:void(0)">Dream Journal</a></li>
           <li><a class="register-link public-link" href="javascript:void(0)">Register</a></li>
           <li class="icon">
-              <a href="javascript:void(0);" class="user-link public-link" onclick="toggleNav()">&#8801;</a>
+            <a href="javascript:void(0);" class="user-link public-link">&#8801;</a>
           </li>
         </ul>
       </div>
@@ -42,9 +42,7 @@
                 with the option of publishing dreams for others to view.</p>
             <button class="get-started-button">Get Started!</button>
           </div>
-        </div>
-        <div class="col-6">
-        </div>                
+        </div>            
       </div>
       <div class="row">
         <div class="col-12">
@@ -70,7 +68,7 @@
             <p class="dream-details"><span class="dream-author"></span> <span class="dream-publish-date"></span></p> 
             <p class="dream-text"></p>
             <ul class="dream-comments"></ul>                
-            <form role="form" class="comment-add-form">
+            <form role="form" class="comment-add-form" action="">
               <legend>Leave a Comment:</legend>
               <span class="create-comment-message"></span>
               <label for="comment-text">Comment:</label>
@@ -92,7 +90,7 @@
     <div class="view" id="login">
       <div class="row">
         <div class="col-4">
-          <form role="form" class="login-form">
+          <form role="form" class="login-form" action="">
             <span class="login-message"></span>
             <fieldset>
               <legend>Log In</legend>
@@ -112,7 +110,7 @@
     <div class="view" id="create-account">
       <div class="row">
         <div class="col-6">
-          <form role="form" class="create-account-form">
+          <form role="form" class="create-account-form" action="">
             <fieldset>
               <legend>Create an Account</legend>
               <span class="create-account-message"></span>
@@ -143,8 +141,6 @@
         <div class="col-3 dream-journal-header">
           <button class="new-dream">New Dream</button>
         </div>
-        <div class="col-3 solid"></div>
-        <div class="col-3 solid"></div>
       </div>
       <div class="row">
         <div class="col-3">
@@ -164,7 +160,7 @@
       <div class="row">
         <div class="col-12">
           <div class="container">
-            <form role="form" class="dream-editor-form">
+            <form role="form" class="dream-editor-form" action="">
               <fieldset>
                 <legend><span class="dream-editor-mode"></span> Dream</legend>
                 <span class="dream-editor-message"></span>
@@ -197,7 +193,6 @@
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-  <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>
   <script src="js/dream-detail.js"></script>

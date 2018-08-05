@@ -14,8 +14,7 @@ const appState = {
   viewStack: []
 };
 
-//used for returning from POST PUT or DELETE where updated data
-//from previous screen must be shown
+//used for returning from POST PUT or DELETE where updated data must be shown
 function initPreviousScreen() {
   //pop off currend screen;
   appState.viewStack.pop();
@@ -47,7 +46,7 @@ function showView(viewName) {
 }
 
 function toggleNav(){
-  const nav = $('#my-top-nav');
+  const nav = $('.top-nav');
   if (nav.attr('class') === 'top-nav'){
     nav.attr('class', 'top-nav responsive');
   } else {
@@ -66,6 +65,10 @@ function setMenu(type) {
   }
 }
 
+function setHeader(xhr) {
+  xhr.setRequestHeader('Authorization', `Bearer ${Cookies.get('_dream-catcher-token')}`);
+}
+
 function setJournalDreams(data) {
   appState.journalDreams = data.dreams;
 }
@@ -76,19 +79,22 @@ function getUserOnAppStartError() {
   .css('display', 'block');  
 }
 
-function startApp() {
-  //for manually setting dream journal view
-  // $('main').prop('hidden', false);
-  // initDreamJournal();
+function handleToggleNav() {
+  $('.icon a').click(() => {
+    toggleNav();
+  })
+}
 
- // actual start app code
+function startApp() {
   if(Cookies.get('_dream-catcher-token')) {
     setMenu('user');
     getJournalDreams(setJournalDreams);
     getUserInfo(getUserOnAppStartError);
+    handleToggleNav();
   } else {
     setMenu('public');
   }
   initRecentDreams();
 }
+
 $(startApp);

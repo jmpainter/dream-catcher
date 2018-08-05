@@ -28,16 +28,18 @@ function createAccount() {
   });
 }
 
-function createAccountError(xhr, status, error) {
+function createAccountError(xhr) {
   let message;
-  const xhrResponse = JSON.parse(xhr.responseText);
-  message = xhrResponse.location ? xhrResponse.location + ' ' : '';
-  message += xhrResponse.message;
-
+  if(xhr.responseText) {
+    const xhrResponse = JSON.parse(xhr.responseText);
+    message = xhrResponse.location ? xhrResponse.location + ' ' : '';
+    message += xhrResponse.message;
+  } else {
+    message = "There has been an error in creating your account."
+  }
   $('.create-account-message')
-  .text(message)
-  .css('display', 'block');
-  handleAccountCreate();
+    .text(message)
+    .css('display', 'block');
 }
 
 function createAccountSuccess() {
@@ -45,7 +47,7 @@ function createAccountSuccess() {
 }
 
 function handleAccountCreate() {
-  $('.create-account-form').off().submit(function(event) {
+  $('.create-account-form').off().submit(event => {
     event.preventDefault();
     createAccount();
   });

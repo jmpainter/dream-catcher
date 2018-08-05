@@ -6,12 +6,12 @@ const expect = chai.expect;
 
 mongoose.Promise = global.Promise;
 
-const {Dream} = require('../dreams/models');
-const {User} = require('../users/models');
-const {Comment} = require('../comments/models');
+const { Dream } = require('../dreams/models');
+const { User } = require('../users/models');
+const { Comment } = require('../comments/models');
 
-const {app, runServer, closeServer} = require('../server');
-const {TEST_DATABASE_URL} = require('../config');
+const { app, runServer, closeServer } = require('../server');
+const  {TEST_DATABASE_URL } = require('../config');
 
 const {
   seedData,
@@ -40,7 +40,7 @@ function seedDataAndGenerateTestUsers() {
     .then(user => {
       testUser = user;
       testUserToken = generateTestUserToken(user);
-      return User.findOne({_id: {$ne: user.id}});
+      return User.findOne({ _id: { $ne: user.id } });
     })
     .then(user2 => {
       testUser2 = user2;
@@ -53,27 +53,27 @@ function seedDataAndGenerateTestUsers() {
     .catch(err => console.error(err));
 }
 
-describe('dreams API resource', function() {
+describe('dreams API resource', () => {
   
-  before(function() {
+  before(() => {
     return runServer(TEST_DATABASE_URL);
   });
   
-  beforeEach(function() {
+  beforeEach(() => {
     return seedDataAndGenerateTestUsers();
   });
 
-  afterEach(function() {
+  afterEach(() => {
     return tearDownDb();
   });
 
-  after(function() {
+  after(() => {
     return closeServer();
   });  
 
-  describe('GET endpoint - unauthorized', function() {
+  describe('GET endpoint - unauthorized', () => {
 
-    it('Should return all public dreams', function() {
+    it('Should return all public dreams', () => {
       let res;
       return chai.request(app)
         .get('/dreams')
@@ -91,7 +91,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should return public dreams with the right fields', function() {
+    it('Should return public dreams with the right fields', () => {
       let resDream;
       return chai.request(app)
         .get('/dreams')
@@ -123,9 +123,9 @@ describe('dreams API resource', function() {
 
   });
 
-  describe('GET endpoint - authorized', function() {
+  describe('GET endpoint - authorized', () => {
 
-    it('Should send user dreams for authorized user', function() {
+    it('Should send user dreams for authorized user', () => {
       return chai.request(app)
         .get('/dreams')
         .set('authorization', `Bearer ${testUserToken}`)
@@ -136,7 +136,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should return user dreams with the right fields', function() {
+    it('Should return user dreams with the right fields', () => {
       let resDream;
       return chai.request(app)
         .get('/dreams?personal=true')
@@ -164,7 +164,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should return the correct number of user dreams', function() {
+    it('Should return the correct number of user dreams', () => {
       let resDreamCount;
       return chai.request(app)
         .get('/dreams?personal=true')
@@ -180,9 +180,9 @@ describe('dreams API resource', function() {
     });
   });
 
-  describe('GET /dreams/:id', function() {
+  describe('GET /dreams/:id', () => {
 
-    it('Should allow an unathorized user to request a public dream', function() {
+    it('Should allow an unathorized user to request a public dream', () => {
       return chai.request(app)
         .get(`/dreams/${testDream._id}`)
         .then(res => {
@@ -197,9 +197,9 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should not allow an unathorized user to request a private dream', function() {
+    it('Should not allow an unathorized user to request a private dream', () => {
       return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .get(`/dreams/${testDream.id}`)
         })
@@ -209,7 +209,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
       });
 
-      it('Should allow an authorized user to request a public dream', function() {
+      it('Should allow an authorized user to request a public dream', () => {
         return chai.request(app)
         .get(`/dreams/${testDream.id}`)
         .set('authorization', `Bearer ${testUserToken}`)
@@ -225,9 +225,9 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));        
       });
 
-      it('Should allow an authorized user to request a private dream of theirs', function() {
+      it('Should allow an authorized user to request a private dream of theirs', () => {
         return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false, author: testUser.id}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .get(`/dreams/${testDream.id}`)
             .set('authorization', `Bearer ${testUserToken}`)
@@ -238,9 +238,9 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
       });      
       
-      it('Should not allow an authorized user to request a private dream not of theirs', function() {
+      it('Should not allow an authorized user to request a private dream not of theirs', () => {
         return Dream.findByIdAndUpdate(testDream.id, {$set: {public: false, author: testUser2.id}})
-        .then(function() {
+        .then(() => {
           return chai.request(app)
             .get(`/dreams/${testDream.id}`)
             .set('authorization', `Bearer ${testUserToken}`)
@@ -252,9 +252,9 @@ describe('dreams API resource', function() {
       });        
   });
 
-  describe('POST endpoint', function() {
+  describe('POST endpoint', () => {
 
-    it('Should not allow an unauthorized request to post', function(){
+    it('Should not allow an unauthorized request to post', () =>{
       return chai.request(app)
         .post('/dreams')
         .then(function(res) {
@@ -262,7 +262,7 @@ describe('dreams API resource', function() {
         })
     });
 
-    it('Should add a new dream', function() {
+    it('Should add a new dream', () => {
       const newDream = generateDreamData(testUser.id);
 
       return chai.request(app)
@@ -288,9 +288,9 @@ describe('dreams API resource', function() {
     });
   });
 
-  describe('PUT endpont', function() {
+  describe('PUT endpont', () => {
 
-    it('Should not allow an unauthorized request to put', function(){
+    it('Should not allow an unauthorized request to put', () =>{
       return chai.request(app)
         .put('/dreams')
         .then(function(res) {
@@ -299,7 +299,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });
 
-    it('Should update dream document with supplied fields', function() {
+    it('Should update dream document with supplied fields', () => {
       const updateData = {
         title: 'New Title',
         text: 'New text',
@@ -331,9 +331,9 @@ describe('dreams API resource', function() {
     });
   });
 
-  describe('DELETE endpoint', function() {
+  describe('DELETE endpoint', () => {
 
-    it('Should not allow an unauthorized request to delete', function(){
+    it('Should not allow an unauthorized request to delete', () =>{
       return chai.request(app)
         .delete('/dreams')
         .then(function(res) {
@@ -341,7 +341,7 @@ describe('dreams API resource', function() {
         })
     });
 
-    it('Should not allow an authorized user to delete a dream that is not theirs', function(){
+    it('Should not allow an authorized user to delete a dream that is not theirs', () =>{
       let dream;
 
       return Dream
@@ -359,7 +359,7 @@ describe('dreams API resource', function() {
         .catch(err => handleError(err));
     });       
 
-    it('Should delete a dream by id, delete any comments on it, and update dream reference in user document', function() {
+    it('Should delete a dream by id, delete any comments on it, and update dream reference in user document', () => {
       const newComment = generateCommentData(testUser2.id);
       let dream;
       let comment
