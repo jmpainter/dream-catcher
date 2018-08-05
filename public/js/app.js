@@ -80,7 +80,7 @@ function getUserOnAppStartError() {
 }
 
 function handleToggleNav() {
-  $('.icon a').click(() => {
+  $('.menu-link').click(() => {
     toggleNav();
   })
 }
@@ -90,10 +90,10 @@ function startApp() {
     setMenu('user');
     getJournalDreams(setJournalDreams);
     getUserInfo(getUserOnAppStartError);
-    handleToggleNav();
   } else {
     setMenu('public');
   }
+  handleToggleNav();
   initRecentDreams();
 }
 
