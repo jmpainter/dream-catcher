@@ -5,6 +5,7 @@ function initDreamDetail() {
   $('.dream-edit').css('display', 'none');
   $('.dream-delete').css('display', 'none');
   $('.dream-comment').css('display', 'none');
+  nicEditors.findEditor('comment-text').setContent('');
 
   handleDreamDetailBackClick();
   handleCommentDeleteClick();
