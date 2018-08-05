@@ -4,7 +4,7 @@ function initCreateAccount(){
   $('#account-first-name').val('');
   $('#account-last-name').val('');
   $('#account-screen-name').val(''); 
-  $('.account-create-message').css('display', 'none');
+  $('.create-account-message').css('display', 'none');
   handleAccountCreate();
   showView('create-account');
 }

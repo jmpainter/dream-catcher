@@ -56,7 +56,7 @@ function displayLatestDreams(data) {
 }
 
 function handleDreamClick() {
-  $('.flex-container').off('click', '.flex-col').on('click', '.flex-col', () => {
+  $('.flex-container').off('click', '.flex-col').on('click', '.flex-col', function() {
     dreamId = $(this).attr('data-dream-id');
     appState.currentDream = appState.latestDreams.find(dream => dream._id === dreamId );
     initDreamDetail();
