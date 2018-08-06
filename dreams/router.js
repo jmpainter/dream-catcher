@@ -126,7 +126,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
       return user.save();
     })
     .then(() => {
-      return res.status(201).json(dream.serialize());
+      res.status(201).json(dream.serialize());
     })
     .catch(err => {
       console.error(err);
@@ -193,9 +193,10 @@ router.delete('/:id', jwtAuth, (req, res) => {
       }
     })
     .then(() => {
-      return res.status(204).end();
+      res.status(204).end();
     })
     .catch(err => {
+      console.error(err);
       if (err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }

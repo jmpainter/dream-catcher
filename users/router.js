@@ -124,9 +124,10 @@ router.post('/', jsonParser, (req, res) => {
       });
     })
     .then(user => {
-      return res.status(201).json(user.serialize());
+      res.status(201).json(user.serialize());
     })
     .catch(err => {
+      console.error(err);
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
@@ -138,9 +139,9 @@ router.get('/', jwtAuth, (req, res) => {
   User.findById(req.user.id)
     .then(user => {
       if(!user) {
-        return res.status(404).json({message: 'Not found'});
+        res.status(404).json({message: 'Not found'});
       } else {
-        return res.status(200).json(user.serialize());
+        res.status(200).json(user.serialize());
       }
     })
     .catch(err => {

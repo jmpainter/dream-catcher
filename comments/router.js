@@ -105,14 +105,14 @@ router.delete('/:comment_id', jwtAuth, (req, res) => {
       }
     })
     .then(() => {
-      return res.status(204).end();
+      res.status(204).end();
     })
     .catch(err => {
       console.error(err);
       if (err.reason === 'AccessError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({message: JSON.stringify(err)});
+      res.status(500).json({ message: JSON.stringify(err) });
     });
 })
 
