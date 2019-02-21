@@ -1,22 +1,48 @@
-html, body, div, span, h1, h2, h3, h4, h5, h6, p, 
-fieldset, form, label, legend,
-footer, header, menu, nav, section, summary
-{
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+fieldset,
+form,
+label,
+legend,
+footer,
+header,
+menu,
+nav,
+section,
+summary {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
-footer, header, hgroup, menu, nav, section {
-	display: block;
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 html {
   box-sizing: border-box;
 }
 * {
   box-sizing: inherit;
+}
+html,
+body {
+  height: 100%;
 }
 body {
   font-family: 'Nunito Sans', sans-serif;
@@ -30,6 +56,20 @@ a {
 main {
   padding: 0;
 }
+.container {
+  margin: auto;
+  height: 100%;
+  background-color: #352edb;
+  max-width: 1000px;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  max-width: 1000px;
+  margin: auto;
+  width: 100%;
+  color: white;
+}
 h1 {
   font-size: 24px;
   margin: 12px 0;
@@ -42,15 +82,8 @@ p {
   font-size: 17px;
   margin: 16px 0;
 }
-.row {
-  /* background-color: #463edf; */
-  background-color: #352EDB;
-}
 .view {
   display: none;
-}
-footer {
-  color: white;
 }
 footer p {
   font-size: 13px;
@@ -58,7 +91,7 @@ footer p {
 button {
   margin: 15px 0;
   /* background-color: #463edf; */
-  background-color: #352EDB;
+  background-color: #352edb;
   padding: 0 16px;
   white-space: nowrap;
   font-weight: 700;
@@ -72,15 +105,15 @@ button {
   font-size: 15px;
   height: auto;
   outline: none;
-  -webkit-transition: all .15s ease-in-out;
-  -o-transition: all .15s ease-in-out;
-  transition: all .15s ease-in-out;
+  -webkit-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
   width: auto;
   cursor: pointer;
 }
 label {
   margin: 8px 0 2px;
-  display: block;  
+  display: block;
 }
 .login-message,
 .dream-editor-message,
@@ -93,17 +126,20 @@ label {
   font-size: 17px;
   color: rgb(243, 55, 55);
 }
-#dream-journal .row, #dream-editor .row, #dream-detail .row {
+#dream-journal .row,
+#dream-editor .row,
+#dream-detail .row {
   background-color: white;
 }
-#create-account .col-6, #login .col-4 {
+#create-account .col-6,
+#login .col-4 {
   background-color: white;
   padding: 15px;
   margin: 15px 0;
   border-radius: 5px;
   margin-bottom: 40px;
 }
-.container {
+.editor-container {
   width: 80%;
 }
 .clr {
@@ -126,9 +162,10 @@ ul.top-nav {
   margin: 0;
 }
 ul.top-nav li {
-  float:right;
+  float: right;
 }
-ul.top-nav li a, .dreams-nav-link{
+ul.top-nav li a,
+.dreams-nav-link {
   display: none;
   color: #ffb500;
   text-align: center;
@@ -144,14 +181,14 @@ ul.top-nav li.icon a {
   padding: 8px 0 10px;
   font-size: 24px;
 }
-.dreams-previous{
+.dreams-previous {
   margin-right: 14px;
 }
 .splash {
   margin-bottom: 34px;
   background-color: white;
   border-radius: 5px;
-  padding: 9px 15px;
+  padding: 30px 20px;
   margin-top: 30px;
   border: 1px solid black;
 }
@@ -161,7 +198,7 @@ ul.top-nav li.icon a {
 }
 .splash button {
   display: block;
-  margin: 12px auto;
+  margin: 40px auto 10px;
 }
 /* Hide the list item that contains the link that should open
  and close the top-nav on small screens */
@@ -184,10 +221,10 @@ header .row {
 }
 .flex-container {
   padding-top: 20px;
-	max-width: 1000px;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .flex-col {
   margin-bottom: 20px;
@@ -200,7 +237,7 @@ header .row {
   border: 1px solid black;
 }
 .home-title {
-  margin: 0;  
+  margin: 0;
 }
 .home-title a {
   font-size: 19px;
@@ -209,7 +246,7 @@ header .row {
 }
 .home-author {
   margin: 0;
-  font-size: 14px;  
+  font-size: 14px;
 }
 .home-publish-date {
   margin: 0;
@@ -266,9 +303,9 @@ legend {
   font-size: 26px;
   padding: 5px 0;
 }
-input[type="email"],
-input[type="password"],
-input[type="text"] {
+input[type='email'],
+input[type='password'],
+input[type='text'] {
   display: block;
   border: 1px solid #bebebe;
   border-radius: 3px;
@@ -295,7 +332,8 @@ input[type="text"] {
 .dream-journal-list a {
   font-size: 18px;
 }
-.journal-date, .journal-public {
+.journal-date,
+.journal-public {
   font-size: 14px;
   margin-right: 10px;
 }
@@ -342,7 +380,7 @@ input[type="text"] {
 .comment-add-form legend {
   font-size: 20px;
 }
-.comment-add-form button{
+.comment-add-form button {
   margin: 10px 0 20px;
   float: right;
 }
@@ -359,10 +397,13 @@ textarea {
 #dream-editor-title {
   width: 100%;
 }
-#dream-editor-text, #comment-text {
+#dream-editor-text,
+#comment-text {
   width: 100%;
 }
-.dream-edit, .dream-delete, .dream-comment {
+.dream-edit,
+.dream-delete,
+.dream-comment {
   float: right;
 }
 .dream-delete {
@@ -378,7 +419,7 @@ textarea {
 /* Flexbox */
 
 .flex-col {
-	width: 100%;
+  width: 100%;
 }
 @media only screen and (min-width: 310px) {
   .flex-col {
@@ -391,10 +432,10 @@ textarea {
   }
 }
 @media only screen and (min-width: 815px) {
-	.flex-col {
+  .flex-col {
     /* width: 16.66%; */
     width: 25%;
-	}
+  }
 }
 
 /* Mobile */
@@ -403,18 +444,18 @@ textarea {
     font-size: 33px;
     margin: 2px;
   }
-  .container {
+  .editor-container {
     width: 100%;
   }
-  ul.top-nav li:not(:last-child){
-    display:none;
+  ul.top-nav li:not(:last-child) {
+    display: none;
   }
   ul.top-nav li.icon {
     float: right;
     display: inline-block;
   }
   ul.top-nav.responsive {
-    position:relative;
+    position: relative;
   }
   ul.top-nav.responsive li.icon {
     position: absolute;
@@ -422,12 +463,12 @@ textarea {
     top: 0;
   }
   ul.top-nav.responsive li {
-    float:none;
-    display:inline;
+    float: none;
+    display: inline;
   }
   ul.top-nav.responsive li a {
-    display:block;
-    text-align:left;
+    display: block;
+    text-align: left;
   }
   .home-link {
     margin-top: 30px;
@@ -441,7 +482,8 @@ textarea {
   #dream-journal h1 {
     margin: 0;
   }
-  .dream-journal-list .row .col-3:nth-child(2), .dream-journal-list .row .col-3:nth-child(3)  {
+  .dream-journal-list .row .col-3:nth-child(2),
+  .dream-journal-list .row .col-3:nth-child(3) {
     margin-top: -12px;
   }
   .dream-journal-list a {

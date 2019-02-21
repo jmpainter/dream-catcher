@@ -1,204 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Create a personal dream journal and share your dreams with others">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/float-grid.css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans|Sniglet" rel="stylesheet">  
-  <title>Dream Catcher</title>
-</head>
-<body>
-  <header role="banner">
-    <div class="row">
-      <div class="col-12">
-        <h1 class="logo">Dream Catcher</h1>
-        <ul class="top-nav">
-          <li><a class="home-link public-link user-link" href="javascript:void(0)">Home</a></li>
-          <li><a class="logout-link user-link" href="javascript:void(0)">Log out</a></li>
-          <li><a class="login-link public-link" href="javascript:void(0)">Log In</a></li>
-          <li><a class="dream-journal-link user-link" href="javascript:void(0)">Dream Journal</a></li>
-          <li><a class="register-link public-link" href="javascript:void(0)">Register</a></li>
-          <li class="icon">
-            <a href="javascript:void(0);" class="menu-link user-link public-link">&#8801;</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </header>
-
-  <main role="main" aria-live="assertive">
-
-    <!-- Home Screen  -->
-    
-    <div class="view" id="recent-dreams">
-      <div class="row">
-        <div class="col-6">
-          <div class="splash">
-            <h1>Welcome To Dream Catcher!</h1>
-            <p>In Dream Catcher, you can create a personal dream journal
-                with the option of publishing dreams for others to view.</p>
-            <button class="get-started-button">Get Started!</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta
+      name="description"
+      content="Create a personal dream journal and share your dreams with others"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/float-grid.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito+Sans|Sniglet"
+      rel="stylesheet"
+    />
+    <title>Dream Catcher</title>
+  </head>
+  <body>
+    <div class="container">
+      <header role="banner">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="logo">Dream Catcher</h1>
+            <ul class="top-nav">
+              <li>
+                <a
+                  class="home-link public-link user-link"
+                  href="javascript:void(0)"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a class="logout-link user-link" href="javascript:void(0)"
+                  >Log out</a
+                >
+              </li>
+              <li>
+                <a class="login-link public-link" href="javascript:void(0)"
+                  >Log In</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dream-journal-link user-link"
+                  href="javascript:void(0)"
+                  >Dream Journal</a
+                >
+              </li>
+              <li>
+                <a class="register-link public-link" href="javascript:void(0)"
+                  >Register</a
+                >
+              </li>
+              <li class="icon">
+                <a
+                  href="javascript:void(0);"
+                  class="menu-link user-link public-link"
+                  >&#8801;</a
+                >
+              </li>
+            </ul>
           </div>
-        </div>            
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <span class="home-screen-message"></span>
         </div>
-      </div>
-      <div class="row">
-        <a href="javascript:void(0)" class="dreams-previous dreams-nav-link">< Previous</a>
-        <a href="javascript:void(0)" class="dreams-next dreams-nav-link">Next ></a>
-        <div class="flex-container">    
-        </div>
-      </div>
-    </div>
+      </header>
 
-    <!-- Dream Detail Screen -->
+      <main role="main" aria-live="assertive">
+        <!-- Home Screen  -->
 
-    <div class="view" id="dream-detail">
-      <div class="row">
-        <div class="col-12">
-          <div class="container">
-            <span class="dream-detail-message"></span>
-            <h1 class="dream-title"></h1>
-            <p class="dream-details"><span class="dream-author"></span> <span class="dream-publish-date"></span></p> 
-            <p class="dream-text"></p>
-            <ul class="dream-comments"></ul>                
-            <form role="form" class="comment-add-form" action="">
-              <legend>Leave a Comment:</legend>
-              <span class="create-comment-message"></span>
-              <label for="comment-text">Comment:</label>
-              <textarea name="comment-text" id="comment-text" rows="20"></textarea>
-              <button type="submit">Add Comment</button>
-            </form>
-            <div class="clr"></div>  
-            <button class="dream-back">Back</button>
-            <button class="dream-delete">Delete</button>
-            <button class="dream-edit">Edit</button>
-            <button class="dream-comment">Comment</button>          
+        <div class="view" id="recent-dreams">
+          <div class="row">
+            <div class="col-12">
+              <div class="splash">
+                <h1>Welcome To Dream Catcher!</h1>
+                <p>
+                  In Dream Catcher, you can create a personal dream journal with
+                  the option of publishing dreams for others to view.
+                </p>
+                <button class="get-started-button">Get Started!</button>
+              </div>
+            </div>
           </div>
-        </div>      
-      </div>
-    </div>    
-
-    <!-- Login Screen -->
-
-    <div class="view" id="login">
-      <div class="row">
-        <div class="col-4">
-          <form role="form" class="login-form" action="">
-            <span class="login-message"></span>
-            <fieldset>
-              <legend>Log In</legend>
-              <label for="username">User Name:</label>
-              <input type="text" name="username" id="username" required>
-              <label for="password">Password:</label>
-              <input type="password" name="password" id="password" required>
-              <button type="submit">Submit</button>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Create Account Screen -->
-
-    <div class="view" id="create-account">
-      <div class="row">
-        <div class="col-6">
-          <form role="form" class="create-account-form" action="">
-            <fieldset>
-              <legend>Create an Account</legend>
-              <span class="create-account-message"></span>
-              <label for="account-username">User Name (for Login):</label>
-              <input type="text" name="account-username" id="account-username" required>
-              <label for="account-password">Password:</label>
-              <input type="password" name="account-password" id="account-password" required>
-              <label for="account-first-name">First Name:</label>
-              <input type="text" name="account-first-name" id="account-first-name" required>
-              <label for="account-last-name">Last Name:</label>
-              <input type="text" name="account-last-name" id="account-last-name" required>
-              <label for="account-screen-name">Screen Name (for public dreams):</label>
-              <input type="text" name="account-screen-name" id="account-screen-name" required>
-              <button type="submit">Create</button>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>    
-    
-    <!-- Dream journal screen -->
-    
-    <div class="view" id="dream-journal">
-      <div class="row">
-        <div class="col-3 dream-journal-header">
-          <h1>My Dream Journal</h1>
-        </div>
-        <div class="col-3 dream-journal-header">
-          <button class="new-dream">New Dream</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          <span class="dream-journal-message"></span>
-        </div>
-      </div>
-      <div class="dream-journal-list">
-      </div>
-      <div class="row">
-        <div class="col-3 dream-journal-footer"></div>
-      </div>      
-    </div>    
-
-    <!-- Dream Editor Screen -->
-
-    <div class="view" id="dream-editor">
-      <div class="row">
-        <div class="col-12">
-          <div class="container">
-            <form role="form" class="dream-editor-form" action="">
-              <fieldset>
-                <legend><span class="dream-editor-mode"></span> Dream</legend>
-                <span class="dream-editor-message"></span>
-                <label for="dream-editor-title">Title:</label>
-                <input type="text" name="title" id="dream-editor-title">
-                <label for="dream-editor-text">Text:</label>
-                <textarea name="dream-editor-text" id="dream-editor-text" rows="20"></textarea>
-                <button class="dream-editor-back">Back</button>
-                <button type="submit" class="dream-editor-submit"><span class="dream-editor-submit-label"></span></button>
-              </fieldset>
-            </form>
+          <div class="row">
+            <div class="col-12">
+              <span class="home-screen-message"></span>
+            </div>
           </div>
-        </div>      
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      <div class="row">
-        <div class="col-12">
-          <p>By Josh Painter, Copyright 2018</p>
+          <div class="row">
+            <a href="javascript:void(0)" class="dreams-previous dreams-nav-link"
+              >< Previous</a
+            >
+            <a href="javascript:void(0)" class="dreams-next dreams-nav-link"
+              >Next ></a
+            >
+            <div class="flex-container"></div>
+          </div>
         </div>
-      </div>
-    </footer>
-    
-  </main>
-  <script src="js/nicEdit.js" type="text/javascript"></script>
-  <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script> 
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/home.js"></script>
-  <script src="js/dream-detail.js"></script>
-  <script src="js/dream-journal.js"></script>
-  <script src="js/dream-editor.js"></script>
-  <script src="js/login.js"></script>
-  <script src="js/create-account.js"></script>
-</body>
+
+        <!-- Dream Detail Screen -->
+
+        <div class="view" id="dream-detail">
+          <div class="row">
+            <div class="col-12">
+              <div class="container">
+                <span class="dream-detail-message"></span>
+                <h1 class="dream-title"></h1>
+                <p class="dream-details">
+                  <span class="dream-author"></span>
+                  <span class="dream-publish-date"></span>
+                </p>
+                <p class="dream-text"></p>
+                <ul class="dream-comments"></ul>
+                <form role="form" class="comment-add-form" action="">
+                  <legend>Leave a Comment:</legend>
+                  <span class="create-comment-message"></span>
+                  <label for="comment-text">Comment:</label>
+                  <textarea
+                    name="comment-text"
+                    id="comment-text"
+                    rows="20"
+                  ></textarea>
+                  <button type="submit">Add Comment</button>
+                </form>
+                <div class="clr"></div>
+                <button class="dream-back">Back</button>
+                <button class="dream-delete">Delete</button>
+                <button class="dream-edit">Edit</button>
+                <button class="dream-comment">Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Screen -->
+
+        <div class="view" id="login">
+          <div class="row">
+            <div class="col-4">
+              <form role="form" class="login-form" action="">
+                <span class="login-message"></span>
+                <fieldset>
+                  <legend>Log In</legend>
+                  <label for="username">User Name:</label>
+                  <input type="text" name="username" id="username" required />
+                  <label for="password">Password:</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                  />
+                  <button type="submit">Submit</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Create Account Screen -->
+
+        <div class="view" id="create-account">
+          <div class="row">
+            <div class="col-6">
+              <form role="form" class="create-account-form" action="">
+                <fieldset>
+                  <legend>Create an Account</legend>
+                  <span class="create-account-message"></span>
+                  <label for="account-username">User Name (for Login):</label>
+                  <input
+                    type="text"
+                    name="account-username"
+                    id="account-username"
+                    required
+                  />
+                  <label for="account-password">Password:</label>
+                  <input
+                    type="password"
+                    name="account-password"
+                    id="account-password"
+                    required
+                  />
+                  <label for="account-first-name">First Name:</label>
+                  <input
+                    type="text"
+                    name="account-first-name"
+                    id="account-first-name"
+                    required
+                  />
+                  <label for="account-last-name">Last Name:</label>
+                  <input
+                    type="text"
+                    name="account-last-name"
+                    id="account-last-name"
+                    required
+                  />
+                  <label for="account-screen-name"
+                    >Screen Name (for public dreams):</label
+                  >
+                  <input
+                    type="text"
+                    name="account-screen-name"
+                    id="account-screen-name"
+                    required
+                  />
+                  <button type="submit">Create</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dream journal screen -->
+
+        <div class="view" id="dream-journal">
+          <div class="row">
+            <div class="col-3 dream-journal-header">
+              <h1>My Dream Journal</h1>
+            </div>
+            <div class="col-3 dream-journal-header">
+              <button class="new-dream">New Dream</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <span class="dream-journal-message"></span>
+            </div>
+          </div>
+          <div class="dream-journal-list"></div>
+          <div class="row">
+            <div class="col-3 dream-journal-footer"></div>
+          </div>
+        </div>
+
+        <!-- Dream Editor Screen -->
+
+        <div class="view" id="dream-editor">
+          <div class="row">
+            <div class="col-12">
+              <div class="editor-container">
+                <form role="form" class="dream-editor-form" action="">
+                  <fieldset>
+                    <legend>
+                      <span class="dream-editor-mode"></span> Dream
+                    </legend>
+                    <span class="dream-editor-message"></span>
+                    <label for="dream-editor-title">Title:</label>
+                    <input type="text" name="title" id="dream-editor-title" />
+                    <label for="dream-editor-text">Text:</label>
+                    <textarea
+                      name="dream-editor-text"
+                      id="dream-editor-text"
+                      rows="20"
+                    ></textarea>
+                    <button class="dream-editor-back">Back</button>
+                    <button type="submit" class="dream-editor-submit">
+                      <span class="dream-editor-submit-label"></span>
+                    </button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <div class="row">
+            <div class="col-12">
+              <p>By Josh Painter, Copyright 2018</p>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+    <script src="js/nicEdit.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      bkLib.onDomLoaded(nicEditors.allTextAreas);
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/dream-detail.js"></script>
+    <script src="js/dream-journal.js"></script>
+    <script src="js/dream-editor.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/create-account.js"></script>
+  </body>
 </html>
