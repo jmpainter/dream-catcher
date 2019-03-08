@@ -13,8 +13,8 @@ const dreamSchema = Schema({
   commentsOn: { type: Boolean, default: false },
   comments: [
     {
-       type: mongoose.Schema.Types.ObjectId,
-       ref: "Comment"
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
     }
   ]
 });
@@ -31,18 +31,15 @@ dreamSchema.methods.serialize = function() {
   };
 };
 
-//Mongoose middelware function that will delete dream reference in
+//Mongoose middleware function that will delete dream reference in
 //User document's dreams array and any comments the dream had when a dream is deleted
-dreamSchema.pre('remove', function (next) {
+dreamSchema.pre('remove', function(next) {
   var dream = this;
-  promiseArr = [];
-  Comment.deleteMany({'_id': {$in: dream.comments}})
+  Comment.deleteMany({ _id: { $in: dream.comments } })
     .then(() => {
-      dream.model('User').update(
-        { _id: dream.author}, 
-        { $pull: { dreams: dream._id } },
-        next
-      );
+      dream
+        .model('User')
+        .update({ _id: dream.author }, { $pull: { dreams: dream._id } }, next);
     })
     .catch(err => console.error(err));
 });
